@@ -6,9 +6,11 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
@@ -21,7 +23,8 @@ func init() {
 Helpful additions for writing and maintaining Go code.
 
 Subcommands:
-  presubmit   : run "go test" and "go vet" over all packages
+  presubmit      : run "go test" and "go vet" over all packages
+  install-hook   : install pre-push hook in the current repo
 `)
 		flag.PrintDefaults()
 	}
@@ -51,8 +54,25 @@ func run() error {
 		} else if lint != nil {
 			return lint
 		}
+
+	case "install-hook":
+		root, err := rootDir()
+		if err != nil {
+			return err
+		}
+		hookdir := filepath.Join(root, ".git", "hooks")
+		prepush := filepath.Join(hookdir, "pre-push")
+		if _, err := os.Stat(prepush); os.IsNotExist(err) {
+			return writeHook(prepush)
+		} else if err == nil {
+			return fmt.Errorf("pre-push hook already exists")
+		} else {
+			return err
+		}
+
 	case "help":
 		flag.Usage()
+
 	default:
 		return fmt.Errorf("subcommand %q not understood", flag.Arg(0))
 	}
@@ -85,4 +105,13 @@ func invoke(cmd *exec.Cmd) error {
 		fmt.Fprintln(out, "\033[50C\033[1;31mFAILED\033[0m")
 	}
 	return err
+}
+
+func writeHook(path string) error {
+	const content = `
+#!/bin/sh
+# Verify that the code is in a useful state before pushing.
+git go presubmit
+`
+	return ioutil.WriteFile(path, []byte(content), 0755)
 }
