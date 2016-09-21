@@ -24,6 +24,8 @@ Helpful additions for writing and maintaining Go code.
 
 Subcommands:
   presubmit      : run "go test" and "go vet" over all packages
+  test, tests    : run "go test" over all packages
+  lint           : run "go vet" over all packages
   install-hook   : install pre-push hook in the current repo
 `)
 		flag.PrintDefaults()
@@ -42,6 +44,20 @@ func run() error {
 	}
 
 	switch flag.Arg(0) {
+	case "test", "tests":
+		root, err := rootDir()
+		if err != nil {
+			return err
+		}
+		return invoke(runTests(root))
+
+	case "lint":
+		root, err := rootDir()
+		if err != nil {
+			return err
+		}
+		return invoke(runLinter(root))
+
 	case "presubmit":
 		root, err := rootDir()
 		if err != nil {
