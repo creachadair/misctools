@@ -55,7 +55,7 @@ func main() {
 	case *minPoll < 10*time.Millisecond:
 		log.Fatalf("Poll interval must be at least 10ms: %v", *minPoll)
 	case *maxPoll < *minPoll:
-		log.Fatal("Maximum polling interval is less than minimum: %v < %v", *maxPoll, *minPoll)
+		log.Fatalf("Maximum polling interval is less than minimum: %v < %v", *maxPoll, *minPoll)
 	case flag.NArg() == 0:
 		log.Fatal("You must provide a command to execute")
 	}
