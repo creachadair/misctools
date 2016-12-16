@@ -19,6 +19,7 @@ var (
 	minPoll   = flag.Duration("min", 500*time.Millisecond, "Minimum poll interval")
 	maxPoll   = flag.Duration("max", 1*time.Minute, "Maximum poll interval")
 	pauseTime = flag.Duration("pause", 0, "Time to pause after a successful invocation")
+	beQuiet   = flag.Bool("quiet", false, "Suppress log output")
 )
 
 func init() {
@@ -61,6 +62,12 @@ func main() {
 	os.Exit(run(context.Background()))
 }
 
+func logPrintf(msg string, args ...interface{}) {
+	if !*beQuiet {
+		log.Printf(msg, args...)
+	}
+}
+
 func run(ctx context.Context) int {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -72,7 +79,7 @@ func run(ctx context.Context) int {
 	go func() {
 		select {
 		case s := <-sig:
-			log.Printf("Received %v signal; stopping...", s)
+			logPrintf("Received %v signal; stopping...", s)
 			cancel()
 		}
 	}()
@@ -86,7 +93,7 @@ func run(ctx context.Context) int {
 		// Try starting the command. If starting the command fails, or if the
 		// command exits unsuccessfully, wait and try again.
 		if err := cmd.Start(); err != nil {
-			log.Printf("ERROR: Starting %q command failed: %v", flag.Arg(0), err)
+			logPrintf("ERROR: Starting %q command failed: %v", flag.Arg(0), err)
 			return exitStartup
 		}
 
@@ -94,7 +101,7 @@ func run(ctx context.Context) int {
 		// Wait call to report an error.
 		var poll <-chan time.Time
 		if err := cmd.Wait(); err != nil {
-			log.Printf("ERROR: Command %q failed: %v", flag.Arg(0), err)
+			logPrintf("ERROR: Command %q failed: %v", flag.Arg(0), err)
 			poll = time.After(cur)
 			cur *= 2
 			if cur > *maxPoll {
