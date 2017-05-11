@@ -4,8 +4,12 @@ package sizeof
 
 import "reflect"
 
-// DeepSize reports the size of v in bytes, including all recursive
-// substructures of v. If v contains any cycles, this function may loop.
+// DeepSize reports the size of v in bytes, as reflect.Size, but also including
+// all recursive substructures of v via pointers and slices. If v contains any
+// cycles (even indirect ones), this function may loop.
+//
+// Note that some values, notably maps, may still be undercounted, as there are
+// some pieces of the value that are not visible to reflect.Size.
 func DeepSize(v interface{}) int64 {
 	return int64(valueSize(reflect.ValueOf(v)))
 }
@@ -32,6 +36,9 @@ func valueSize(v reflect.Value) uintptr {
 		}
 
 	case reflect.Map:
+		// N.B. This counts only the size of the map's base element plus the
+		// sizes of the keys and values. There is additional connective tissue
+		// for the hash table that doesn't show up here.
 		for _, key := range v.MapKeys() {
 			base += valueSize(key)
 			base += valueSize(v.MapIndex(key))
