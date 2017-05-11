@@ -2,10 +2,7 @@
 // of Go objects in memory, using the reflect package.
 package sizeof
 
-import (
-	"fmt"
-	"reflect"
-)
+import "reflect"
 
 // DeepSize reports the size of v in bytes, including all recursive
 // substructures of v. If v contains any cycles, this function may loop.
