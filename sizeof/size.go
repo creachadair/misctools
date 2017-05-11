@@ -33,6 +33,7 @@ func valueSize(v reflect.Value) uintptr {
 
 	case reflect.Map:
 		for _, key := range v.MapKeys() {
+			base := valueSize(key)
 			base += valueSize(v.MapIndex(key))
 		}
 
