@@ -124,8 +124,8 @@ func invoke(cmd *exec.Cmd) error {
 }
 
 func writeHook(path string) error {
-	const content = `
-#!/bin/sh
+	const content = `#!/bin/sh
+#
 # Verify that the code is in a useful state before pushing.
 git go presubmit
 `
