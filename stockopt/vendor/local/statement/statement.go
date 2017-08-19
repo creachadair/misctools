@@ -15,9 +15,9 @@ import (
 	"local/currency"
 )
 
-// Parse extracts the gain/loss entries from the statement in data, returning
-// those matched by filter (or all, if filter == nil).
-func Parse(data []byte, filter func(*Entry) bool) ([]*Entry, error) {
+// ParseXLS extracts the gain/loss entries from the statement in data,
+// returning those matched by filter (or all, if filter == nil).
+func ParseXLS(data []byte, filter func(*Entry) bool) ([]*Entry, error) {
 	w, err := xls.OpenReader(bytes.NewReader(data), "utf-8")
 	if err != nil {
 		return nil, err
