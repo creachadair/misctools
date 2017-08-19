@@ -160,3 +160,12 @@ func newParser(header []string) func([]string) (*Entry, error) {
 		return &entry, nil
 	}
 }
+
+// EntryLess reports whether a should be ordered prior to b, based on time of
+// acquisition with ties split by index.
+func EntryLess(a, b *Entry) bool {
+	if a.Acquired.Equal(b.Acquired) {
+		return a.Index < b.Index
+	}
+	return a.Acquired.Before(b.Acquired)
+}
