@@ -86,7 +86,7 @@ var parse = map[string]func(string, *Entry) error{
 	},
 	"acquired price": func(s string, into *Entry) error {
 		c, err := currency.ParseUSD(s)
-		into.Price = c
+		into.IssuePrice = c
 		return err
 	},
 	"acquired via": func(s string, into *Entry) error {
@@ -100,7 +100,7 @@ var parse = map[string]func(string, *Entry) error{
 	},
 	"current market value": func(s string, into *Entry) error {
 		c, err := currency.ParseUSD(s)
-		into.Value = c
+		into.Price = c
 		return err
 	},
 	"unrealized total gain/loss": func(s string, into *Entry) error {
@@ -112,14 +112,14 @@ var parse = map[string]func(string, *Entry) error{
 
 // An Entry represents a group of shares acquired at a particular time.
 type Entry struct {
-	Index     int            // batch index
-	Acquired  time.Time      // when the shares were issued
-	Plan      string         // under what plan
-	Available int            // how many shares are available
-	Via       string         // how they were received
-	Price     currency.Value // price per share at issue
-	Value     currency.Value // value per share currently (estimated)
-	Gain      currency.Value // capital gain/loss per share (via estimated value)
+	Index      int            // batch index
+	Acquired   time.Time      // when the shares were issued
+	Plan       string         // under what plan
+	Available  int            // how many shares are available
+	Via        string         // how they were received
+	IssuePrice currency.Value // price per share at issue
+	Price      currency.Value // value per share currently (estimated)
+	Gain       currency.Value // capital gain/loss per share (via estimated value)
 }
 
 // Format returns a description of n shares of e. If n < 0, the total available
@@ -130,7 +130,7 @@ func (e *Entry) Format(n int) string {
 	}
 	return fmt.Sprintf("%2d %s shares acquired %s : price %s value %s gains %s",
 		n, e.Plan, e.Acquired.Format("2006-01-02"),
-		e.Price.USD(), e.Value.USD(), e.Gain.USD())
+		e.IssuePrice.USD(), e.Price.USD(), e.Gain.USD())
 }
 
 // newParser constructs a row parsing function given a header row.
@@ -154,7 +154,7 @@ func newParser(header []string) func([]string) (*Entry, error) {
 			}
 		}
 		if n := currency.Value(entry.Available); n > 0 {
-			entry.Value /= n
+			entry.Price /= n
 			entry.Gain /= n
 		}
 		return &entry, nil
