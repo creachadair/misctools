@@ -15,13 +15,14 @@ import (
 	"time"
 
 	"local/currency"
+	"local/solver"
 	"local/statement"
 )
 
 var (
 	inputPath    = flag.String("input", "", "Input file (.xls)")
-	ageMonths    = flag.Int("age", 12, "Minimum age in months")
-	planFilter   = flag.String("plan", "GSU Class C", "View only this plan")
+	ageMonths    = flag.Int("age", 12, "Minimum age in months (12 months is the short-term cutoff)")
+	planFilter   = flag.String("plan", "GSU Class C", "Consider only shares issued under this plan")
 	capGainLimit = flag.String("cap", "$25000", "Capital gain limit in USD")
 	printSummary = flag.Bool("summary", false, "Print summary of available shares")
 	allowLoss    = flag.Bool("loss", false, "Allow sale of capital losses")
@@ -48,7 +49,7 @@ func main() {
 	}
 
 	then := time.Now().AddDate(0, -*ageMonths, 0)
-	es, err := statement.Parse(data, func(e *statement.Entry) bool {
+	es, err := statement.ParseXLS(data, func(e *statement.Entry) bool {
 		return e.Available > 0 && e.Acquired.Before(then) &&
 			(*planFilter == "" || e.Plan == *planFilter) &&
 			(e.Gain >= 0 || *allowLoss)
@@ -63,7 +64,7 @@ func main() {
 	for _, e := range es {
 		totalShares += e.Available
 		v := currency.Value(e.Available)
-		totalValue += v * e.Value
+		totalValue += v * e.Price
 		totalGain += v * e.Gain
 	}
 
@@ -85,47 +86,38 @@ Total gains:  %s
 		}
 		fmt.Println()
 	}
+	solve(es, maxGain)
+}
 
-	// Order shares increasing by capital gains.  The share value should be
-	// fixed at a given point in time, so we are trying to maximize number sold
-	// subject to the cap. Thus, by considering gains in nondecreasing order we
-	// ensure we sell as many as possible.
-	sort.Slice(es, func(i, j int) bool {
-		return es[i].Gain < es[j].Gain
+func solve(es []*statement.Entry, maxGain currency.Value) {
+	soln := solver.New(es2e(es)).Solve(maxGain)
+	sort.Slice(soln, func(i, j int) bool {
+		return statement.EntryLess(soln[i].ID.(*statement.Entry), soln[j].ID.(*statement.Entry))
 	})
 
-	type sale struct {
-		count int
-		entry *statement.Entry
-	}
-	var sell []sale
 	var soldValue, soldGains currency.Value
 	var soldShares int
-	for _, e := range es {
-		num := int((maxGain - soldGains) / e.Value)
-		if num == 0 {
-			break
-		} else if num > e.Available {
-			num = e.Available
-		}
-		soldShares += num
-		soldValue += currency.Value(num) * e.Value
-		soldGains += currency.Value(num) * e.Gain
-		sell = append(sell, sale{
-			count: num,
-			entry: e,
-		})
+	for _, elt := range soln {
+		e := elt.ID.(*statement.Entry)
+		soldShares += elt.N
+		soldValue += currency.Value(elt.N) * elt.Value
+		soldGains += currency.Value(elt.N) * elt.Gain
+		fmt.Printf("Sell [lot %2d]: %s\n", e.Index, e.Format(elt.N))
 	}
-
-	fmt.Printf("Sold shares:  %d\nSold value:   %s\nSold gains:   %s\n\n",
+	fmt.Printf("\nSold shares:  %d\nSold value:   %s\nSold gains:   %s\n",
 		soldShares, soldValue.USD(), soldGains.USD())
+}
 
-	// Put the results in a useful order.
-	sort.Slice(sell, func(i, j int) bool {
-		return sell[i].entry.Acquired.Before(sell[j].entry.Acquired)
-	})
-
-	for _, s := range sell {
-		fmt.Printf("Sell [lot %2d]: %s\n", s.entry.Index, s.entry.Format(s.count))
+// es2e converts statement entries to solver entries.
+func es2e(es []*statement.Entry) []solver.Entry {
+	out := make([]solver.Entry, len(es))
+	for i, e := range es {
+		out[i] = solver.Entry{
+			ID:    e,
+			N:     e.Available,
+			Value: e.Price,
+			Gain:  e.Gain,
+		}
 	}
+	return out
 }
