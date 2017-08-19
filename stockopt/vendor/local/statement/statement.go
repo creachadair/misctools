@@ -128,7 +128,7 @@ func (e *Entry) Format(n int) string {
 	if n < 0 || n > e.Available {
 		n = e.Available
 	}
-	return fmt.Sprintf("%2d %s shares acquired %s : price %s value %s gains %s",
+	return fmt.Sprintf("%2d %s shares acquired %s : issue %s price %s gains %s",
 		n, e.Plan, e.Acquired.Format("2006-01-02"),
 		e.IssuePrice.USD(), e.Price.USD(), e.Gain.USD())
 }
