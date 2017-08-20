@@ -14,9 +14,9 @@ import (
 	"sort"
 	"time"
 
-	"local/currency"
-	"local/solver"
-	"local/statement"
+	"bitbucket.org/creachadair/misctools/stockopt/currency"
+	"bitbucket.org/creachadair/misctools/stockopt/solver"
+	"bitbucket.org/creachadair/misctools/stockopt/statement"
 )
 
 var (
