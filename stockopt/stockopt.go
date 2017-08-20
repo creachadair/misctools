@@ -1,9 +1,10 @@
 // Program stockopt optimizes a stock sale subject to limitations of capital
 // gains.  The input to the program is an .xls spreadsheet as generated from
-// the Gain/Loss view of the MSSB stock plan site. The output is a table
-// listing how many of each lot of stock should be sold, the total sale price
-// based on the estimated sale values from MSSB, and the total capital gain
-// from the sale.
+// the Gain/Loss view of the MSSB stock plan site.
+//
+// The output is a table listing how many of each lot of stock should be sold,
+// the total sale price based on the estimated sale values from MSSB, and the
+// total capital gain from the sale.
 package main
 
 import (
