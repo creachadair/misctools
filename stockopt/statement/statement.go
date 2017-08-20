@@ -6,6 +6,7 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
+	"io"
 	"math"
 	"sort"
 	"strconv"
@@ -96,37 +97,58 @@ nextRow:
 	return entries, nil
 }
 
+const (
+	acquiredDate    = "acquired date"
+	acquiredPrice   = "acquired price"
+	acquiredVia     = "acquired via"
+	currentValue    = "current market value"
+	planName        = "plan name"
+	sharesAvailable = "shares available for sale"
+	totalGainLoss   = "unrealized total gain/loss"
+)
+
+// fieldPos maps column names to field positions.
+var fieldPos = map[string]int{
+	acquiredDate:    0,
+	acquiredPrice:   2,
+	acquiredVia:     3,
+	currentValue:    5,
+	planName:        1,
+	sharesAvailable: 4,
+	totalGainLoss:   6,
+}
+
 // parse maps column names to functions parsing their values.
 var parse = map[string]func(string, *Entry) error{
-	"acquired date": func(s string, into *Entry) error {
+	acquiredDate: func(s string, into *Entry) error {
 		t, err := time.Parse("01/02/2006", s)
 		into.Acquired = t
 		return err
 	},
-	"plan name": func(s string, into *Entry) error {
+	planName: func(s string, into *Entry) error {
 		into.Plan = s
 		return nil
 	},
-	"acquired price": func(s string, into *Entry) error {
+	acquiredPrice: func(s string, into *Entry) error {
 		c, err := currency.ParseUSD(s)
 		into.IssuePrice = c
 		return err
 	},
-	"acquired via": func(s string, into *Entry) error {
+	acquiredVia: func(s string, into *Entry) error {
 		into.Via = s
 		return nil
 	},
-	"shares available for sale": func(s string, into *Entry) error {
+	sharesAvailable: func(s string, into *Entry) error {
 		n, err := strconv.Atoi(s)
 		into.Available = n
 		return err
 	},
-	"current market value": func(s string, into *Entry) error {
+	currentValue: func(s string, into *Entry) error {
 		c, err := currency.ParseUSD(s)
 		into.Price = c
 		return err
 	},
-	"unrealized total gain/loss": func(s string, into *Entry) error {
+	totalGainLoss: func(s string, into *Entry) error {
 		c, err := currency.ParseUSD(s)
 		into.Gain = c
 		return err
@@ -176,6 +198,9 @@ func newParser(header []string) func([]string) (*Entry, error) {
 				return nil, fmt.Errorf("parsing %q: %v", header[i], err)
 			}
 		}
+
+		// Issue price appears to be per unit; others are total.
+		// Except for Historical GCUs it looks to be otherwise.
 		if n := currency.Value(entry.Available); n > 0 {
 			entry.Price /= n
 			entry.Gain /= n
@@ -191,4 +216,33 @@ func EntryLess(a, b *Entry) bool {
 		return a.Index < b.Index
 	}
 	return a.Acquired.Before(b.Acquired)
+}
+
+// WriteCSV renders entries as CSV to w.
+func WriteCSV(entries []*Entry, w io.Writer) error {
+	cw := csv.NewWriter(w)
+	row := make([]string, len(fieldPos))
+	for name, pos := range fieldPos {
+		row[pos] = name
+	}
+	if err := cw.Write(row); err != nil {
+		return err
+	}
+	for _, e := range entries {
+		n := currency.Value(e.Available)
+
+		row[fieldPos[acquiredDate]] = e.Acquired.Format("01/02/2006")
+		row[fieldPos[planName]] = e.Plan
+		row[fieldPos[sharesAvailable]] = strconv.Itoa(e.Available)
+		row[fieldPos[acquiredVia]] = e.Via
+		row[fieldPos[acquiredPrice]] = e.IssuePrice.USD()
+		row[fieldPos[currentValue]] = (n * e.Price).USD()
+		row[fieldPos[totalGainLoss]] = (n * e.Gain).USD()
+
+		if err := cw.Write(row); err != nil {
+			return err
+		}
+	}
+	cw.Flush()
+	return cw.Error()
 }
