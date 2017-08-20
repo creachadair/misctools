@@ -1,7 +1,9 @@
+// Package statement parses stock gain/loss statements as issued by MSSB.
 package statement
 
 import (
 	"bytes"
+	"encoding/csv"
 	"errors"
 	"fmt"
 	"math"
@@ -22,6 +24,16 @@ func ParseXLS(data []byte, filter func(*Entry) bool) ([]*Entry, error) {
 		return nil, err
 	}
 	return parseEntries(w.ReadAllCells(math.MaxInt32), filter)
+}
+
+// ParseCSV extracts the gain/loss entries from the statement in data,
+// returning those matched by filter (or all, if filter == nil).
+func ParseCSV(data []byte, filter func(*Entry) bool) ([]*Entry, error) {
+	rows, err := csv.NewReader(bytes.NewReader(data)).ReadAll()
+	if err != nil {
+		return nil, err
+	}
+	return parseEntries(rows, filter)
 }
 
 // parseEntries converts a slice of rows and columns into entries.
