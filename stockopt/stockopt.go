@@ -12,6 +12,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
+	"path/filepath"
 	"sort"
 	"time"
 
@@ -21,11 +23,12 @@ import (
 )
 
 var (
-	inputPath    = flag.String("input", "", "Input file (.xls)")
+	inputPath    = flag.String("input", "", "Input file (.xls or .csv)")
 	ageMonths    = flag.Int("age", 12, "Minimum age in months (12 months is the short-term cutoff)")
 	planFilter   = flag.String("plan", "GSU Class C", "Consider only shares issued under this plan")
 	capGainLimit = flag.String("cap", "$25000", "Capital gain limit in USD")
 	printSummary = flag.Bool("summary", false, "Print summary of available shares")
+	writeCSV     = flag.String("write", "", "Write input data as CSV to this file")
 	allowLoss    = flag.Bool("loss", false, "Allow sale of capital losses")
 )
 
@@ -48,9 +51,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("Reading statement: %v", err)
 	}
+	parse := statement.ParseXLS
+	if filepath.Ext(*inputPath) == ".csv" {
+		parse = statement.ParseCSV
+	}
 
 	then := time.Now().AddDate(0, -*ageMonths, 0)
-	es, err := statement.ParseXLS(data, func(e *statement.Entry) bool {
+	es, err := parse(data, func(e *statement.Entry) bool {
 		return e.Available > 0 && e.Acquired.Before(then) &&
 			(*planFilter == "" || e.Plan == *planFilter) &&
 			(e.Gain >= 0 || *allowLoss)
@@ -83,9 +90,23 @@ Total gains:  %s
 	if *printSummary {
 		fmt.Println("Available shares:")
 		for _, e := range es {
-			fmt.Printf("%d.\t%s\n", e.Index, e.Format(-1))
+			fmt.Printf("%2d. %s\n", e.Index, e.Format(-1))
 		}
 		fmt.Println()
+	}
+	// If requested, write entries as CSV.
+	if *writeCSV != "" {
+		f, err := os.Create(*writeCSV)
+		if err != nil {
+			log.Fatalf("Creating CSV file: %v", err)
+		}
+		err = statement.WriteCSV(es, f)
+		cerr := f.Close()
+		if err != nil {
+			log.Fatalf("Writing CSV: %v", err)
+		} else if cerr != nil {
+			log.Fatalf("Closing CSV file: %v", err)
+		}
 	}
 	solve(es, maxGain)
 }
