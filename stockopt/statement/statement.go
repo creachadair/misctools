@@ -213,6 +213,9 @@ func newParser(header []string) func([]string) (*Entry, error) {
 // acquisition with ties split by index.
 func EntryLess(a, b *Entry) bool {
 	if a.Acquired.Equal(b.Acquired) {
+		if a.Index == b.Index {
+			return a.Available < b.Available
+		}
 		return a.Index < b.Index
 	}
 	return a.Acquired.Before(b.Acquired)
