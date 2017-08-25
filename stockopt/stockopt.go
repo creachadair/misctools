@@ -26,7 +26,7 @@ var (
 	inputPath    = flag.String("input", "", "Input file (.xls or .csv)")
 	ageMonths    = flag.Int("age", 12, "Minimum age in months (12 months is the short-term cutoff)")
 	planFilter   = flag.String("plan", "GSU Class C", "Consider only shares issued under this plan")
-	capGainLimit = flag.String("cap", "$25000", "Capital gain limit in USD")
+	capGainLimit = flag.String("gain", "$25000", "Capital gain limit in USD")
 	printSummary = flag.Bool("summary", false, "Print summary of available shares")
 	writeCSV     = flag.String("write", "", "Write input data as CSV to this file")
 	allowLoss    = flag.Bool("loss", false, "Allow sale of capital losses")
