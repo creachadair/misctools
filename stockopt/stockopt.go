@@ -12,8 +12,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
-	"path/filepath"
 	"sort"
 	"time"
 
@@ -26,9 +24,8 @@ var (
 	inputPath    = flag.String("input", "", "Input file (.xls or .csv)")
 	ageMonths    = flag.Int("age", 12, "Minimum age in months (12 months is the short-term cutoff)")
 	planFilter   = flag.String("plan", "GSU Class C", "Consider only shares issued under this plan")
-	capGainLimit = flag.String("gain", "$25000", "Capital gain limit in USD")
-	printSummary = flag.Bool("summary", false, "Print summary of available shares")
-	writeCSV     = flag.String("write", "", "Write input data as CSV to this file")
+	capGainLimit = flag.String("gain", "$0", "Capital gain limit in USD")
+	printSummary = flag.Bool("summary", false, "Print summary of available shares and exit")
 	allowLoss    = flag.Bool("loss", false, "Allow sale of capital losses")
 )
 
@@ -51,13 +48,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Reading statement: %v", err)
 	}
-	parse := statement.ParseXLS
-	if filepath.Ext(*inputPath) == ".csv" {
-		parse = statement.ParseCSV
-	}
 
 	then := time.Now().AddDate(0, -*ageMonths, 0)
-	es, err := parse(data, func(e *statement.Entry) bool {
+	es, err := statement.ParseXLS(data, func(e *statement.Entry) bool {
 		return e.Available > 0 && e.Acquired.Before(then) &&
 			(*planFilter == "" || e.Plan == *planFilter) &&
 			(e.Gain >= 0 || *allowLoss)
@@ -83,31 +76,17 @@ Allow loss:   %v
 Total shares: %d
 Total value:  %s
 Total gains:  %s
-
 `, *inputPath, *ageMonths, maxGain.USD(), *allowLoss, totalShares, totalValue.USD(), totalGain.USD())
 
 	// If requested, print a summary of available shares.
 	if *printSummary {
-		fmt.Println("Available shares:")
+		fmt.Println("\nAvailable shares:")
 		for _, e := range es {
 			fmt.Printf("%2d. %s\n", e.Index, e.Format(-1))
 		}
-		fmt.Println()
+		return
 	}
-	// If requested, write entries as CSV.
-	if *writeCSV != "" {
-		f, err := os.Create(*writeCSV)
-		if err != nil {
-			log.Fatalf("Creating CSV file: %v", err)
-		}
-		err = statement.WriteCSV(es, f)
-		cerr := f.Close()
-		if err != nil {
-			log.Fatalf("Writing CSV: %v", err)
-		} else if cerr != nil {
-			log.Fatalf("Closing CSV file: %v", err)
-		}
-	}
+
 	solve(es, maxGain)
 }
 
