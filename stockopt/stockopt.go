@@ -21,7 +21,7 @@ import (
 )
 
 var (
-	inputPath    = flag.String("input", "", "Input file (.xls or .csv)")
+	inputPath    = flag.String("input", "", "Input .xls file")
 	ageMonths    = flag.Int("age", 12, "Minimum age in months (12 months is the short-term cutoff)")
 	planFilter   = flag.String("plan", "GSU Class C", "Consider only shares issued under this plan")
 	capGainLimit = flag.String("gain", "$0", "Capital gain limit in USD")
