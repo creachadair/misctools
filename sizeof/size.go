@@ -2,7 +2,10 @@
 // of Go objects in memory, using the reflect package.
 package sizeof
 
-import "reflect"
+import (
+	"math"
+	"reflect"
+)
 
 // DeepSize reports the size of v in bytes, as reflect.Size, but also including
 // all recursive substructures of v via pointers and slices. If v contains any
@@ -36,9 +39,10 @@ func valueSize(v reflect.Value) uintptr {
 		}
 
 	case reflect.Map:
-		// N.B. This counts only the size of the map's base element plus the
-		// sizes of the keys and values. There is additional connective tissue
-		// for the hash table that doesn't show up here.
+		// A map m has len(m) / 6.5 buckets, rounded up to a power of two, and
+		// a minimum of one bucket. Each bucket is 16 bytes + 8*(keysize + valsize).
+		nb := uintptr(math.Pow(2, math.Ceil(math.Log(float64(v.Len())/6.5)/math.Log(2))))
+		base = 16 * nb
 		for _, key := range v.MapKeys() {
 			base += valueSize(key)
 			base += valueSize(v.MapIndex(key))
