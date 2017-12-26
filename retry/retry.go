@@ -99,10 +99,10 @@ func run(ctx context.Context) int {
 
 		// Tripping the signal handler will kill the subprocess, causing the
 		// Wait call to report an error.
-		var poll <-chan time.Time
+		var waitFor time.Duration
 		if err := cmd.Wait(); err != nil {
 			logPrintf("ERROR: Command %q failed: %v", flag.Arg(0), err)
-			poll = time.After(cur)
+			waitFor = cur
 			cur *= 2
 			if cur > *maxPoll {
 				cur = *maxPoll
@@ -111,14 +111,14 @@ func run(ctx context.Context) int {
 			return exitDone // success, retries disabled
 		} else {
 			cur = *minPoll // reset poll time since we succeeded
-			poll = time.After(*pauseTime)
+			waitFor = *pauseTime
 		}
 
 		select {
 		case <-ctx.Done():
 			return exitDone
 
-		case <-poll:
+		case <-time.After(waitFor):
 			// try again...
 		}
 	}
