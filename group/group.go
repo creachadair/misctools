@@ -1,6 +1,7 @@
 // Package group provides an interface to the getgrnam(3) and getgrgid(3)
-// functions to read the /etc/groups database. This package will only work on
-// os/arch combinations where those functions are defined.
+// functions to read group membership from the /etc/groups database, NIS, LDAP,
+// etc. This package will only work on os/arch combinations where those
+// functions are defined.
 package group
 
 // #include <grp.h>
