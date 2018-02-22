@@ -18,7 +18,7 @@ var out = os.Stdout
 
 func init() {
 	flag.Usage = func() {
-		fmt.Fprintln(os.Stderr, `Usage: git go [subcommand] [options]
+		fmt.Fprint(os.Stderr, `Usage: git go [subcommand] [options]
 
 Helpful additions for writing and maintaining Go code.
 
@@ -27,6 +27,7 @@ Subcommands:
   test, tests    : run "go test" over all packages
   lint           : run "go vet" over all packages
   install-hook   : install pre-push hook in the current repo
+
 `)
 		flag.PrintDefaults()
 	}
