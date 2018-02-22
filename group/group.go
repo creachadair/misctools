@@ -25,9 +25,9 @@ type Group struct {
 // ErrNotFound is returned when a requested group could not be found.
 var ErrNotFound = errors.New("no matching group")
 
-// ByName loads the named group via getgrnam(3).
+// Lookup loads the named group via getgrnam(3).
 // If the group could not be found, ErrNotFound is reported.
-func ByName(name string) (*Group, error) {
+func Lookup(name string) (*Group, error) {
 	grp, err := C.getgrnam(C.CString(name))
 	if err != nil {
 		return nil, err
@@ -35,9 +35,9 @@ func ByName(name string) (*Group, error) {
 	return unpack(grp)
 }
 
-// ByGID loads the specified group via getgrgid(3).
+// LookupID loads the specified group via getgrgid(3).
 // If the group could not be found, ErrNotFound is reported.
-func ByGID(gid int) (*Group, error) {
+func LookupID(gid int) (*Group, error) {
 	grp, err := C.getgrgid(C.gid_t(gid))
 	if err != nil {
 		return nil, err
