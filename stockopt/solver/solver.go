@@ -56,9 +56,12 @@ func (s *Solver) Solve(cap currency.Value) []Entry {
 
 func (s *Solver) init(cap currency.Value) int {
 	// Lazily initialize the solution table.
+	//
+	// table[i][j] records for each entry[i] in nonincreasing order of gain,
+	// the maximum value that can be obtained by taking j shares of i and
+	// additional shares with equal or lesser gain, without exceeding the gain
+	// cap. Nonincreasing order ensures that local optima are monotonic.
 	if s.table == nil {
-		// Consider entries in nondecreasing order of capital gains, so that
-		// local optima are monotonic.
 		sort.Slice(s.entries, func(i, j int) bool {
 			return s.entries[i].Gain > s.entries[j].Gain
 		})
