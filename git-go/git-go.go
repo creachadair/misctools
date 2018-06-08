@@ -25,7 +25,8 @@ Helpful additions for writing and maintaining Go code.
 Subcommands:
   presubmit      : run "go test" and "go vet" over all packages
   test, tests    : run "go test" over all packages
-  lint           : run "go vet" over all packages
+  vet            : run "go vet" over all packages
+  lint           : run "golint" over all packages (if installed)
   install-hook   : install pre-push hook in the current repo
 
 `)
@@ -42,37 +43,7 @@ func run() error {
 	flag.Parse()
 	if flag.NArg() == 0 {
 		return errors.New("no subcommand specified")
-	}
-
-	switch flag.Arg(0) {
-	case "test", "tests":
-		root, err := rootDir()
-		if err != nil {
-			return err
-		}
-		return invoke(runTests(root))
-
-	case "lint":
-		root, err := rootDir()
-		if err != nil {
-			return err
-		}
-		return invoke(runLinter(root))
-
-	case "presubmit":
-		root, err := rootDir()
-		if err != nil {
-			return err
-		}
-		test := invoke(runTests(root))
-		lint := invoke(runLinter(root))
-		if test != nil {
-			return test
-		} else if lint != nil {
-			return lint
-		}
-
-	case "install-hook":
+	} else if flag.Arg(0) == "install-hook" {
 		root, err := rootDir()
 		if err != nil {
 			return err
@@ -86,12 +57,50 @@ func run() error {
 		} else {
 			return err
 		}
-
-	case "help":
+	} else if flag.Arg(0) == "help" {
 		flag.Usage()
+		return nil
+	}
 
-	default:
-		return fmt.Errorf("subcommand %q not understood", flag.Arg(0))
+	root, err := rootDir()
+	if err != nil {
+		return err
+	}
+	var nerr int
+	for _, arg := range flag.Args() {
+		err := func() error {
+
+			switch arg {
+			case "test", "tests":
+				return invoke(runTests(root))
+
+			case "vet":
+				return invoke(runVet(root))
+
+			case "lint":
+				return invoke(runLint(root))
+
+			case "presubmit":
+				test := invoke(runTests(root))
+				vet := invoke(runVet(root))
+				if test != nil {
+					return test
+				} else if vet != nil {
+					return vet
+				}
+
+			default:
+				return fmt.Errorf("subcommand %q not understood", arg)
+			}
+			return nil
+		}()
+		if err != nil {
+			log.Printf("Error: %v", err)
+			nerr++
+		}
+	}
+	if nerr > 0 {
+		return fmt.Errorf("%d problems found", nerr)
 	}
 	return nil
 }
@@ -101,8 +110,10 @@ func rootDir() (string, error) {
 	return strings.TrimSpace(string(data)), err
 }
 
-func gocmd(dir string, args ...string) *exec.Cmd {
-	cmd := exec.Command("go", args...)
+func gocmd(dir string, args ...string) *exec.Cmd { return runcmd("go", dir, args...) }
+
+func runcmd(bin, dir string, args ...string) *exec.Cmd {
+	cmd := exec.Command(bin, args...)
 	cmd.Stdout = os.Stderr
 	cmd.Stderr = os.Stderr
 	cmd.Dir = dir
@@ -111,14 +122,20 @@ func gocmd(dir string, args ...string) *exec.Cmd {
 
 func runTests(path string) *exec.Cmd { return gocmd(path, "test", "./...") }
 
-func runLinter(path string) *exec.Cmd { return gocmd(path, "vet", "./...") }
+func runVet(path string) *exec.Cmd { return gocmd(path, "vet", "./...") }
+
+func runLint(path string) *exec.Cmd { return runcmd("golint", path, "-set_exit_status", "./...") }
 
 func invoke(cmd *exec.Cmd) error {
 	fmt.Fprintf(out, "▷ \033[1;36m%s\033[0m\n", strings.Join(cmd.Args, " "))
 	err := cmd.Run()
-	if err == nil {
+	switch t := err.(type) {
+	case nil:
 		fmt.Fprintln(out, "\033[50C\033[1;32mPASSED\033[0m")
-	} else {
+	case *exec.Error:
+		fmt.Fprintf(out, "\033[50C\033[1;33mSKIPPED\033[0m (%v)\n", t)
+		return nil
+	default:
 		fmt.Fprintln(out, "\033[50C\033[1;31mFAILED\033[0m")
 	}
 	return err
