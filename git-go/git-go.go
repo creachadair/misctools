@@ -120,7 +120,7 @@ func runcmd(bin, dir string, args ...string) *exec.Cmd {
 	return cmd
 }
 
-func runTests(path string) *exec.Cmd { return gocmd(path, "test", "./...") }
+func runTests(path string) *exec.Cmd { return gocmd(path, "test", "-race", "./...") }
 
 func runVet(path string) *exec.Cmd { return gocmd(path, "vet", "./...") }
 
