@@ -66,6 +66,10 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	args := flag.Args()
+	if len(args) == 1 && args[0] == "check" {
+		args = []string{"test", "vet", "lint"}
+	}
 	var nerr int
 	for _, arg := range flag.Args() {
 		err := func() error {
