@@ -27,6 +27,7 @@ Subcommands:
   test, tests    : run "go test" over all packages
   vet            : run "go vet" over all packages
   lint           : run "golint" over all packages (if installed)
+  check          : run all the above checks
   install-hook   : install pre-push hook in the current repo
 
 `)
@@ -71,7 +72,7 @@ func run() error {
 		args = []string{"test", "vet", "lint"}
 	}
 	var nerr int
-	for _, arg := range flag.Args() {
+	for _, arg := range args {
 		err := func() error {
 
 			switch arg {
