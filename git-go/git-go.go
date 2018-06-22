@@ -23,14 +23,15 @@ func init() {
 Helpful additions for writing and maintaining Go code.
 
 Subcommands:
-  presubmit        : run "go test" and "go vet" over all packages
-  test, tests      : run "go test" over all packages
-  vet              : run "go vet" over all packages
-  lint             : run "golint" over all packages (if installed)
-  check            : run all the above checks
-  install-hook [c] : install pre-push hook in the current repo
-                     c defaults to "presubmit"
+  presubmit    : run "go test" and "go vet" over all packages
+  test, test   : run "go test" over all packages
+  vet          : run "go vet" over all packages
+  lint         : run "golint" over all packages (if installed)
+  check        : run all the above checks
 
+  install-hook [subcommand]
+               : install pre-push hook in the current repo.
+                 subcommand defaults to "presubmit"
 `)
 		flag.PrintDefaults()
 	}
