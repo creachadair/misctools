@@ -23,12 +23,13 @@ func init() {
 Helpful additions for writing and maintaining Go code.
 
 Subcommands:
-  presubmit      : run "go test" and "go vet" over all packages
-  test, tests    : run "go test" over all packages
-  vet            : run "go vet" over all packages
-  lint           : run "golint" over all packages (if installed)
-  check          : run all the above checks
-  install-hook   : install pre-push hook in the current repo
+  presubmit        : run "go test" and "go vet" over all packages
+  test, tests      : run "go test" over all packages
+  vet              : run "go vet" over all packages
+  lint             : run "golint" over all packages (if installed)
+  check            : run all the above checks
+  install-hook [c] : install pre-push hook in the current repo
+                     c defaults to "presubmit"
 
 `)
 		flag.PrintDefaults()
@@ -49,10 +50,14 @@ func run() error {
 		if err != nil {
 			return err
 		}
+		subcommand := "presubmit"
+		if flag.NArg() > 1 {
+			subcommand = flag.Arg(1)
+		}
 		hookdir := filepath.Join(root, ".git", "hooks")
 		prepush := filepath.Join(hookdir, "pre-push")
 		if _, err := os.Stat(prepush); os.IsNotExist(err) {
-			return writeHook(prepush)
+			return writeHook(prepush, subcommand)
 		} else if err == nil {
 			return fmt.Errorf("pre-push hook already exists")
 		} else {
@@ -146,11 +151,12 @@ func invoke(cmd *exec.Cmd) error {
 	return err
 }
 
-func writeHook(path string) error {
-	const content = `#!/bin/sh
+func writeHook(path, subcommand string) error {
+	content := fmt.Sprintf(`#!/bin/sh
 #
 # Verify that the code is in a useful state before pushing.
-git go presubmit
-`
+git go %s
+`, subcommand)
+
 	return ioutil.WriteFile(path, []byte(content), 0755)
 }
