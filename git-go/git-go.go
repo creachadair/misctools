@@ -137,7 +137,7 @@ func runcmd(bin, dir string, args ...string) *exec.Cmd {
 	return cmd
 }
 
-func runTests(path string) *exec.Cmd { return gocmd(path, "test", "-race", "./...") }
+func runTests(path string) *exec.Cmd { return gocmd(path, "test", "-race", "-cpu=1,2,4", "./...") }
 
 func runVet(path string) *exec.Cmd { return gocmd(path, "vet", "./...") }
 
