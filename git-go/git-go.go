@@ -33,6 +33,8 @@ Subcommands:
   install-hook [subcommand]
                : install pre-push hook in the current repo.
                  subcommand defaults to "presubmit"
+
+Set GITGO_LINT=warn to convert lint failures into warnings.
 `)
 		flag.PrintDefaults()
 	}
@@ -89,7 +91,13 @@ func run() error {
 				return invoke(runVet(root))
 
 			case "lint":
-				return invoke(runLint(root))
+				lint := invoke(runLint(root))
+				if _, ok := lint.(*exec.ExitError); ok && lintMode() == "warn" {
+					fmt.Fprintln(out, "\t[NOTE] \033[1;33mIgnoring linter failure "+
+						"because lint mode is \"warn\"\033[0m")
+					return nil
+				}
+				return lint
 
 			case "presubmit":
 				fumpt := invoke(runFumpt(root))
@@ -184,4 +192,11 @@ git go %s
 `, subcommand)
 
 	return ioutil.WriteFile(path, []byte(content), 0755)
+}
+
+func lintMode() string {
+	if m := os.Getenv("GITGO_LINT"); m != "" {
+		return m
+	}
+	return "error"
 }
