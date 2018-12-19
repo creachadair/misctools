@@ -24,7 +24,7 @@ Helpful additions for writing and maintaining Go code.
 
 Subcommands:
   presubmit    : run "gofmt", "go test", and "go vet" over all packages
-  test, test   : run "go test" over all packages
+  test, tests  : run "go test" over all packages
   vet          : run "go vet" over all packages
   lint         : run "golint" over all packages (if installed)
   fmt, format  : run "gofmt -s" over all packages (if installed)
@@ -34,7 +34,8 @@ Subcommands:
                : install pre-push hook in the current repo.
                  subcommand defaults to "presubmit"
 
-Set GITGO_LINT=warn to convert lint failures into warnings.
+Set GITGO_<tag>=warn to convert failures into warnings, where tag is one of
+  TEST, VET, LINT, FMT
 `)
 		flag.PrintDefaults()
 	}
@@ -77,32 +78,31 @@ func run() error {
 		return err
 	}
 	args := flag.Args()
-	if len(args) == 1 && args[0] == "check" {
-		args = []string{"format", "test", "vet", "lint"}
+	if len(args) == 1 {
+		switch args[0] {
+		case "check":
+			args = []string{"fmt", "test", "vet", "lint"}
+		case "presubmit":
+			args = []string{"fmt", "test", "vet"}
+		}
 	}
 	var nerr int
 	for _, arg := range args {
 		err := func() error {
 			switch arg {
 			case "test", "tests":
-				return invoke(runTests(root))
+				return check("test", invoke(runTests(root)))
 
 			case "vet":
-				return invoke(runVet(root))
+				return check("vet", invoke(runVet(root)))
 
 			case "lint":
-				lint := invoke(runLint(root))
-				if _, ok := lint.(*exec.ExitError); ok && lintMode() == "warn" {
-					fmt.Fprintln(out, "\t[NOTE] \033[1;33mIgnoring linter failure "+
-						"because lint mode is \"warn\"\033[0m")
-					return nil
-				}
-				return lint
+				return check("lint", invoke(runLint(root)))
 
 			case "presubmit":
-				fumpt := invoke(runFumpt(root))
-				test := invoke(runTests(root))
-				vet := invoke(runVet(root))
+				fumpt := check("fmt", invoke(runFumpt(root)))
+				test := check("test", invoke(runTests(root)))
+				vet := check("vet", invoke(runVet(root)))
 				if fumpt != nil {
 					return fumpt
 				} else if test != nil {
@@ -112,7 +112,7 @@ func run() error {
 				}
 
 			case "fmt", "format":
-				return invoke(runFumpt(root))
+				return check("fmt", invoke(runFumpt(root)))
 
 			default:
 				return fmt.Errorf("subcommand %q not understood", arg)
@@ -194,9 +194,18 @@ git go %s
 	return ioutil.WriteFile(path, []byte(content), 0755)
 }
 
-func lintMode() string {
-	if m := os.Getenv("GITGO_LINT"); m != "" {
+func tagMode(tag string) string {
+	if m := os.Getenv("GITGO_" + strings.ToUpper(tag)); m != "" {
 		return m
 	}
 	return "error"
+}
+
+func check(tag string, err error) error {
+	if _, ok := err.(*exec.ExitError); ok && tagMode(tag) == "warn" {
+		fmt.Fprintf(out, "\t[NOTE] \033[1;33mIgnoring %[1]s failure "+
+			"because %[1]s mode is \"warn\"\033[0m\n", tag)
+		return nil
+	}
+	return err
 }
