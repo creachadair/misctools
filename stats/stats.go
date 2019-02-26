@@ -20,6 +20,7 @@ var (
 	doMin  = flag.Bool("min", false, "Print minimum entry")
 	doMax  = flag.Bool("max", false, "Print maximum entry")
 	doMean = flag.Bool("mean", false, "Print arithmetic mean")
+	doTrim = flag.Bool("trim", false, "Trim leading and trailing whitespace")
 
 	splitter  = flag.String("split", "", `Split input lines on this regexp ("" means don't split)`)
 	field     = flag.Int("field", 0, "Field to select (1-based; use 0 for the entire line)")
@@ -118,6 +119,13 @@ func ratString(r *big.Rat) string {
 	return r.FloatString(*precision)
 }
 
+func trim(s string) string {
+	if *doTrim {
+		return strings.TrimSpace(s)
+	}
+	return strings.TrimRight(s, "\n")
+}
+
 func main() {
 	flag.Parse()
 
@@ -153,7 +161,7 @@ func main() {
 				fail("In %s: line %d: %v", path, ln, err)
 			}
 
-			v, err := p.Pick(strings.TrimRight(line, "\n"))
+			v, err := p.Pick(trim(line))
 			if err != nil {
 				log.Printf("In %s: line %d: %v", path, ln, err)
 				continue
