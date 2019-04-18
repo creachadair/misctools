@@ -19,7 +19,7 @@ import (
 )
 
 var (
-	host = flag.String("host", "github", "Repository host")
+	host = flag.String("host", "github", "Default repository host")
 
 	hostMap = map[string]hostInfo{
 		"github": {
@@ -32,6 +32,20 @@ var (
 		},
 	}
 )
+
+func init() {
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, `Usage: %s [-host site] user ...
+
+Fetch the names of public Git repositories owned by the specified users on
+well-known hosting sites. By default the -host flag determines which site
+applies to each user; or use "user@site" to specify a different one per user.
+
+Options:
+`, filepath.Base(os.Args[0]))
+		flag.PrintDefaults()
+	}
+}
 
 type hostInfo struct {
 	url   string
@@ -63,15 +77,22 @@ func main() {
 	if flag.NArg() == 0 {
 		log.Fatalf("Usage: %s [-host site] user ...", filepath.Base(os.Args[0]))
 	}
-	hi, ok := hostMap[*host]
-	if !ok {
-		log.Fatalf("No query information known for host %q", *host)
-	}
+
 	var all stringset.Set
 	for _, user := range flag.Args() {
+		site := *host
+		if uhost := strings.SplitN(user, "@", 2); len(uhost) == 2 {
+			user, site = uhost[0], uhost[1]
+		}
+		hi, ok := hostMap[site]
+		if !ok {
+			log.Fatalf("No query information for host site %q", site)
+		}
+
+		log.Printf("Fetching %s repositories for %q...", site, user)
 		repos, err := hi.fetch(user)
 		if err != nil {
-			log.Fatalf("Fetching repository list for %q failed: %v", user, err)
+			log.Fatalf("Fetching %s repository list for %q failed: %v", site, user, err)
 		}
 		all.Add(repos...)
 	}
