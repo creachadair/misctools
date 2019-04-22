@@ -19,16 +19,19 @@ import (
 )
 
 var (
-	host = flag.String("host", "github", "Default repository host")
+	repoHost     = flag.String("host", "github", "Default repository host")
+	includeForks = flag.Bool("forks", false, "Include forks in listing")
 
 	hostMap = map[string]hostInfo{
 		"github": {
 			url:   "https://api.github.com/users/{}/repos",
 			query: ".[]|select(.fork|not)|.html_url",
+			forks: ".[].html_url",
 		},
 		"bitbucket": {
 			url:   "https://api.bitbucket.org/2.0/repositories/{}",
-			query: ".values[].links.html.href",
+			query: ".values[]|select(.parent|not)|.links.html.href",
+			forks: ".values[].links.html.href",
 		},
 	}
 )
@@ -49,7 +52,15 @@ Options:
 
 type hostInfo struct {
 	url   string
-	query string
+	query string // only non-fork repositories
+	forks string // all repositories, including forks
+}
+
+func (h hostInfo) jq() string {
+	if *includeForks {
+		return h.forks
+	}
+	return h.query
 }
 
 func (h hostInfo) fetch(user string) ([]string, error) {
@@ -62,7 +73,7 @@ func (h hostInfo) fetch(user string) ([]string, error) {
 	if rsp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("http get: %s", rsp.Status)
 	}
-	cmd := exec.Command("jq", "-r", h.query)
+	cmd := exec.Command("jq", "-r", h.jq())
 	cmd.Stdin = rsp.Body
 	data, err := cmd.Output()
 	if err != nil {
@@ -80,7 +91,7 @@ func main() {
 
 	var all stringset.Set
 	for _, user := range flag.Args() {
-		site := *host
+		site := *repoHost
 		if uhost := strings.SplitN(user, "@", 2); len(uhost) == 2 {
 			user, site = uhost[0], uhost[1]
 		}
