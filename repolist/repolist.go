@@ -100,10 +100,9 @@ func main() {
 			log.Fatalf("No query information for host site %q", site)
 		}
 
-		log.Printf("Listing %s repositories for %q...", site, user)
 		repos, err := hi.fetch(user)
 		if err != nil {
-			log.Fatalf("Listing %s repository list for %q failed: %v", site, user, err)
+			log.Fatalf("Fetching %s repository list for %q failed: %v", site, user, err)
 		}
 		all.Add(repos...)
 	}
