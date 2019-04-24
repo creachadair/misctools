@@ -76,8 +76,7 @@ func run(ctx context.Context) int {
 	sig := make(chan os.Signal, 2)
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
-		select {
-		case s := <-sig:
+		if s, ok := <-sig; ok {
 			logPrintf("Received %v signal; stopping...", s)
 			cancel()
 		}
