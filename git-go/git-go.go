@@ -27,6 +27,7 @@ Subcommands:
   test, tests  : run "go test" over all packages
   vet          : run "go vet" over all packages
   lint         : run "golint" over all packages (if installed)
+  static       : run "staticheck" over all packages (if installed)
   fmt, format  : run "gofmt -s" over all packages (if installed)
   check        : run all the above checks
 
@@ -35,7 +36,7 @@ Subcommands:
                  subcommand defaults to "presubmit"
 
 Set GITGO_<tag>=warn to convert failures into warnings, where tag is one of
-  TEST, VET, LINT, FMT
+  TEST, VET, LINT, FMT, STATIC
 `)
 		flag.PrintDefaults()
 	}
@@ -81,7 +82,7 @@ func run() error {
 	if len(args) == 1 {
 		switch args[0] {
 		case "check":
-			args = []string{"fmt", "test", "vet", "lint"}
+			args = []string{"fmt", "test", "vet", "lint", "static"}
 		case "presubmit":
 			args = []string{"fmt", "test", "vet"}
 		}
@@ -98,6 +99,9 @@ func run() error {
 
 			case "lint":
 				return check("lint", invoke(runLint(root)))
+
+			case "static":
+				return check("static", invoke(runStatic(root)))
 
 			case "presubmit":
 				fumpt := check("fmt", invoke(runFumpt(root)))
@@ -150,6 +154,8 @@ func runTests(path string) *exec.Cmd { return gocmd(path, "test", "-race", "-cpu
 func runVet(path string) *exec.Cmd { return gocmd(path, "vet", "./...") }
 
 func runLint(path string) *exec.Cmd { return runcmd("golint", path, "-set_exit_status", "./...") }
+
+func runStatic(path string) *exec.Cmd { return runcmd("staticcheck", path, "./...") }
 
 func runFumpt(path string) *exec.Cmd {
 	const script = `find . -type f -name '*.go' -print0 \
