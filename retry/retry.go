@@ -46,7 +46,6 @@ Options:
 const (
 	exitDone    = 0 // command complete
 	exitStartup = 1 // error starting up the command
-	exitTimeout = 2 // timed out waiting for the command to run
 )
 
 func main() {
