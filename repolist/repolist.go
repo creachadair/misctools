@@ -56,8 +56,8 @@ well-known hosting sites. By default the -host flag determines which site
 applies to each user; or use "user@site" to specify a different one per user.
 
 By default, API requests are made without authentication. Set the environment
-variable REPOLIST_AUTH to "username:token" will authenticate the request with
-those credentials.
+variable REPOLIST_AUTH to "username:token" to authenticate the request with
+those credentials using basic auth.
 
 Options:
 `, filepath.Base(os.Args[0]))
