@@ -55,6 +55,10 @@ List the names of public Git repositories owned by the specified users on
 well-known hosting sites. By default the -host flag determines which site
 applies to each user; or use "user@site" to specify a different one per user.
 
+By default, API requests are made without authentication. Set the environment
+variable REPOLIST_AUTH to "username:token" will authenticate the request with
+those credentials.
+
 Options:
 `, filepath.Base(os.Args[0]))
 		flag.PrintDefaults()
@@ -68,18 +72,34 @@ type hostInfo struct {
 
 func (h hostInfo) fetch(user string) ([]string, error) {
 	query := strings.ReplaceAll(h.url, "{}", user)
-	rsp, err := http.Get(query)
+	req, err := http.NewRequest("GET", query, nil)
+	if err != nil {
+		return nil, fmt.Errorf("http request: %v", err)
+	}
+
+	// Check for authorization credentials in the environment.
+	if auth := os.Getenv("REPOLIST_AUTH"); strings.Contains(auth, ":") {
+		parts := strings.SplitN(auth, ":", 2)
+		req.SetBasicAuth(parts[0], parts[1])
+	}
+
+	// Issue the query and recover the JSON response blob.
+	rsp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("http get: %v", err)
 	}
 	defer rsp.Body.Close()
-	if rsp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("http get: %s", rsp.Status)
-	}
+
 	data, err := ioutil.ReadAll(rsp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("http body: %v", err)
 	}
+	if rsp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("http get: %s (%s)", rsp.Status, string(data))
+	}
+
+	// Decode the JSON response into structures and evaluate the host query to
+	// extract repository names and details.
 	var obj interface{}
 	if err := json.Unmarshal(data, &obj); err != nil {
 		return nil, fmt.Errorf("json unmarshal: %v", err)
