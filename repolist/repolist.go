@@ -1,21 +1,21 @@
 // Program repolist prints a list of the public repositories owned by one or
-// more users or organizations on common hosting sites.
-//
-// This program requires jq to be installed (https://stedolan.github.io/jq/).
-// It currently understands the GitHub and Bitbucket APIs.
+// more users or organizations on common hosting sites.  It currently
+// understands the GitHub and Bitbucket APIs.
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"bitbucket.org/creachadair/stringset"
+	"bitbucket.org/creachadair/vql"
 )
 
 var (
@@ -24,14 +24,23 @@ var (
 
 	hostMap = map[string]hostInfo{
 		"github": {
-			url:   "https://api.github.com/users/{}/repos",
-			query: ".[]|select(.fork|not)|.html_url",
-			forks: ".[].html_url",
+			url: "https://api.github.com/users/{}/repos",
+			query: vql.Each(vql.Bind(map[string]vql.Query{
+				"url":    vql.Key("html_url"),
+				"isFork": vql.Key("fork"),
+			})),
 		},
 		"bitbucket": {
-			url:   "https://api.bitbucket.org/2.0/repositories/{}",
-			query: ".values[]|select(.parent|not)|.links.html.href",
-			forks: ".values[].links.html.href",
+			url: "https://api.bitbucket.org/2.0/repositories/{}",
+			query: vql.Seq{
+				vql.Key("values"),
+				vql.Each(vql.Bind(map[string]vql.Query{
+					"url": vql.Keys("links", "html", "href"),
+					"isFork": vql.As(vql.Key("parent"), func(obj interface{}) interface{} {
+						return obj != nil
+					}),
+				})),
+			},
 		},
 	}
 )
@@ -52,15 +61,7 @@ Options:
 
 type hostInfo struct {
 	url   string
-	query string // only non-fork repositories
-	forks string // all repositories, including forks
-}
-
-func (h hostInfo) jq() string {
-	if *includeForks {
-		return h.forks
-	}
-	return h.query
+	query vql.Query
 }
 
 func (h hostInfo) fetch(user string) ([]string, error) {
@@ -73,13 +74,26 @@ func (h hostInfo) fetch(user string) ([]string, error) {
 	if rsp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("http get: %s", rsp.Status)
 	}
-	cmd := exec.Command("jq", "-r", h.jq())
-	cmd.Stdin = rsp.Body
-	data, err := cmd.Output()
+	data, err := ioutil.ReadAll(rsp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("jq parse: %v", err)
+		return nil, fmt.Errorf("http body: %v", err)
 	}
-	return strings.Split(strings.TrimSpace(string(data)), "\n"), nil
+	var obj interface{}
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return nil, fmt.Errorf("json unmarshal: %v", err)
+	}
+	v, err := vql.Eval(h.query, obj)
+	if err != nil {
+		return nil, fmt.Errorf("eval: %v", err)
+	}
+	var names []string
+	for _, elt := range v.([]interface{}) {
+		repo := elt.(map[string]interface{})
+		if *includeForks || !repo["isFork"].(bool) {
+			names = append(names, repo["url"].(string))
+		}
+	}
+	return names, nil
 }
 
 func main() {
