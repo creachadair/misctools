@@ -1,6 +1,6 @@
 bitbucket.org/creachadair/stringset v0.0.5 h1:30tjoubbPMW4WDfObeby7U00dLvKBRVRyoz4kPEEICI=
 bitbucket.org/creachadair/stringset v0.0.5/go.mod h1:Sh09n+mAanyIbrkX0MICAEZcqXVbuFi8L0P/dbrhH2A=
-bitbucket.org/creachadair/vql v0.0.9 h1:Q9XZMIpVYuohxDKNU9D+DKuE82R0+zUGf2yMZpuTQT4=
-bitbucket.org/creachadair/vql v0.0.9/go.mod h1:2EcZ0fXr6cH1aDnZIwlkwRupu0c5wliPzGo+il+/arE=
+bitbucket.org/creachadair/vql v0.0.10 h1:ogdKE+5B87DmjwuYr8nYY9EDN+qmn33HpbFe4DebVls=
+bitbucket.org/creachadair/vql v0.0.10/go.mod h1:2EcZ0fXr6cH1aDnZIwlkwRupu0c5wliPzGo+il+/arE=
 github.com/kylelemons/godebug v0.0.0-20170820004349-d65d576e9348 h1:MtvEpTB6LX3vkb4ax0b5D2DHbNAUsen0Gx5wZoq3lV4=
 github.com/kylelemons/godebug v0.0.0-20170820004349-d65d576e9348/go.mod h1:B69LEHPfb2qLo0BaaOLcbitczOKLWTsrBG9LczfCD4k=

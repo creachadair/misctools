@@ -38,11 +38,9 @@ var (
 			query: vql.Seq{
 				vql.Key("values"),
 				vql.Each(vql.Bind(map[string]vql.Query{
-					"url":  vql.Keys("links", "html", "href"),
-					"desc": vql.Key("description"),
-					"isFork": vql.With(vql.Key("parent"), func(obj interface{}) interface{} {
-						return obj != nil
-					}),
+					"url":    vql.Keys("links", "html", "href"),
+					"desc":   vql.Key("description"),
+					"isFork": vql.Seq{vql.Key("parent"), vql.As(vql.NotNil)},
 				})),
 			},
 		},
