@@ -27,6 +27,7 @@ var (
 			url: "https://api.github.com/users/{}/repos",
 			query: vql.Each(vql.Bind(map[string]vql.Query{
 				"url":    vql.Key("html_url"),
+				"desc":   vql.Key("description"),
 				"isFork": vql.Key("fork"),
 			})),
 		},
@@ -35,7 +36,8 @@ var (
 			query: vql.Seq{
 				vql.Key("values"),
 				vql.Each(vql.Bind(map[string]vql.Query{
-					"url": vql.Keys("links", "html", "href"),
+					"url":  vql.Keys("links", "html", "href"),
+					"desc": vql.Key("description"),
 					"isFork": vql.As(vql.Key("parent"), func(obj interface{}) interface{} {
 						return obj != nil
 					}),
