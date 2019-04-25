@@ -22,6 +22,7 @@ import (
 var (
 	repoHost     = flag.String("host", "github", "Default repository host")
 	includeForks = flag.Bool("forks", false, "Include forks in listing")
+	doJSON       = flag.Bool("json", false, "Emit output as JSON objects")
 	authToken    = flag.String("auth", "", "Use this username:token to authenticate to the host")
 
 	hostMap = map[string]hostInfo{
@@ -29,7 +30,7 @@ var (
 			url: "https://api.github.com/users/{}/repos",
 			query: vql.Each(vql.Bind(map[string]vql.Query{
 				"url":    vql.Key("html_url"),
-				"desc":   vql.Key("description"),
+				"desc":   vql.Or{vql.Key("description"), vql.Const("")},
 				"isFork": vql.Key("fork"),
 			})),
 		},
@@ -39,7 +40,7 @@ var (
 				vql.Key("values"),
 				vql.Each(vql.Bind(map[string]vql.Query{
 					"url":    vql.Keys("links", "html", "href"),
-					"desc":   vql.Key("description"),
+					"desc":   vql.Or{vql.Key("description"), vql.Const("")},
 					"isFork": vql.Seq{vql.Key("parent"), vql.As(vql.NotNil)},
 				})),
 			},
@@ -57,6 +58,12 @@ applies to each user; or use "user@site" to specify a different one per user.
 
 By default, API requests are made without authentication. Set the -auth flag to
 "username:token" to authenticate the request with those credentials.
+
+With -json, each repository is written out as a JSON object containing keys:
+
+  url:    The fetch URL for the repository (string)
+  isFork: Whether the repository is a fork (bool)
+  desc:   The description of the repository (string)
 
 Options:
 `, filepath.Base(os.Args[0]))
@@ -114,7 +121,15 @@ func (h hostInfo) fetch(user string) ([]string, error) {
 	for _, elt := range v.([]interface{}) {
 		repo := elt.(map[string]interface{})
 		if *includeForks || !repo["isFork"].(bool) {
-			names = append(names, repo["url"].(string))
+			if *doJSON {
+				bits, err := json.Marshal(repo)
+				if err != nil {
+					return nil, fmt.Errorf("render: %v", err)
+				}
+				names = append(names, string(bits))
+			} else {
+				names = append(names, repo["url"].(string))
+			}
 		}
 	}
 	return names, nil
