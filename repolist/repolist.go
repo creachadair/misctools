@@ -5,6 +5,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -21,6 +22,7 @@ import (
 var (
 	repoHost     = flag.String("host", "github", "Default repository host")
 	includeForks = flag.Bool("forks", false, "Include forks in listing")
+	authToken    = flag.String("auth", "", "Use this username:token to authenticate to the host")
 
 	hostMap = map[string]hostInfo{
 		"github": {
@@ -55,9 +57,8 @@ List the names of public Git repositories owned by the specified users on
 well-known hosting sites. By default the -host flag determines which site
 applies to each user; or use "user@site" to specify a different one per user.
 
-By default, API requests are made without authentication. Set the environment
-variable REPOLIST_AUTH to "username:token" to authenticate the request with
-those credentials using basic auth.
+By default, API requests are made without authentication. Set the -auth flag to
+"username:token" to authenticate the request with those credentials.
 
 Options:
 `, filepath.Base(os.Args[0]))
@@ -77,9 +78,12 @@ func (h hostInfo) fetch(user string) ([]string, error) {
 		return nil, fmt.Errorf("http request: %v", err)
 	}
 
-	// Check for authorization credentials in the environment.
-	if auth := os.Getenv("REPOLIST_AUTH"); strings.Contains(auth, ":") {
-		parts := strings.SplitN(auth, ":", 2)
+	// Check for authorization credentials.
+	if *authToken != "" {
+		parts := strings.SplitN(*authToken, ":", 2)
+		if len(parts) != 2 {
+			return nil, errors.New("invalid auth token format")
+		}
 		req.SetBasicAuth(parts[0], parts[1])
 	}
 
