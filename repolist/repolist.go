@@ -120,16 +120,17 @@ func (h hostInfo) fetch(user string) ([]string, error) {
 	var names []string
 	for _, elt := range v.([]interface{}) {
 		repo := elt.(map[string]interface{})
-		if *includeForks || !repo["isFork"].(bool) {
-			if *doJSON {
-				bits, err := json.Marshal(repo)
-				if err != nil {
-					return nil, fmt.Errorf("render: %v", err)
-				}
-				names = append(names, string(bits))
-			} else {
-				names = append(names, repo["url"].(string))
+		if repo["isFork"].(bool) && !*includeForks {
+			continue
+		}
+		if *doJSON {
+			bits, err := json.Marshal(repo)
+			if err != nil {
+				return nil, fmt.Errorf("render: %v", err)
 			}
+			names = append(names, string(bits))
+		} else {
+			names = append(names, repo["url"].(string))
 		}
 	}
 	return names, nil
