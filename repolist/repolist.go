@@ -27,7 +27,7 @@ var (
 
 	hostMap = map[string]hostInfo{
 		"github": {
-			url: "https://api.github.com/users/{}/repos",
+			url: "https://api.github.com/users/{}/repos?per_page=100",
 			query: vql.Each(vql.Bind(map[string]vql.Query{
 				"url":    vql.Key("html_url"),
 				"desc":   vql.Or{vql.Key("description"), vql.Const("")},
@@ -35,7 +35,7 @@ var (
 			})),
 		},
 		"bitbucket": {
-			url: "https://api.bitbucket.org/2.0/repositories/{}",
+			url: "https://api.bitbucket.org/2.0/repositories/{}?pagelen=100",
 			query: vql.Seq{
 				vql.Key("values"),
 				vql.Each(vql.Bind(map[string]vql.Query{
