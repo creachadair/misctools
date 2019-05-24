@@ -94,7 +94,7 @@ func gitCurrentBranch(ctx context.Context) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return string(out), nil
+	return strings.TrimSpace(string(out)), nil
 }
 
 type result struct {
