@@ -37,6 +37,11 @@ Subcommands:
 
 Set GITGO_<tag>=warn to convert failures into warnings, where tag is one of
   TEST, VET, LINT, FMT, STATIC
+
+When using "presubmit" or "check", additional arguments are added to or removed
+from the base set, e.g., "presubmit static" means fmt, test, vet, and static,
+while "check -vet" means all the tests except vet.
+
 `)
 		flag.PrintDefaults()
 	}
@@ -79,12 +84,16 @@ func run() error {
 		return err
 	}
 	args := flag.Args()
-	if len(args) == 1 {
+	if len(args) >= 1 {
+		fix := args[1:]
 		switch args[0] {
 		case "check":
 			args = []string{"fmt", "test", "vet", "lint", "static"}
 		case "presubmit":
 			args = []string{"fmt", "test", "vet"}
+		}
+		for _, arg := range fix {
+			update(&args, arg)
 		}
 	}
 	var nerr int
@@ -214,4 +223,18 @@ func check(tag string, err error) error {
 		return nil
 	}
 	return err
+}
+
+func update(args *[]string, arg string) {
+	trim := strings.TrimPrefix(arg, "-")
+	drop := trim != arg
+	for i, cur := range *args {
+		if cur == trim {
+			if drop {
+				*args = append((*args)[:i], (*args)[i+1:]...)
+			}
+			return
+		}
+	}
+	*args = append(*args, trim)
 }
