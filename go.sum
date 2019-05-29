@@ -1,6 +1,16 @@
+bitbucket.org/creachadair/ffs v0.0.0-20190528195352-ad10196e03d9 h1:b9gaeY2NNcMd9uA+rG1gu3uxB8lH2dziNz6xfTl4yd0=
+bitbucket.org/creachadair/ffs v0.0.0-20190528195352-ad10196e03d9/go.mod h1:gm0n5wYJIaIynKEx2+S/bsBknEZAJj6xi6JstgF2y34=
+bitbucket.org/creachadair/shell v0.0.5 h1:OZvECJl/+hhmLskrBOrodFr4mhpH7C/UO5zEWGjnUW8=
+bitbucket.org/creachadair/shell v0.0.5/go.mod h1:8Qqi/cYk7vPnsOePHroKXDJYmb5x7ENhtiFtfZq8K+M=
 bitbucket.org/creachadair/stringset v0.0.5 h1:30tjoubbPMW4WDfObeby7U00dLvKBRVRyoz4kPEEICI=
 bitbucket.org/creachadair/stringset v0.0.5/go.mod h1:Sh09n+mAanyIbrkX0MICAEZcqXVbuFi8L0P/dbrhH2A=
+bitbucket.org/creachadair/vocab v0.0.2 h1:Ze1UwBlI8FE3GC7+bqks24s0yHHwNzelZ26CcaW4lvA=
+bitbucket.org/creachadair/vocab v0.0.2/go.mod h1:J6vb+l4PZ5gMKMhkIHpmtD+8wKdXqHgAo0tb4BQt954=
 bitbucket.org/creachadair/vql v0.0.14 h1:qEBDRpUfOfjoyMF8fNILZBZJYAa1a+0tNAAz6WMUSx4=
 bitbucket.org/creachadair/vql v0.0.14/go.mod h1:tEBw5z3/ibTARkItJ3iynFhtHqkpEhckAQu7NOUF9Y0=
+github.com/golang/protobuf v1.3.1/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
+github.com/golang/snappy v0.0.1/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
 github.com/google/go-cmp v0.3.0 h1:crn/baboCvb5fXaQ0IJ1SGTsTVrWpDsCWC8EGETZijY=
 github.com/google/go-cmp v0.3.0/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
+golang.org/x/xerrors v0.0.0-20190513163551-3ee3066db522 h1:bhOzK9QyoD0ogCnFro1m2mz41+Ib0oOhfJnBp5MR4K4=
+golang.org/x/xerrors v0.0.0-20190513163551-3ee3066db522/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
