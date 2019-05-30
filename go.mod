@@ -5,7 +5,7 @@ go 1.12
 require (
 	bitbucket.org/creachadair/ffs v0.0.0-20190529161352-8c0e8406206d
 	bitbucket.org/creachadair/getpass v0.0.2
-	bitbucket.org/creachadair/keyfile v0.0.3
+	bitbucket.org/creachadair/keyfile v0.0.4
 	bitbucket.org/creachadair/stringset v0.0.5
 	bitbucket.org/creachadair/vocab v0.0.2
 	bitbucket.org/creachadair/vql v0.0.14

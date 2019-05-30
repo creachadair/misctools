@@ -48,6 +48,31 @@ func (getCmd) Run(ctx context.Context, args []string) error {
 	return nil
 }
 
+type randCmd struct {
+	Len int `flag:"n,Length of generated key in bytes"`
+}
+
+func (r randCmd) Run(ctx context.Context, args []string) error {
+	if len(args) == 0 {
+		return xerrors.New("usage: rand <slug>")
+	} else if r.Len <= 0 {
+		return xerrors.Errorf("rand: invalid length %d", r.Len)
+	}
+	pp, err := tool(ctx).passphrase(ctx)
+	if err != nil {
+		return err
+	}
+	data, err := tool(ctx).File.Random(args[0], pp, r.Len)
+	if err != nil {
+		return err
+	}
+	if err := tool(ctx).save(ctx); err != nil {
+		return err
+	}
+	os.Stdout.Write(data)
+	return nil
+}
+
 type setCmd struct{}
 
 func (setCmd) Run(ctx context.Context, args []string) error {
@@ -105,11 +130,12 @@ type kftool struct {
 	File *keyfile.File
 
 	Help vocab.Help `vocab:"help"`
-	List listCmd    `vocab:"list,ls" help-summary:"List the key slugs in the keyfile"`
-	Set  setCmd     `vocab:"set" help-summary:"Store the contents of stdin as a key"`
-	Get  getCmd     `vocab:"get" help-summary:"Write the specified key to stdout"`
 	Del  delCmd     `vocab:"remove,delete,del,rm" help-summary:"Delete the specified key"`
+	Get  getCmd     `vocab:"get" help-summary:"Write the specified key to stdout"`
 	JSON jsonCmd    `vocab:"json" help-summary:"Write the keyfile as JSON to stdout"`
+	List listCmd    `vocab:"list,ls" help-summary:"List the key slugs in the keyfile"`
+	Rand randCmd    `vocab:"rand" help-summary:"Generate and store a random key of a specified length"`
+	Set  setCmd     `vocab:"set" help-summary:"Store the contents of stdin as a key"`
 
 	_ struct{} `help-summary:"A tool to read and write keyfiles"`
 }
