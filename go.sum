@@ -1,5 +1,5 @@
-bitbucket.org/creachadair/ffs v0.0.0-20190529041320-bc7131aeee97 h1:JbI37x4hxobwtSt/teLf+D2HtsAKI3xvodQHbdtyOs4=
-bitbucket.org/creachadair/ffs v0.0.0-20190529041320-bc7131aeee97/go.mod h1:0n9cWBHhL8cq8fSm4tSghbceQPJUUsHmzj08z/0WQCI=
+bitbucket.org/creachadair/ffs v0.0.0-20190529161352-8c0e8406206d h1:UcX7/m5wYChWCMoUG8sDysJQKi/9F3io8GIwPtPMaBM=
+bitbucket.org/creachadair/ffs v0.0.0-20190529161352-8c0e8406206d/go.mod h1:0n9cWBHhL8cq8fSm4tSghbceQPJUUsHmzj08z/0WQCI=
 bitbucket.org/creachadair/getpass v0.0.2 h1:0sv0P7lFb1KK/Vg6/PKRy5/mEDP4+DawsP8qM2hTJ6c=
 bitbucket.org/creachadair/getpass v0.0.2/go.mod h1:/MCNdfWnl5p3BYJdgmDRcevHiOCovCWNefh6EaN6LpY=
 bitbucket.org/creachadair/keyfile v0.0.3 h1:2FxZXcN95ctn8NpjTcURLQolmU4k6Q01TmFhMwWXq2Y=
@@ -20,11 +20,15 @@ github.com/google/go-cmp v0.3.0/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMyw
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20190513172903-22d7a77e9e5f h1:R423Cnkcp5JABoeemiGEPlt9tHXFfw5kvc0yqlxRPWo=
 golang.org/x/crypto v0.0.0-20190513172903-22d7a77e9e5f/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
+golang.org/x/crypto v0.0.0-20190530122614-20be4c3c3ed5 h1:8dUaAV7K4uHsF56JQWkprecIQKdPHtR9jCHF5nB8uzc=
+golang.org/x/crypto v0.0.0-20190530122614-20be4c3c3ed5/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
 golang.org/x/sys v0.0.0-20181221143128-b4a75ba826a6/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 golang.org/x/sys v0.0.0-20190412213103-97732733099d h1:+R4KGOnez64A81RvjARKc4UT5/tI9ujCIVX+P5KiHuI=
 golang.org/x/sys v0.0.0-20190412213103-97732733099d/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20190530182044-ad28b68e88f1 h1:R4dVlxdmKenVdMRS/tTspEpSTRWINYrHD8ySIU9yCIU=
+golang.org/x/sys v0.0.0-20190530182044-ad28b68e88f1/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/xerrors v0.0.0-20190513163551-3ee3066db522 h1:bhOzK9QyoD0ogCnFro1m2mz41+Ib0oOhfJnBp5MR4K4=
 golang.org/x/xerrors v0.0.0-20190513163551-3ee3066db522/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
