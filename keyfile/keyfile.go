@@ -49,14 +49,15 @@ func (getCmd) Run(ctx context.Context, args []string) error {
 }
 
 type randCmd struct {
-	Len int `flag:"n,Length of generated key in bytes"`
+	Len   int  `flag:"n,Length of generated key in bytes"`
+	Print bool `flag:"p,Write the generated key to stdout"`
 }
 
 func (r randCmd) Run(ctx context.Context, args []string) error {
 	if len(args) == 0 {
 		return xerrors.New("usage: rand <slug>")
 	} else if r.Len <= 0 {
-		return xerrors.Errorf("rand: invalid length %d", r.Len)
+		return xerrors.Errorf("rand: length must be positive (not %d)", r.Len)
 	}
 	pp, err := tool(ctx).passphrase(ctx)
 	if err != nil {
@@ -65,11 +66,12 @@ func (r randCmd) Run(ctx context.Context, args []string) error {
 	data, err := tool(ctx).File.Random(args[0], pp, r.Len)
 	if err != nil {
 		return err
-	}
-	if err := tool(ctx).save(ctx); err != nil {
+	} else if err := tool(ctx).save(ctx); err != nil {
 		return err
 	}
-	os.Stdout.Write(data)
+	if r.Print {
+		os.Stdout.Write(data)
+	}
 	return nil
 }
 
