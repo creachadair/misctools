@@ -158,7 +158,7 @@ func (k *kftool) Init(ctx context.Context, name string, args []string) (context.
 	}
 
 	f, err := os.Open(k.Path)
-	if os.IsNotExist(err) {
+	if os.IsNotExist(err) && (name == "set" || name == "rand") {
 		k.File = keyfile.New()
 		return context.WithValue(ctx, rootKey{}, k), nil
 	} else if err != nil {
