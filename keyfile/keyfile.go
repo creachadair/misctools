@@ -5,6 +5,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/base64"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -28,9 +29,11 @@ func main() {
 	}
 }
 
-type getCmd struct{}
+type getCmd struct {
+	Base64 bool `flag:"a,Encode the output key as base64"`
+}
 
-func (getCmd) Run(ctx context.Context, args []string) error {
+func (g getCmd) Run(ctx context.Context, args []string) error {
 	if len(args) == 0 {
 		return xerrors.New("usage: get <slug>")
 	} else if !tool(ctx).File.Has(args[0]) {
@@ -44,13 +47,14 @@ func (getCmd) Run(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
-	os.Stdout.Write(data)
+	printKey(data, g.Base64)
 	return nil
 }
 
 type randCmd struct {
-	Len   int  `flag:"n,Length of generated key in bytes"`
-	Print bool `flag:"p,Write the generated key to stdout"`
+	Len    int  `flag:"n,Length of generated key in bytes"`
+	Print  bool `flag:"p,Write the generated key to stdout"`
+	Base64 bool `flag:"a,Encode the output key as base64"`
 }
 
 func (r randCmd) Run(ctx context.Context, args []string) error {
@@ -70,7 +74,7 @@ func (r randCmd) Run(ctx context.Context, args []string) error {
 		return err
 	}
 	if r.Print {
-		os.Stdout.Write(data)
+		printKey(data, r.Base64)
 	}
 	return nil
 }
@@ -184,4 +188,12 @@ func (k *kftool) save(ctx context.Context) error {
 
 func (k *kftool) passphrase(ctx context.Context) (string, error) {
 	return getpass.Prompt("Passphrase: ")
+}
+
+func printKey(data []byte, armor bool) {
+	if armor {
+		fmt.Println(base64.StdEncoding.EncodeToString(data))
+	} else {
+		os.Stdout.Write(data)
+	}
 }
