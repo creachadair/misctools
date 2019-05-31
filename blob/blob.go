@@ -23,17 +23,7 @@ import (
 )
 
 func init() {
-	// Register storage implementations.
-	if err := store.Default.Register("file",
-		func(ctx context.Context, addr string) (blob.Store, error) {
-			dir := strings.TrimPrefix(addr, "file://")
-			if dir == addr {
-				return nil, xerrors.Errorf("invalid file address: %q", addr)
-			}
-			return filestore.New(dir)
-		}); err != nil {
-		log.Fatalf("Register file: %v", err)
-	}
+	store.Default.Register("file", filestore.Opener)
 }
 
 func main() {
@@ -255,7 +245,7 @@ func (casKeyCmd) Run(ctx context.Context, args []string) error {
 }
 
 type tool struct {
-	URL   string     `flag:"url,Blob store URL (required)"`
+	Addr  string     `flag:"store,Blob store address (required)"`
 	Store storeGroup `vocab:"store" help-summary:"Manipulate a raw blob store"`
 	CAS   casGroup   `vocab:"cas" help-summary:"Manipulate a content-addressable blob store"`
 	Help  vocab.Help `vocab:"help"`
@@ -271,10 +261,10 @@ type toolKey struct{}
 
 func storeFromContext(ctx context.Context) (blob.Store, error) {
 	t := ctx.Value(toolKey{}).(*tool)
-	if t.URL == "" {
+	if t.Addr == "" {
 		return nil, xerrors.New("no store -url was specified")
 	}
-	return store.Default.Open(ctx, t.URL)
+	return store.Default.Open(ctx, t.Addr)
 }
 
 type casKey struct{}
