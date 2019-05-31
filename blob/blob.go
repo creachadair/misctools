@@ -40,17 +40,6 @@ func main() {
 	}
 }
 
-type storeGroup struct {
-	Get  getCmd  `vocab:"get" help-summary:"Read a blob from the store"`
-	Put  putCmd  `vocab:"put" help-summary:"Write a blob to the store"`
-	Size sizeCmd `vocab:"size" help-summary:"Print the size of a stored blob"`
-	Del  delCmd  `vocab:"delete,del" help-summary:"Delete a blob from the store"`
-	List listCmd `vocab:"list,ls" help-summary:"List keys in the store"`
-	Len  lenCmd  `vocab:"len,length" help-summary:"Print the number of stored keys"`
-
-	_ struct{} `help-long:"To specify blob keys literally, prefix them with @. To escape a leading @, double it.\nPrefix a base64-encoded key with \"+\". Otherwise, keys must be encoded in hexadecimal."`
-}
-
 type getCmd struct{}
 
 func (getCmd) Run(ctx context.Context, args []string) error {
@@ -85,14 +74,15 @@ func (p putCmd) Run(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
-	data, err := readData(ctx, "put", args[1:])
-	if err != nil {
-		return err
-	}
 	bs, err := storeFromContext(ctx)
 	if err != nil {
 		return nil
 	}
+	data, err := readData(ctx, "put", args[1:])
+	if err != nil {
+		return err
+	}
+
 	return bs.Put(ctx, blob.PutOptions{
 		Key:     key,
 		Data:    data,
@@ -187,13 +177,8 @@ func (lenCmd) Run(ctx context.Context, args []string) error {
 type casGroup struct {
 	Hash string `flag:"hash,CAS hash algorithm"`
 
-	Del  delCmd    `vocab:"delete,del" help-summary:"Delete a blob from the store"`
-	Get  getCmd    `vocab:"get" help-summary:"Read a blob from the store"`
-	Key  casKeyCmd `vocab:"key" help-summary:"Compute the key for a blob without writing it"`
-	Len  lenCmd    `vocab:"len,length" help-summary:"Print the number of stored keys"`
-	List listCmd   `vocab:"list,ls" help-summary:"List keys in the store"`
-	Put  casPutCmd `vocab:"put" help-summary:"Write a content-addressed blob to the store"`
-	Size sizeCmd   `vocab:"size" help-summary:"Print the size of a stored blob"`
+	Key casKeyCmd `vocab:"key" help-summary:"Compute the key for a blob without writing it"`
+	Put casPutCmd `vocab:"put" help-summary:"Write a content-addressed blob to the store"`
 }
 
 func (c *casGroup) Init(ctx context.Context, name string, args []string) (context.Context, error) {
@@ -214,11 +199,11 @@ func readData(ctx context.Context, cmd string, args []string) (data []byte, err 
 type casPutCmd struct{}
 
 func (casPutCmd) Run(ctx context.Context, args []string) error {
-	data, err := readData(ctx, "put", args)
+	cas, err := casFromContext(ctx)
 	if err != nil {
 		return err
 	}
-	cas, err := casFromContext(ctx)
+	data, err := readData(ctx, "put", args)
 	if err != nil {
 		return err
 	}
@@ -246,12 +231,19 @@ func (casKeyCmd) Run(ctx context.Context, args []string) error {
 }
 
 type tool struct {
-	Addr  string     `flag:"store,Blob store address (required)"`
-	Store storeGroup `vocab:"store" help-summary:"Manipulate a raw blob store"`
-	CAS   casGroup   `vocab:"cas" help-summary:"Manipulate a content-addressable blob store"`
-	Help  vocab.Help `vocab:"help"`
+	Addr string  `flag:"store,Blob store address (required)"`
+	Get  getCmd  `vocab:"get" help-summary:"Read a blob from the store"`
+	Put  putCmd  `vocab:"put" help-summary:"Write a blob to the store"`
+	Size sizeCmd `vocab:"size" help-summary:"Print the size of a stored blob"`
+	Del  delCmd  `vocab:"delete,del" help-summary:"Delete a blob from the store"`
+	List listCmd `vocab:"list,ls" help-summary:"List keys in the store"`
+	Len  lenCmd  `vocab:"len,length" help-summary:"Print the number of stored keys"`
+
+	CAS  casGroup   `vocab:"cas" help-summary:"Manipulate a content-addressable blob store"`
+	Help vocab.Help `vocab:"help"`
 
 	_ struct{} `help-summary:"Manipulate the contents of a blob store"`
+	_ struct{} `help-long:"To specify blob keys literally, prefix them with @. To escape a leading @, double it.\nPrefix a base64-encoded key with \"+\". Otherwise, keys must be encoded in hexadecimal."`
 }
 
 func (t *tool) Init(ctx context.Context, name string, args []string) (context.Context, error) {
@@ -263,7 +255,7 @@ type toolKey struct{}
 func storeFromContext(ctx context.Context) (blob.Store, error) {
 	t := ctx.Value(toolKey{}).(*tool)
 	if t.Addr == "" {
-		return nil, xerrors.New("no store -url was specified")
+		return nil, xerrors.New("no -store address was specified")
 	}
 	return store.Default.Open(ctx, t.Addr)
 }
