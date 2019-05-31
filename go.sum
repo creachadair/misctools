@@ -1,5 +1,5 @@
-bitbucket.org/creachadair/ffs v0.0.0-20190531061940-a50fdb02be9a h1:uWshIEAbXYRd1NRVUs0esHqcyuXFCUXsvfuns1Cwhzo=
-bitbucket.org/creachadair/ffs v0.0.0-20190531061940-a50fdb02be9a/go.mod h1:0n9cWBHhL8cq8fSm4tSghbceQPJUUsHmzj08z/0WQCI=
+bitbucket.org/creachadair/ffs v0.0.0-20190531174711-3baa4a14cfce h1:y6p2iLAkK+NgR+KXg0Q/cLUUVNAcUc9ACIyfkSAjQXU=
+bitbucket.org/creachadair/ffs v0.0.0-20190531174711-3baa4a14cfce/go.mod h1:0n9cWBHhL8cq8fSm4tSghbceQPJUUsHmzj08z/0WQCI=
 bitbucket.org/creachadair/getpass v0.0.2 h1:0sv0P7lFb1KK/Vg6/PKRy5/mEDP4+DawsP8qM2hTJ6c=
 bitbucket.org/creachadair/getpass v0.0.2/go.mod h1:/MCNdfWnl5p3BYJdgmDRcevHiOCovCWNefh6EaN6LpY=
 bitbucket.org/creachadair/keyfile v0.0.4 h1:w/aw6aRQPya9oi/ium9TMGleFqUMLWOiFAY1g84a41I=
@@ -14,6 +14,7 @@ bitbucket.org/creachadair/vql v0.0.14 h1:qEBDRpUfOfjoyMF8fNILZBZJYAa1a+0tNAAz6WM
 bitbucket.org/creachadair/vql v0.0.14/go.mod h1:tEBw5z3/ibTARkItJ3iynFhtHqkpEhckAQu7NOUF9Y0=
 github.com/golang/protobuf v1.3.1 h1:YF8+flBXS5eO826T4nzqPrxfhQThhXl0YzfuUPu4SBg=
 github.com/golang/protobuf v1.3.1/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
+github.com/golang/snappy v0.0.1 h1:Qgr9rKW7uDUkrbSmQeiDsGa8SjGyCOGtuasMWwvp2P4=
 github.com/golang/snappy v0.0.1/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
 github.com/google/go-cmp v0.3.0 h1:crn/baboCvb5fXaQ0IJ1SGTsTVrWpDsCWC8EGETZijY=
 github.com/google/go-cmp v0.3.0/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
