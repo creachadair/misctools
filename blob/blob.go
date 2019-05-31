@@ -6,6 +6,7 @@ import (
 	"context"
 	"crypto/sha1"
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"hash"
@@ -47,7 +48,7 @@ type storeGroup struct {
 	List listCmd `vocab:"list,ls" help-summary:"List keys in the store"`
 	Len  lenCmd  `vocab:"len,length" help-summary:"Print the number of stored keys"`
 
-	_ struct{} `help-long:"To specify blob keys literally, prefix them with @. To escape a leading @, double it.\nOtherwise, keys are expected to be encoded in hexadecimal."`
+	_ struct{} `help-long:"To specify blob keys literally, prefix them with @. To escape a leading @, double it.\nPrefix a base64-encoded key with \"+\". Otherwise, keys must be encoded in hexadecimal."`
 }
 
 type getCmd struct{}
@@ -298,6 +299,12 @@ func hashFromContext(ctx context.Context) (func() hash.Hash, error) {
 func parseKey(s string) (string, error) {
 	if strings.HasPrefix(s, "@") {
 		return s[1:], nil
+	} else if strings.HasPrefix(s, "+") {
+		key, err := base64.StdEncoding.DecodeString(s[1:])
+		if err != nil {
+			return "", xerrors.Errorf("invalid key %q: %w", s, err)
+		}
+		return string(key), nil
 	}
 	key, err := hex.DecodeString(s)
 	if err != nil {

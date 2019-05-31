@@ -3,7 +3,7 @@ module bitbucket.org/creachadair/misctools
 go 1.12
 
 require (
-	bitbucket.org/creachadair/ffs v0.0.0-20190529161352-8c0e8406206d
+	bitbucket.org/creachadair/ffs v0.0.0-20190531061940-a50fdb02be9a
 	bitbucket.org/creachadair/getpass v0.0.2
 	bitbucket.org/creachadair/keyfile v0.0.4
 	bitbucket.org/creachadair/stringset v0.0.5
