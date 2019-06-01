@@ -23,6 +23,20 @@ import (
 
 var dryRun = flag.Bool("dry-run", false, "Print the conversion script and exit")
 
+func init() {
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, `Usage: %[1]s [options] docfile...
+
+Convert Microsoft Word .doc files to .pdf. This tool uses the macOS Pages
+application and AppleScript to do the conversion, so it will not work on other
+systems. Filenames not ending in .doc are skipped.
+
+Options:
+`, filepath.Base(os.Args[0]))
+		flag.PrintDefaults()
+	}
+}
+
 func main() {
 	flag.Parse()
 
