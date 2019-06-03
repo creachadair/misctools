@@ -30,21 +30,21 @@ var (
 	hostMap = map[string]hostInfo{
 		"github": {
 			url: "https://api.github.com/users/{user}/repos?per_page=100&page={page}",
-			query: vql.Each(vql.Bind(map[string]vql.Query{
+			query: vql.Each(vql.Map{
 				"url":    vql.Key("html_url"),
 				"desc":   vql.Or{vql.Key("description"), vql.Const("")},
 				"isFork": vql.Key("fork"),
-			})),
+			}),
 		},
 		"bitbucket": {
 			url: "https://api.bitbucket.org/2.0/repositories/{user}?pagelen=100&page={page}",
 			query: vql.Seq{
 				vql.Key("values"),
-				vql.Each(vql.Bind(map[string]vql.Query{
+				vql.Each(vql.Map{
 					"url":    vql.Key("links", "html", "href"),
 					"desc":   vql.Or{vql.Key("description"), vql.Const("")},
 					"isFork": vql.Seq{vql.Key("parent"), vql.Func(vql.NotNil)},
-				})),
+				}),
 			},
 		},
 	}
@@ -129,7 +129,7 @@ func (h hostInfo) fetch(user string) ([]string, error) {
 
 		var names []string
 		for _, elt := range v.([]interface{}) {
-			repo := elt.(map[string]interface{})
+			repo := elt.(vql.Values)
 			if repo["isFork"].(bool) && !*includeForks {
 				continue
 			}
