@@ -10,8 +10,8 @@ bitbucket.org/creachadair/stringset v0.0.5 h1:30tjoubbPMW4WDfObeby7U00dLvKBRVRyo
 bitbucket.org/creachadair/stringset v0.0.5/go.mod h1:Sh09n+mAanyIbrkX0MICAEZcqXVbuFi8L0P/dbrhH2A=
 bitbucket.org/creachadair/vocab v0.0.2 h1:Ze1UwBlI8FE3GC7+bqks24s0yHHwNzelZ26CcaW4lvA=
 bitbucket.org/creachadair/vocab v0.0.2/go.mod h1:J6vb+l4PZ5gMKMhkIHpmtD+8wKdXqHgAo0tb4BQt954=
-bitbucket.org/creachadair/vql v0.0.14 h1:qEBDRpUfOfjoyMF8fNILZBZJYAa1a+0tNAAz6WMUSx4=
-bitbucket.org/creachadair/vql v0.0.14/go.mod h1:tEBw5z3/ibTARkItJ3iynFhtHqkpEhckAQu7NOUF9Y0=
+bitbucket.org/creachadair/vql v0.0.15 h1:Is8G2/SG3IWMsH6i3YaORUFr8+YtpnT3rc3NuuGNthE=
+bitbucket.org/creachadair/vql v0.0.15/go.mod h1:tEBw5z3/ibTARkItJ3iynFhtHqkpEhckAQu7NOUF9Y0=
 github.com/golang/protobuf v1.3.1 h1:YF8+flBXS5eO826T4nzqPrxfhQThhXl0YzfuUPu4SBg=
 github.com/golang/protobuf v1.3.1/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/golang/snappy v0.0.1 h1:Qgr9rKW7uDUkrbSmQeiDsGa8SjGyCOGtuasMWwvp2P4=

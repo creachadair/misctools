@@ -41,7 +41,7 @@ var (
 			query: vql.Seq{
 				vql.Key("values"),
 				vql.Each(vql.Bind(map[string]vql.Query{
-					"url":    vql.Keys("links", "html", "href"),
+					"url":    vql.Key("links", "html", "href"),
 					"desc":   vql.Or{vql.Key("description"), vql.Const("")},
 					"isFork": vql.Seq{vql.Key("parent"), vql.Func(vql.NotNil)},
 				})),
