@@ -31,15 +31,15 @@ func main() {
 	flag.Parse()
 	ctx := context.Background()
 
+	curBranch, err := gitCurrentBranch(ctx)
+	if err != nil {
+		log.Fatalf("Getting current branch: %v", err)
+	}
 	if *beforeBranch == "" {
 		*beforeBranch = "master"
 	}
 	if *afterBranch == "" {
-		cur, err := gitCurrentBranch(ctx)
-		if err != nil {
-			log.Fatalf("Getting current branch: %v", err)
-		}
-		*afterBranch = cur
+		*afterBranch = curBranch
 	}
 	if *beforeBranch == *afterBranch {
 		log.Fatalf("The -before and -after branches must be different (%q)", *beforeBranch)
@@ -68,6 +68,11 @@ func main() {
 		log.Fatalf("Running -after benchmark: %v", err)
 	}
 	fmt.Fprintf(os.Stderr, "AFTER [done] %d results, %v elapsed\n\n", len(after), time.Since(start))
+
+	// Try to get back to where we started.
+	if err := gitCheckout(ctx, curBranch); err != nil {
+		log.Printf("Warning: unable to switch back to %q: %v", curBranch, err)
+	}
 
 	// Summarize the results as a table to stdout.
 	w := tabwriter.NewWriter(os.Stdout, 0, 8, 3, ' ', 0)
