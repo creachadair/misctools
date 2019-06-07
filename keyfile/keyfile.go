@@ -82,14 +82,19 @@ func (r randCmd) Run(ctx context.Context, args []string) error {
 type setCmd struct{}
 
 func (setCmd) Run(ctx context.Context, args []string) error {
-	if len(args) == 0 {
-		return xerrors.New("usage: set <slug>")
+	if len(args) == 0 || len(args) > 2 {
+		return xerrors.New("usage: set <slug> [<path>]")
 	}
 	pp, err := tool(ctx).passphrase(ctx)
 	if err != nil {
 		return err
 	}
-	data, err := ioutil.ReadAll(os.Stdin)
+	var data []byte
+	if len(args) == 2 {
+		data, err = ioutil.ReadFile(args[1])
+	} else {
+		data, err = ioutil.ReadAll(os.Stdin)
+	}
 	if err != nil {
 		return err
 	}
