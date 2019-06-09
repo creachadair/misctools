@@ -17,6 +17,8 @@ import (
 	"strings"
 
 	"bitbucket.org/creachadair/ffs/blob"
+	"bitbucket.org/creachadair/ffs/blob/codecs/zlib"
+	"bitbucket.org/creachadair/ffs/blob/encoded"
 	"bitbucket.org/creachadair/ffs/blob/filestore"
 	"bitbucket.org/creachadair/ffs/blob/store"
 	"bitbucket.org/creachadair/vocab"
@@ -25,6 +27,13 @@ import (
 
 func init() {
 	store.Default.Register("file", filestore.Opener)
+	store.Default.Register("zlib", func(ctx context.Context, addr string) (blob.Store, error) {
+		s, err := filestore.Opener(ctx, addr)
+		if err != nil {
+			return nil, err
+		}
+		return encoded.New(s, zlib.NewCodec(zlib.LevelDefault)), nil
+	})
 }
 
 func main() {
