@@ -1,4 +1,4 @@
-module bitbucket.org/creachadair/misctools
+module github.com/creachadair/misctools
 
 go 1.12
 
