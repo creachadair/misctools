@@ -17,7 +17,7 @@ import (
 	"strings"
 
 	"bitbucket.org/creachadair/stringset"
-	"bitbucket.org/creachadair/vql"
+	"github.com/creachadair/vql"
 )
 
 var (
