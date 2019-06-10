@@ -1,7 +1,3 @@
-bitbucket.org/creachadair/atomicfile v0.1.1 h1:2FMf8JuYGte9GCVuuMm8ixi1In7ylfFOMe4rTMkDjh0=
-bitbucket.org/creachadair/atomicfile v0.1.1/go.mod h1:afm1w1sVyLuvRzciYQQVQiPWIlhwjYgDUhspvHMG4/w=
-bitbucket.org/creachadair/ffs v0.0.0-20190609065103-ea7f832dcb8e h1:TKYQmH1rubEOp6JowrTvfqR6dyvTgr0dTncqSbwjyzw=
-bitbucket.org/creachadair/ffs v0.0.0-20190609065103-ea7f832dcb8e/go.mod h1:qasJpiVJ3G9kFMxX79Lpsgtc1SWdkygmlCGLcLzBmk8=
 bitbucket.org/creachadair/getpass v0.0.2 h1:0sv0P7lFb1KK/Vg6/PKRy5/mEDP4+DawsP8qM2hTJ6c=
 bitbucket.org/creachadair/getpass v0.0.2/go.mod h1:/MCNdfWnl5p3BYJdgmDRcevHiOCovCWNefh6EaN6LpY=
 bitbucket.org/creachadair/keyfile v0.0.6 h1:vCpmgc9usST8odII4rNKoHzqj4MB/QbOnsuohObDuNk=
@@ -14,6 +10,10 @@ bitbucket.org/creachadair/stringset v0.0.5 h1:30tjoubbPMW4WDfObeby7U00dLvKBRVRyo
 bitbucket.org/creachadair/stringset v0.0.5/go.mod h1:Sh09n+mAanyIbrkX0MICAEZcqXVbuFi8L0P/dbrhH2A=
 bitbucket.org/creachadair/vocab v0.0.2 h1:Ze1UwBlI8FE3GC7+bqks24s0yHHwNzelZ26CcaW4lvA=
 bitbucket.org/creachadair/vocab v0.0.2/go.mod h1:J6vb+l4PZ5gMKMhkIHpmtD+8wKdXqHgAo0tb4BQt954=
+github.com/creachadair/atomicfile v0.2.0 h1:ZtLG+eU5gQwStcLwuq5WZRmzlxNuJhFIxsEjxsFdqrQ=
+github.com/creachadair/atomicfile v0.2.0/go.mod h1:Tvr/wsb3lQY4dj+9utcmJ7Gp6wi3LKA8jRNqoxUhA2M=
+github.com/creachadair/ffs v0.0.0-20190610133815-0a1bda2218be h1:Fewg46a5oRdGHiqbixPbm5ePPq8w6Bz/97zRdMM4lKk=
+github.com/creachadair/ffs v0.0.0-20190610133815-0a1bda2218be/go.mod h1:XHWmBqkuEfU/xnIqVdo2KiLKj1dhYksw7c5z9lf3NDM=
 github.com/creachadair/vql v0.0.19 h1:8yUL9DrLZuALGzUf9dcPT2cmYTfvJ2SwHpoacusaS/0=
 github.com/creachadair/vql v0.0.19/go.mod h1:KNmBr/lJOumdnm9de6kuwiInP7M1IqobgOw5dPHN60s=
 github.com/golang/protobuf v1.3.1 h1:YF8+flBXS5eO826T4nzqPrxfhQThhXl0YzfuUPu4SBg=

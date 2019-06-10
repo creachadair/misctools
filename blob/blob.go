@@ -16,12 +16,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"bitbucket.org/creachadair/ffs/blob"
-	"bitbucket.org/creachadair/ffs/blob/codecs/zlib"
-	"bitbucket.org/creachadair/ffs/blob/encoded"
-	"bitbucket.org/creachadair/ffs/blob/filestore"
-	"bitbucket.org/creachadair/ffs/blob/store"
 	"bitbucket.org/creachadair/vocab"
+	"github.com/creachadair/ffs/blob"
+	"github.com/creachadair/ffs/blob/codecs/zlib"
+	"github.com/creachadair/ffs/blob/encoded"
+	"github.com/creachadair/ffs/blob/filestore"
+	"github.com/creachadair/ffs/blob/store"
 	"golang.org/x/xerrors"
 )
 
