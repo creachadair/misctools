@@ -14,8 +14,8 @@ import (
 	"strings"
 
 	"bitbucket.org/creachadair/getpass"
-	"bitbucket.org/creachadair/keyfile"
 	"bitbucket.org/creachadair/vocab"
+	"github.com/creachadair/keyfile"
 	"golang.org/x/xerrors"
 )
 
