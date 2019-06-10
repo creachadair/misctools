@@ -16,12 +16,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"bitbucket.org/creachadair/vocab"
 	"github.com/creachadair/ffs/blob"
 	"github.com/creachadair/ffs/blob/codecs/zlib"
 	"github.com/creachadair/ffs/blob/encoded"
 	"github.com/creachadair/ffs/blob/filestore"
 	"github.com/creachadair/ffs/blob/store"
+	"github.com/creachadair/vocab"
 	"golang.org/x/xerrors"
 )
 
