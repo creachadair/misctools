@@ -24,7 +24,9 @@ import (
 
 var (
 	beforeBranch = flag.String("before", "", "Before branch (defaults to master)")
+	beforeTest   = flag.String("beforetest", "", "Before test (defaults to .)")
 	afterBranch  = flag.String("after", "", "After branch (defaults to current)")
+	afterTest    = flag.String("aftertest", "", "After test (defaults to .)")
 )
 
 func main() {
@@ -51,7 +53,7 @@ func main() {
 		log.Fatalf("Checking out %q: %v", *beforeBranch, err)
 	}
 	start := time.Now()
-	before, err := runBenchmark(ctx)
+	before, err := runBenchmark(ctx, *beforeTest)
 	if err != nil {
 		log.Fatalf("Running -before benchmark: %v", err)
 	}
@@ -63,7 +65,7 @@ func main() {
 		log.Fatalf("Checking out %q: %v", *afterBranch, err)
 	}
 	start = time.Now()
-	after, err := runBenchmark(ctx)
+	after, err := runBenchmark(ctx, *afterTest)
 	if err != nil {
 		log.Fatalf("Running -after benchmark: %v", err)
 	}
@@ -108,8 +110,8 @@ type result struct {
 	TimePerOp time.Duration
 }
 
-func runBenchmark(ctx context.Context) ([]result, error) {
-	out, err := exec.CommandContext(ctx, "go", "test", "-bench=.", "-run=^NONE").Output()
+func runBenchmark(ctx context.Context, test string) ([]result, error) {
+	out, err := exec.CommandContext(ctx, "go", "test", "-bench=.", "-run=^NONE", test).Output()
 	if err != nil {
 		return nil, err
 	}
