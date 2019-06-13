@@ -244,7 +244,7 @@ type tool struct {
 	Get  getCmd  `vocab:"get" help-summary:"Read a blob from the store"`
 	Put  putCmd  `vocab:"put" help-summary:"Write a blob to the store"`
 	Size sizeCmd `vocab:"size" help-summary:"Print the size of a stored blob"`
-	Del  delCmd  `vocab:"delete,del" help-summary:"Delete a blob from the store"`
+	Del  delCmd  `vocab:"delete,del,rm" help-summary:"Delete a blob from the store"`
 	List listCmd `vocab:"list,ls" help-summary:"List keys in the store"`
 	Len  lenCmd  `vocab:"len,length" help-summary:"Print the number of stored keys"`
 
