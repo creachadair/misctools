@@ -20,7 +20,9 @@ import (
 )
 
 func main() {
-	v, err := vocab.New(filepath.Base(os.Args[0]), new(kftool))
+	v, err := vocab.New(filepath.Base(os.Args[0]), &kftool{
+		Path: os.Getenv("KEYFILE_PATH"),
+	})
 	if err != nil {
 		log.Fatalf("Error: %v", err)
 	}
