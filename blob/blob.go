@@ -30,7 +30,7 @@ func init() {
 	store.Default.Register("badger", badgerstore.Opener)
 	store.Default.Register("file", filestore.Opener)
 	store.Default.Register("zlib", func(ctx context.Context, addr string) (blob.Store, error) {
-		s, err := filestore.Opener(ctx, addr)
+		s, err := store.Default.Open(ctx, addr)
 		if err != nil {
 			return nil, err
 		}
