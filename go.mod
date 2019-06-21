@@ -5,7 +5,7 @@ go 1.12
 require (
 	bitbucket.org/creachadair/shell v0.0.6 // indirect
 	bitbucket.org/creachadair/stringset v0.0.7
-	github.com/creachadair/ffs v0.0.0-20190615193417-9ca3eb043ddb
+	github.com/creachadair/ffs v0.0.0-20190621064303-85e63f3de2b0
 	github.com/creachadair/getpass v0.1.0
 	github.com/creachadair/keyfile v0.1.0
 	github.com/creachadair/vocab v0.0.3

@@ -17,6 +17,7 @@ import (
 	"strings"
 
 	"github.com/creachadair/ffs/blob"
+	"github.com/creachadair/ffs/blob/badgerstore"
 	"github.com/creachadair/ffs/blob/codecs/zlib"
 	"github.com/creachadair/ffs/blob/encoded"
 	"github.com/creachadair/ffs/blob/filestore"
@@ -26,6 +27,7 @@ import (
 )
 
 func init() {
+	store.Default.Register("badger", badgerstore.Opener)
 	store.Default.Register("file", filestore.Opener)
 	store.Default.Register("zlib", func(ctx context.Context, addr string) (blob.Store, error) {
 		s, err := filestore.Opener(ctx, addr)
