@@ -138,17 +138,44 @@ func (jsonCmd) Run(ctx context.Context, args []string) error {
 	return nil
 }
 
+type rekeyCmd struct{}
+
+func (rekeyCmd) Run(ctx context.Context, args []string) error {
+	if len(args) == 0 {
+		return xerrors.New("usage: rekey <slug>")
+	} else if !tool(ctx).File.Has(args[0]) {
+		return xerrors.Errorf("rekey: no such key %q", args[0])
+	}
+	pp, err := getpass.Prompt("Old passphrase: ")
+	if err != nil {
+		return err
+	}
+	data, err := tool(ctx).File.Get(args[0], pp)
+	if err != nil {
+		return err
+	}
+	np, err := getpass.Prompt("New passphrase: ")
+	if err != nil {
+		return err
+	}
+	if err := tool(ctx).File.Set(args[0], np, data); err != nil {
+		return err
+	}
+	return tool(ctx).save(ctx)
+}
+
 type kftool struct {
 	Path string `flag:"f,Path of key file (required)"`
 	File *keyfile.File
 
-	Help vocab.Help `vocab:"help"`
-	Del  delCmd     `vocab:"remove,delete,del,rm" help-summary:"Delete the specified key"`
-	Get  getCmd     `vocab:"get" help-summary:"Write the specified key to stdout"`
-	JSON jsonCmd    `vocab:"json" help-summary:"Write the keyfile as JSON to stdout"`
-	List listCmd    `vocab:"list,ls" help-summary:"List the key slugs in the keyfile"`
-	Rand randCmd    `vocab:"rand" help-summary:"Generate and store a random key of a specified length"`
-	Set  setCmd     `vocab:"set" help-summary:"Store the contents of stdin as a key"`
+	Help  vocab.Help `vocab:"help"`
+	Del   delCmd     `vocab:"remove,delete,del,rm" help-summary:"Delete the specified key"`
+	Get   getCmd     `vocab:"get" help-summary:"Write the specified key to stdout"`
+	JSON  jsonCmd    `vocab:"json" help-summary:"Write the keyfile as JSON to stdout"`
+	List  listCmd    `vocab:"list,ls" help-summary:"List the key slugs in the keyfile"`
+	Rand  randCmd    `vocab:"rand" help-summary:"Generate and store a random key of a specified length"`
+	Rekey rekeyCmd   `vocab:"rekey" help-summary:"Change the passphrase on an existing key"`
+	Set   setCmd     `vocab:"set" help-summary:"Store the contents of stdin as a key"`
 
 	_ struct{} `help-summary:"A tool to read and write keyfiles"`
 }
