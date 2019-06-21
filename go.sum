@@ -15,8 +15,8 @@ github.com/creachadair/ffs v0.0.0-20190621064303-85e63f3de2b0 h1:HN3mEfBjin8Y9an
 github.com/creachadair/ffs v0.0.0-20190621064303-85e63f3de2b0/go.mod h1:8PQeiBWUu/EbSFGLj2LOEolp5TEjQNcEGmZG5ls7RmM=
 github.com/creachadair/getpass v0.1.0 h1:L/bEjfydVpDLP+0VIqK9z4rFktOz/5hYBDVeyWe61zg=
 github.com/creachadair/getpass v0.1.0/go.mod h1:Wup04NkmcX+Af5Z2pt3FJFySTC7bs9PcsqS2zC2Ar7M=
-github.com/creachadair/keyfile v0.1.0 h1:QrhRV4V8KGosOB7PAxtbQ9LJS83UJ+HC1/IXiqU/bdk=
-github.com/creachadair/keyfile v0.1.0/go.mod h1:3wX4Yv40fvLJ2h4lbqj3sKAG7gt39lo2zU4IO1pw+YQ=
+github.com/creachadair/keyfile v0.1.1 h1:VhR96BXDh6Jhe+B/u3WwvTf4BWH0lGnJd23xeOYdNR8=
+github.com/creachadair/keyfile v0.1.1/go.mod h1:lr0QzqVciHmWYYxqe8pfb3WDKpXbs9fNJKViYo7NE+o=
 github.com/creachadair/staticfile v0.0.3/go.mod h1:a3qySzCIXEprDGxk6tSxSI+dBBdLzqeBOMhZ+o2d3pM=
 github.com/creachadair/vocab v0.0.3 h1:ILQyhmTdJLIVtII9FOjw0SxG4+mTZ9vGUFJp23eVygk=
 github.com/creachadair/vocab v0.0.3/go.mod h1:gbtlm7j6xaKpakeGzUKLLrpakMngMAxFSG6CxGougY0=
@@ -47,8 +47,6 @@ github.com/spf13/pflag v1.0.3/go.mod h1:DYY7MBk1bdzusC3SYhjObp+wFpr4gzcvqqNjLnIn
 github.com/stretchr/testify v1.2.2 h1:bSDNvY7ZPG5RlJ8otE/7V6gMiyenm9RtJ7IUVIAoJ1w=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
-golang.org/x/crypto v0.0.0-20190605123033-f99c8df09eb5 h1:58fnuSXlxZmFdJyvtTFVmVhcMLU6v5fEb/ok4wyqtNU=
-golang.org/x/crypto v0.0.0-20190605123033-f99c8df09eb5/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20190618222545-ea8f1a30c443 h1:IcSOAf4PyMp3U3XbIEj1/xJ2BjNN2jWv7JoyOsMxXUU=
 golang.org/x/crypto v0.0.0-20190618222545-ea8f1a30c443/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/net v0.0.0-20181217023233-e147a9138326/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
