@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"crypto/aes"
 	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/base64"
@@ -20,8 +21,11 @@ import (
 	"github.com/creachadair/ffs/blob/badgerstore"
 	"github.com/creachadair/ffs/blob/codecs/zlib"
 	"github.com/creachadair/ffs/blob/encoded"
+	"github.com/creachadair/ffs/blob/encrypted"
 	"github.com/creachadair/ffs/blob/filestore"
 	"github.com/creachadair/ffs/blob/store"
+	"github.com/creachadair/getpass"
+	"github.com/creachadair/keyfile"
 	"github.com/creachadair/vocab"
 	"golang.org/x/xerrors"
 )
@@ -40,7 +44,8 @@ func init() {
 
 func main() {
 	v, err := vocab.New(filepath.Base(os.Args[0]), &tool{
-		CAS: casGroup{Hash: "1"},
+		KeyFile: os.Getenv("KEYFILE_PATH"),
+		CAS:     casGroup{Hash: "1"},
 	})
 	if err != nil {
 		log.Fatalf("Setup failed: %v", err)
@@ -242,7 +247,10 @@ func (casKeyCmd) Run(ctx context.Context, args []string) error {
 }
 
 type tool struct {
-	Addr string  `flag:"store,Blob store address (required)"`
+	Addr    string `flag:"store,Blob store address (required)"`
+	KeyFile string `flag:"keyfile,Path of encryption key file"`
+	Encrypt string `flag:"encrypt,Enable encryption with this key slug"`
+
 	Get  getCmd  `vocab:"get" help-summary:"Read a blob from the store"`
 	Put  putCmd  `vocab:"put" help-summary:"Write a blob to the store"`
 	Size sizeCmd `vocab:"size" help-summary:"Print the size of a stored blob"`
@@ -267,8 +275,29 @@ func storeFromContext(ctx context.Context) (blob.Store, error) {
 	t := ctx.Value(toolKey{}).(*tool)
 	if t.Addr == "" {
 		return nil, xerrors.New("no -store address was specified")
+	} else if t.Encrypt != "" && t.KeyFile == "" {
+		return nil, xerrors.New("no -keyfile was specified for -encrypt")
 	}
-	return store.Default.Open(ctx, t.Addr)
+	st, err := store.Default.Open(ctx, t.Addr)
+	if err != nil {
+		return nil, err
+	}
+	if t.Encrypt != "" {
+		pp, err := getpass.Prompt("Passphrase for " + t.Encrypt + ": ")
+		if err != nil {
+			return nil, xerrors.Errorf("reading passphrase: %v", err)
+		}
+		key, err := keyfile.LoadKey(t.KeyFile, t.Encrypt, pp)
+		if err != nil {
+			return nil, xerrors.Errorf("loading encryption key: %v", err)
+		}
+		c, err := aes.NewCipher(key)
+		if err != nil {
+			return nil, xerrors.Errorf("creating cipher: %v", err)
+		}
+		st = encrypted.New(st, c, nil)
+	}
+	return st, err
 }
 
 type casKey struct{}
