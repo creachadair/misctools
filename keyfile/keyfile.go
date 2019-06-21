@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/creachadair/atomicfile"
 	"github.com/creachadair/getpass"
 	"github.com/creachadair/keyfile"
 	"github.com/creachadair/vocab"
@@ -208,16 +209,15 @@ func (k *kftool) Init(ctx context.Context, name string, args []string) (context.
 }
 
 func (k *kftool) save(ctx context.Context) error {
-	f, err := os.Create(k.Path)
+	f, err := atomicfile.New(k.Path, 0600)
 	if err != nil {
 		return err
 	}
-	_, err = k.File.WriteTo(f)
-	cerr := f.Close()
-	if err != nil {
+	if _, err := k.File.WriteTo(f); err != nil {
+		f.Cancel()
 		return err
 	}
-	return cerr
+	return f.Close()
 }
 
 func (k *kftool) passphrase(ctx context.Context) (string, error) {
