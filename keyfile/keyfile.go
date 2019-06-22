@@ -1,5 +1,5 @@
 // Program keyfile is a low-level command-line tool to read and write the
-// contents of key files using the bitbucket.org/creachadair/keyfile package.
+// contents of key files using the github.com/creachadair/keyfile package.
 package main
 
 import (
