@@ -27,6 +27,7 @@ var (
 	beforeTest   = flag.String("beforetest", "", "Before test (defaults to .)")
 	afterBranch  = flag.String("after", "", "After branch (defaults to current)")
 	afterTest    = flag.String("aftertest", "", "After test (defaults to .)")
+	benchPattern = flag.String("match", ".", "Run benchmarks matching this regexp")
 )
 
 func main() {
@@ -111,7 +112,7 @@ type result struct {
 }
 
 func runBenchmark(ctx context.Context, test string) ([]result, error) {
-	out, err := exec.CommandContext(ctx, "go", "test", "-bench=.", "-run=^NONE", test).Output()
+	out, err := exec.CommandContext(ctx, "go", "test", "-bench="+*benchPattern, "-run=^NONE", test).Output()
 	if err != nil {
 		return nil, err
 	}
