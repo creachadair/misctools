@@ -11,6 +11,9 @@ require (
 	github.com/creachadair/keyfile v0.1.1
 	github.com/creachadair/vocab v0.0.3
 	github.com/creachadair/vql v0.0.19
+	github.com/pkg/errors v0.8.1 // indirect
+	github.com/stretchr/testify v1.3.0 // indirect
+	golang.org/x/net v0.0.0-20190502183928-7f726cade0ab // indirect
 	golang.org/x/sys v0.0.0-20190618155005-516e3c20635f // indirect
 	golang.org/x/xerrors v0.0.0-20190513163551-3ee3066db522
 )
