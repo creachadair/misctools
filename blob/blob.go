@@ -17,8 +17,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/creachadair/badgerstore"
 	"github.com/creachadair/ffs/blob"
-	"github.com/creachadair/ffs/blob/badgerstore"
 	"github.com/creachadair/ffs/blob/codecs/zlib"
 	"github.com/creachadair/ffs/blob/encoded"
 	"github.com/creachadair/ffs/blob/encrypted"
