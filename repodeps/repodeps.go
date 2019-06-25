@@ -46,7 +46,7 @@ func main() {
 
 func visitDirectory(ctx context.Context, dir string) (*Repo, error) {
 	// Find the URLs for the remotes defined for this repository.
-	remotes, err := gitRemotes(ctx)
+	remotes, err := gitRemotes(ctx, dir)
 	if err != nil {
 		return nil, fmt.Errorf("listing remotes: %v", err)
 	} else if len(remotes) == 0 {
@@ -120,8 +120,10 @@ type File struct {
 	Digest []byte `json:"sha256"`
 }
 
-func gitRemotes(ctx context.Context) ([]*Remote, error) {
-	bits, err := exec.CommandContext(ctx, "git", "remote").Output()
+func gitRemotes(ctx context.Context, dir string) ([]*Remote, error) {
+	cmd := exec.CommandContext(ctx, "git", "remote")
+	cmd.Dir = dir
+	bits, err := cmd.Output()
 	if err != nil {
 		return nil, fmt.Errorf("listing remotes: %v", err)
 	}
@@ -129,7 +131,9 @@ func gitRemotes(ctx context.Context) ([]*Remote, error) {
 	names := strings.Split(strings.TrimSpace(string(bits)), "\n")
 	var rs []*Remote
 	for _, name := range names {
-		bits, err := exec.CommandContext(ctx, "git", "remote", "get-url", name).Output()
+		cmd := exec.CommandContext(ctx, "git", "remote", "get-url", name)
+		cmd.Dir = dir
+		bits, err := cmd.Output()
 		if err != nil {
 			return nil, fmt.Errorf("getting remote URL for %q: %v", name, err)
 		}
