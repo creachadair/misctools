@@ -8,8 +8,8 @@ github.com/AndreasBriese/bbloom v0.0.0-20180913140656-343706a395b7/go.mod h1:bOv
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/creachadair/atomicfile v0.2.0 h1:ZtLG+eU5gQwStcLwuq5WZRmzlxNuJhFIxsEjxsFdqrQ=
 github.com/creachadair/atomicfile v0.2.0/go.mod h1:Tvr/wsb3lQY4dj+9utcmJ7Gp6wi3LKA8jRNqoxUhA2M=
-github.com/creachadair/badgerstore v0.0.0-20190627151828-4a8c2e9988f0 h1:wYz7KajSQlgKw4qKIkCewraJrm09Gnck/3fS9JJk6q4=
-github.com/creachadair/badgerstore v0.0.0-20190627151828-4a8c2e9988f0/go.mod h1:hemOIeMDdBBIGHV37N+I4qtfiMfSAw0gsaAiNQSpdHQ=
+github.com/creachadair/badgerstore v0.0.3 h1:jkfZdCFINSAzGRx4sj+1hhrAEZ179gPU2Y12fk2MFB4=
+github.com/creachadair/badgerstore v0.0.3/go.mod h1:gE/0n5aidyp1GhbiwD97TA1EdaxRZPiF9pWc4QMy0K4=
 github.com/creachadair/ffs v0.0.0-20190621064303-85e63f3de2b0/go.mod h1:8PQeiBWUu/EbSFGLj2LOEolp5TEjQNcEGmZG5ls7RmM=
 github.com/creachadair/ffs v0.0.0-20190622160218-fd16ac7ed292 h1:UprIbniL1mSq5tVgNBq4cG6Ad4PGkqjmiXtC/UPfQDQ=
 github.com/creachadair/ffs v0.0.0-20190622160218-fd16ac7ed292/go.mod h1:XHWmBqkuEfU/xnIqVdo2KiLKj1dhYksw7c5z9lf3NDM=
@@ -24,9 +24,9 @@ github.com/creachadair/vql v0.0.19 h1:8yUL9DrLZuALGzUf9dcPT2cmYTfvJ2SwHpoacusaS/
 github.com/creachadair/vql v0.0.19/go.mod h1:KNmBr/lJOumdnm9de6kuwiInP7M1IqobgOw5dPHN60s=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/dgraph-io/badger v2.0.0-rc2+incompatible h1:6fXfqViMStaKb73bxivvD9hgwYdWyiEKzwWNVkXhslE=
+github.com/dgraph-io/badger v2.0.0-rc2+incompatible/go.mod h1:VZxzAIRPHRVNRKRo6AXrX9BJegn6il06VMTZVJYCIjQ=
 github.com/dgraph-io/badger/v2 v2.0.0-20190620211019-41d170b5158f/go.mod h1:jUaIjOV835xZ/mCLG/8P/38ZxiT4bG/K1khDNZJxuwU=
-github.com/dgraph-io/badger/v2 v2.0.0-20190621164610-46698910835f h1:3RUBoS8yrsYjqccgX2MkNa4QRbB0EBKpjJjFVPlsIW4=
-github.com/dgraph-io/badger/v2 v2.0.0-20190621164610-46698910835f/go.mod h1:jUaIjOV835xZ/mCLG/8P/38ZxiT4bG/K1khDNZJxuwU=
 github.com/dgryski/go-farm v0.0.0-20180109070241-2de33835d102 h1:afESQBXJEnj3fu+34X//E8Wg3nEbMJxJkwSc0tPePK0=
 github.com/dgryski/go-farm v0.0.0-20180109070241-2de33835d102/go.mod h1:SqUrOPUnsFjfmXRMNPybcSiG0BgUW2AuFH8PAnS2iTw=
 github.com/dustin/go-humanize v1.0.0 h1:VSnTsYCnlFHaM2/igO1h6X3HA71jcobQuxemgkq4zYo=
