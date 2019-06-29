@@ -14,6 +14,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"os/exec"
 	"strconv"
@@ -28,6 +29,7 @@ var (
 	afterBranch  = flag.String("after", "", "After branch (defaults to current)")
 	afterTest    = flag.String("aftertest", "", "After test (defaults to .)")
 	benchPattern = flag.String("match", ".", "Run benchmarks matching this regexp")
+	washLevel    = flag.Float64("wash", 2, "Percentage below which differences are a wash")
 )
 
 func main() {
@@ -85,9 +87,14 @@ func main() {
 			// If this benchmark did not exist in the original sample, we can't
 			// compare.  Avert a zero division but still print out the results.
 			fmt.Fprintf(w, "%s\t%d\t%d\t?\n", b.Name, b.OldTime, b.NewTime)
+			continue
+		}
+		fmt.Fprintf(w, "%s\t%d\t%d\t", b.Name, b.OldTime, b.NewTime)
+		sp := 100 * float64(b.OldTime-b.NewTime) / float64(b.OldTime)
+		if math.Abs(sp) > *washLevel {
+			fmt.Fprintf(w, "%.1f\n", sp)
 		} else {
-			sp := float64(b.OldTime-b.NewTime) / float64(b.OldTime)
-			fmt.Fprintf(w, "%s\t%d\t%d\t%.1f\n", b.Name, b.OldTime, b.NewTime, 100*sp)
+			fmt.Fprintln(w, "~")
 		}
 	}
 	w.Flush()
