@@ -8,8 +8,8 @@ github.com/AndreasBriese/bbloom v0.0.0-20180913140656-343706a395b7/go.mod h1:bOv
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/creachadair/atomicfile v0.2.0 h1:ZtLG+eU5gQwStcLwuq5WZRmzlxNuJhFIxsEjxsFdqrQ=
 github.com/creachadair/atomicfile v0.2.0/go.mod h1:Tvr/wsb3lQY4dj+9utcmJ7Gp6wi3LKA8jRNqoxUhA2M=
-github.com/creachadair/badgerstore v0.0.0-20190621174744-f45712accee3 h1:4oXsL7y8K935KzKTnMdSp4TnzT1eOGt5ih5jzxcKa+s=
-github.com/creachadair/badgerstore v0.0.0-20190621174744-f45712accee3/go.mod h1:hemOIeMDdBBIGHV37N+I4qtfiMfSAw0gsaAiNQSpdHQ=
+github.com/creachadair/badgerstore v0.0.0-20190627151828-4a8c2e9988f0 h1:wYz7KajSQlgKw4qKIkCewraJrm09Gnck/3fS9JJk6q4=
+github.com/creachadair/badgerstore v0.0.0-20190627151828-4a8c2e9988f0/go.mod h1:hemOIeMDdBBIGHV37N+I4qtfiMfSAw0gsaAiNQSpdHQ=
 github.com/creachadair/ffs v0.0.0-20190621064303-85e63f3de2b0/go.mod h1:8PQeiBWUu/EbSFGLj2LOEolp5TEjQNcEGmZG5ls7RmM=
 github.com/creachadair/ffs v0.0.0-20190622160218-fd16ac7ed292 h1:UprIbniL1mSq5tVgNBq4cG6Ad4PGkqjmiXtC/UPfQDQ=
 github.com/creachadair/ffs v0.0.0-20190622160218-fd16ac7ed292/go.mod h1:XHWmBqkuEfU/xnIqVdo2KiLKj1dhYksw7c5z9lf3NDM=
