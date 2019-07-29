@@ -3,7 +3,7 @@ module github.com/creachadair/misctools
 go 1.12
 
 require (
-	bitbucket.org/creachadair/stringset v0.0.7
+	bitbucket.org/creachadair/stringset v0.0.8
 	github.com/AndreasBriese/bbloom v0.0.0-20190306092124-e2d15f34fcf9 // indirect
 	github.com/creachadair/atomicfile v0.2.0
 	github.com/creachadair/badgerstore v0.0.3
