@@ -68,7 +68,7 @@ func unpack(grp *C.struct_group) (*Group, error) {
 	return &Group{
 		Name:     C.GoString(grp.gr_name),
 		Password: C.GoString(grp.gr_passwd),
-		ID:       int(grp.gr_gid),
+		ID:       int(C.int(grp.gr_gid)),
 		Members:  mem,
 	}, nil
 }
