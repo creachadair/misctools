@@ -113,9 +113,11 @@ func gitCurrentBranch(ctx context.Context) (string, error) {
 }
 
 type result struct {
-	Name      string
-	Count     int64
-	TimePerOp time.Duration
+	Name        string
+	Count       int64
+	TimePerOp   time.Duration
+	BytesPerOp  int64 // may not be present
+	AllocsPerOp int64 // may not be present
 }
 
 func runBenchmark(ctx context.Context, test string) ([]result, error) {
@@ -129,15 +131,25 @@ func runBenchmark(ctx context.Context, test string) ([]result, error) {
 			continue
 		}
 		fields := strings.Fields(line)
-		count, _ := strconv.ParseInt(fields[1], 10, 64)
-		nsPerOp, _ := strconv.ParseInt(fields[2], 10, 64)
-		res = append(res, result{
-			Name:      fields[0],
-			Count:     count,
-			TimePerOp: time.Duration(nsPerOp) / time.Nanosecond,
-		})
+		r := result{Name: fields[0], Count: parseInt(fields[1])}
+		for i := 2; i+1 < len(fields); i += 2 {
+			switch fields[i+1] {
+			case "ns/op":
+				r.TimePerOp = time.Duration(parseInt(fields[i])) / time.Nanosecond
+			case "B/op":
+				r.BytesPerOp = parseInt(fields[i])
+			case "allocs/op":
+				r.AllocsPerOp = parseInt(fields[i])
+			}
+		}
+		res = append(res, r)
 	}
 	return res, nil
+}
+
+func parseInt(s string) int64 {
+	v, _ := strconv.ParseInt(s, 10, 64)
+	return v
 }
 
 type joined struct {
