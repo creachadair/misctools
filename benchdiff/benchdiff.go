@@ -13,6 +13,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"math"
 	"os"
@@ -80,22 +81,16 @@ func main() {
 	}
 
 	// Summarize the results as a table to stdout.
+	hasMem := hasMemStats(before) || hasMemStats(after)
 	w := tabwriter.NewWriter(os.Stdout, 0, 8, 3, ' ', 0)
-	fmt.Fprintln(w, "BENCHMARK\tBEFORE\tAFTER\tSPEEDUP (%)")
+
+	fmt.Fprint(w, "BENCHMARK\tBEFORE\tAFTER\tSPEEDUP (%)")
+	if hasMem {
+		fmt.Fprint(w, "\tB/op (B)\tB/op (A)\tA/op (B)\tA/op (A)")
+	}
+	fmt.Fprintln(w)
 	for _, b := range joinResults(before, after) {
-		if b.OldTime == 0 {
-			// If this benchmark did not exist in the original sample, we can't
-			// compare.  Avert a zero division but still print out the results.
-			fmt.Fprintf(w, "%s\t%d\t%d\t?\n", b.Name, b.OldTime, b.NewTime)
-			continue
-		}
-		fmt.Fprintf(w, "%s\t%d\t%d\t", b.Name, b.OldTime, b.NewTime)
-		sp := 100 * float64(b.OldTime-b.NewTime) / float64(b.OldTime)
-		if math.Abs(sp) > *washLevel {
-			fmt.Fprintf(w, "%.1f\n", sp)
-		} else {
-			fmt.Fprintln(w, "~")
-		}
+		b.format(w, hasMem)
 	}
 	w.Flush()
 }
@@ -147,15 +142,49 @@ func runBenchmark(ctx context.Context, test string) ([]result, error) {
 	return res, nil
 }
 
+func hasMemStats(rs []result) bool {
+	for _, r := range rs {
+		if r.BytesPerOp > 0 && r.AllocsPerOp > 0 {
+			return true
+		}
+	}
+	return false
+}
+
 func parseInt(s string) int64 {
 	v, _ := strconv.ParseInt(s, 10, 64)
 	return v
 }
 
 type joined struct {
-	Name               string
-	OldCount, NewCount int64
-	OldTime, NewTime   time.Duration
+	Name                 string
+	OldCount, NewCount   int64
+	OldTime, NewTime     time.Duration
+	OldBytes, NewBytes   int64
+	OldAllocs, NewAllocs int64
+}
+
+func (b joined) format(w io.Writer, mem bool) {
+	fmt.Fprintf(w, "%s\t%d\t%d\t", b.Name, b.OldTime, b.NewTime)
+	if b.OldTime == 0 {
+		// This benchmark did not exist in the original sample. Avert a zero
+		// division.
+		fmt.Fprint(w, "[new]")
+	} else if b.NewTime == 0 {
+		// This benchmark is missing from the comparison sample.
+		fmt.Fprint(w, "[gone]")
+	} else {
+		sp := 100 * float64(b.OldTime-b.NewTime) / float64(b.OldTime)
+		if math.Abs(sp) > *washLevel {
+			fmt.Fprintf(w, "%.1f", sp)
+		} else {
+			fmt.Fprint(w, "~")
+		}
+	}
+	if mem {
+		fmt.Fprintf(w, "\t%d\t%d\t%d\t%d", b.OldBytes, b.NewBytes, b.OldAllocs, b.NewAllocs)
+	}
+	fmt.Fprintln(w)
 }
 
 func joinResults(old, new []result) []joined {
@@ -164,20 +193,26 @@ func joinResults(old, new []result) []joined {
 	for _, b := range old {
 		m[b.Name] = len(res)
 		res = append(res, joined{
-			Name:     b.Name,
-			OldCount: b.Count,
-			OldTime:  b.TimePerOp,
+			Name:      b.Name,
+			OldCount:  b.Count,
+			OldTime:   b.TimePerOp,
+			OldBytes:  b.BytesPerOp,
+			OldAllocs: b.AllocsPerOp,
 		})
 	}
 	for _, b := range new {
 		if p, ok := m[b.Name]; ok {
 			res[p].NewCount = b.Count
 			res[p].NewTime = b.TimePerOp
+			res[p].NewBytes = b.BytesPerOp
+			res[p].NewAllocs = b.AllocsPerOp
 		} else {
 			res = append(res, joined{
-				Name:     b.Name,
-				NewCount: b.Count,
-				NewTime:  b.TimePerOp,
+				Name:      b.Name,
+				NewCount:  b.Count,
+				NewTime:   b.TimePerOp,
+				NewBytes:  b.BytesPerOp,
+				NewAllocs: b.AllocsPerOp,
 			})
 		}
 	}
