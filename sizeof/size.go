@@ -44,15 +44,19 @@ func valueSize(v reflect.Value) uintptr {
 		//
 		// We can't tell which keys are in which bucket by reflection, however,
 		// so here we count the 16-byte header for each bucket, and then just add
-		// in the computed key and value sizes. This will undercount empty slots
-		// in the buckets. We could estimate the number of empty slots and count
-		// them as zeroes but that seems a little too statistical to be useful.
+		// in the computed key and value sizes.
 		nb := uintptr(math.Pow(2, math.Ceil(math.Log(float64(v.Len())/6.5)/math.Log(2))))
 		base = 16 * nb
 		for _, key := range v.MapKeys() {
 			base += valueSize(key)
 			base += valueSize(v.MapIndex(key))
 		}
+
+		// We have nb buckets of 8 slots each, and v.Len() slots are filled.
+		// The remaining slots we will assume contain zero key/value pairs.
+		zk := v.Type().Key().Size()  // a zero key
+		zv := v.Type().Elem().Size() // a zero value
+		base += (8*nb - uintptr(v.Len())) * (zk + zv)
 
 	case reflect.Struct:
 		// Chase pointer and slice fields and add the size of their members.
