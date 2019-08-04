@@ -46,6 +46,9 @@ func valueSize(v reflect.Value) uintptr {
 		// so here we count the 16-byte header for each bucket, and then just add
 		// in the computed key and value sizes.
 		nb := uintptr(math.Pow(2, math.Ceil(math.Log(float64(v.Len())/6.5)/math.Log(2))))
+		if nb == 0 {
+			nb = 1
+		}
 		base = 16 * nb
 		for _, key := range v.MapKeys() {
 			base += valueSize(key)
