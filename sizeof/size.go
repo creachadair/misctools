@@ -9,26 +9,42 @@ import (
 
 // DeepSize reports the size of v in bytes, as reflect.Size, but also including
 // all recursive substructures of v via pointers and slices. If v contains any
-// cycles (even indirect ones), this function may loop.
+// cycles, the size of each pointer introducing a cycle is included but the
+// acyclic substructure is counted only once.
 //
-// Note that some values, notably maps, may still be undercounted, as there are
-// some pieces of the value that are not visible to reflect.Size.
+// Only values whose size and structure can be obtained by the reflect package
+// are counted.  Some values have components that are not visible by
+// reflection, and so are not counted or may be undercounted. In particular:
+//
+// The space occupied by of code, as well as data reachable through variables
+// captured in the closure of a function pointer, are not counted. A field or
+// value of function type is counted only as a pointer.
+//
+// The unused buckets of a map cannot be inspected by the reflect package.  The
+// size is estimated by assuming unfilled slots contain zeroes of their type.
+//
+// The unused capacity of a slice cannot be inspected by the reflect package
+// without reslicing, and reslicing is only possible if the slice is
+// addressable.  The size is estimated by assuming unreachable slots contain
+// zeroes of their type.
 func DeepSize(v interface{}) int64 {
-	return int64(valueSize(reflect.ValueOf(v)))
+	return int64(valueSize(reflect.ValueOf(v), make(map[uintptr]bool)))
 }
 
-func valueSize(v reflect.Value) uintptr {
+func valueSize(v reflect.Value, seen map[uintptr]bool) uintptr {
 	base := v.Type().Size()
 	switch v.Kind() {
 	case reflect.Ptr:
-		if !v.IsNil() {
-			return base + valueSize(v.Elem())
+		p := v.Pointer()
+		if !seen[p] && !v.IsNil() {
+			seen[p] = true
+			return base + valueSize(v.Elem(), seen)
 		}
 
 	case reflect.Slice:
 		n := v.Len()
 		for i := 0; i < n; i++ {
-			base += valueSize(v.Index(i))
+			base += valueSize(v.Index(i), seen)
 		}
 
 		// Account for the parts of the array not covered by this slice.  Since
@@ -51,8 +67,8 @@ func valueSize(v reflect.Value) uintptr {
 		}
 		base = 16 * nb
 		for _, key := range v.MapKeys() {
-			base += valueSize(key)
-			base += valueSize(v.MapIndex(key))
+			base += valueSize(key, seen)
+			base += valueSize(v.MapIndex(key), seen)
 		}
 
 		// We have nb buckets of 8 slots each, and v.Len() slots are filled.
@@ -67,11 +83,13 @@ func valueSize(v reflect.Value) uintptr {
 			f := v.Field(i)
 			switch f.Kind() {
 			case reflect.Ptr:
-				if !f.IsNil() {
-					base += valueSize(f.Elem())
+				p := f.Pointer()
+				if !seen[p] && !f.IsNil() {
+					seen[p] = true
+					base += valueSize(f.Elem(), seen)
 				}
 			case reflect.Slice:
-				base += valueSize(f)
+				base += valueSize(f, seen)
 			}
 		}
 
