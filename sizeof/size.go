@@ -8,25 +8,26 @@ import (
 )
 
 // DeepSize reports the size of v in bytes, as reflect.Size, but also including
-// all recursive substructures of v via pointers and slices. If v contains any
-// cycles, the size of each pointer introducing a cycle is included but the
-// acyclic substructure is counted only once.
+// all recursive substructures of v via maps, pointers, and slices. If v
+// contains any cycles, the size of each pointer (re)introducing the cycle is
+// included but the acyclic substructure is counted only once.
 //
 // Only values whose size and structure can be obtained by the reflect package
 // are counted.  Some values have components that are not visible by
 // reflection, and so are not counted or may be undercounted. In particular:
 //
-// The space occupied by of code, as well as data reachable through variables
-// captured in the closure of a function pointer, are not counted. A field or
-// value of function type is counted only as a pointer.
+// The space occupied by code and data, reachable through variables captured in
+// the closure of a function pointer, are not counted. A value of function type
+// is counted only as a pointer.
 //
-// The unused buckets of a map cannot be inspected by the reflect package.  The
-// size is estimated by assuming unfilled slots contain zeroes of their type.
+// The unused buckets of a map cannot be inspected by the reflect package.
+// Their size is estimated by assuming unfilled slots contain zeroes of their
+// type.
 //
-// The unused capacity of a slice cannot be inspected by the reflect package
-// without reslicing, and reslicing is only possible if the slice is
-// addressable.  The size is estimated by assuming unreachable slots contain
-// zeroes of their type.
+// The unused capacity of the array under a slice is estimated by assuming the
+// unused slots contain zeroes of their type. It is possible they contain non
+// zero values from sharing or reslicing, but without explicitly reslicing the
+// reflect package cannot touch them.
 func DeepSize(v interface{}) int64 {
 	return int64(valueSize(reflect.ValueOf(v), make(map[uintptr]bool)))
 }
