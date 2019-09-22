@@ -142,7 +142,11 @@ func (delCmd) Run(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
-	return bs.Delete(ctx, key)
+	del, ok := bs.(blob.Deleter)
+	if !ok {
+		return xerrors.New("store does not support deletion")
+	}
+	return del.Delete(ctx, key)
 }
 
 type listCmd struct {
