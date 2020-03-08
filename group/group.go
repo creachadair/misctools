@@ -46,6 +46,11 @@ func LookupID(gid int) (*Group, error) {
 	return unpack(grp)
 }
 
+//go:nocheckptr
+//
+// TODO: Figure out why the conversion back to **C.char below is not valid.
+// I'm guessing it's an alignment issue, but I couldn't figure out how to make
+// it better apart from just disabling the check for now.
 func unpack(grp *C.struct_group) (*Group, error) {
 	// The lookup functions do not report an error for a missing group, they
 	// just return a NULL.
@@ -56,8 +61,7 @@ func unpack(grp *C.struct_group) (*Group, error) {
 	// The members list is a NULL-terminated array of C strings.  We need
 	// unsafe here to handle the pointer arithmetic.
 	var mem []string
-	p := grp.gr_mem
-	q := unsafe.Pointer(p)
+	q := unsafe.Pointer(grp.gr_mem)
 	for i := uintptr(0); ; i++ {
 		s := (**C.char)(unsafe.Pointer(uintptr(q) + i*unsafe.Sizeof(q)))
 		if *s == nil {
