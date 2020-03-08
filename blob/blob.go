@@ -211,7 +211,7 @@ func readData(ctx context.Context, cmd string, args []string) (data []byte, err 
 	} else if len(args) == 1 {
 		data, err = ioutil.ReadFile(args[0])
 	} else {
-		return nil, xerrors.Errorf("usage is: %s [<path>]", cmd)
+		return nil, fmt.Errorf("usage is: %s [<path>]", cmd)
 	}
 	return
 }
@@ -289,15 +289,15 @@ func storeFromContext(ctx context.Context) (blob.Store, error) {
 	if t.Encrypt != "" {
 		pp, err := getpass.Prompt("Passphrase for " + t.Encrypt + ": ")
 		if err != nil {
-			return nil, xerrors.Errorf("reading passphrase: %v", err)
+			return nil, fmt.Errorf("reading passphrase: %v", err)
 		}
 		key, err := keyfile.LoadKey(t.KeyFile, t.Encrypt, pp)
 		if err != nil {
-			return nil, xerrors.Errorf("loading encryption key: %v", err)
+			return nil, fmt.Errorf("loading encryption key: %v", err)
 		}
 		c, err := aes.NewCipher(key)
 		if err != nil {
-			return nil, xerrors.Errorf("creating cipher: %v", err)
+			return nil, fmt.Errorf("creating cipher: %v", err)
 		}
 		st = encrypted.New(st, c, nil)
 	}
@@ -328,7 +328,7 @@ func hashFromContext(ctx context.Context) (func() hash.Hash, error) {
 	case "":
 		return nil, xerrors.New("hash not specified")
 	default:
-		return nil, xerrors.Errorf("unknown hash algorithm %q", c.Hash)
+		return nil, fmt.Errorf("unknown hash algorithm %q", c.Hash)
 	}
 }
 
@@ -338,13 +338,13 @@ func parseKey(s string) (string, error) {
 	} else if strings.HasPrefix(s, "+") {
 		key, err := base64.StdEncoding.DecodeString(s[1:])
 		if err != nil {
-			return "", xerrors.Errorf("invalid key %q: %w", s, err)
+			return "", fmt.Errorf("invalid key %q: %w", s, err)
 		}
 		return string(key), nil
 	}
 	key, err := hex.DecodeString(s)
 	if err != nil {
-		return "", xerrors.Errorf("invalid key %q: %w", s, err)
+		return "", fmt.Errorf("invalid key %q: %w", s, err)
 	}
 	return string(key), nil
 }

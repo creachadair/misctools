@@ -40,7 +40,7 @@ func (g getCmd) Run(ctx context.Context, args []string) error {
 	if len(args) == 0 {
 		return xerrors.New("usage: get <slug>")
 	} else if !tool(ctx).File.Has(args[0]) {
-		return xerrors.Errorf("get: no such key %q", args[0])
+		return fmt.Errorf("get: no such key %q", args[0])
 	}
 	pp, err := tool(ctx).passphrase(ctx)
 	if err != nil {
@@ -64,7 +64,7 @@ func (r randCmd) Run(ctx context.Context, args []string) error {
 	if len(args) == 0 {
 		return xerrors.New("usage: rand <slug>")
 	} else if r.Len <= 0 {
-		return xerrors.Errorf("rand: length must be positive (not %d)", r.Len)
+		return fmt.Errorf("rand: length must be positive (not %d)", r.Len)
 	}
 	pp, err := tool(ctx).passphrase(ctx)
 	if err != nil {
@@ -145,7 +145,7 @@ func (rekeyCmd) Run(ctx context.Context, args []string) error {
 	if len(args) == 0 {
 		return xerrors.New("usage: rekey <slug>")
 	} else if !tool(ctx).File.Has(args[0]) {
-		return xerrors.Errorf("rekey: no such key %q", args[0])
+		return fmt.Errorf("rekey: no such key %q", args[0])
 	}
 	pp, err := getpass.Prompt("Old passphrase: ")
 	if err != nil {
