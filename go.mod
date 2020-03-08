@@ -1,6 +1,6 @@
 module github.com/creachadair/misctools
 
-go 1.12
+go 1.13
 
 require (
 	bitbucket.org/creachadair/shell v0.0.6 // indirect
