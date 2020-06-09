@@ -19,9 +19,9 @@ import (
 
 	"github.com/creachadair/badgerstore"
 	"github.com/creachadair/ffs/blob"
+	"github.com/creachadair/ffs/blob/codecs/encrypted"
 	"github.com/creachadair/ffs/blob/codecs/zlib"
 	"github.com/creachadair/ffs/blob/encoded"
-	"github.com/creachadair/ffs/blob/encrypted"
 	"github.com/creachadair/ffs/blob/filestore"
 	"github.com/creachadair/ffs/blob/store"
 	"github.com/creachadair/getpass"
@@ -299,7 +299,7 @@ func storeFromContext(ctx context.Context) (blob.Store, error) {
 		if err != nil {
 			return nil, fmt.Errorf("creating cipher: %v", err)
 		}
-		st = encrypted.New(st, c, nil)
+		st = encoded.New(st, encrypted.New(c, nil))
 	}
 	return st, err
 }
