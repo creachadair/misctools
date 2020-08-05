@@ -23,17 +23,19 @@ func init() {
 Helpful additions for writing and maintaining Go code.
 
 Subcommands:
-  presubmit    : run "gofmt", "go test", and "go vet" over all packages
-  test, tests  : run "go test" over all packages
-  vet          : run "go vet" over all packages
-  lint         : run "golint" over all packages (if installed)
-  static       : run "staticheck" over all packages (if installed)
-  fmt, format  : run "gofmt -s" over all packages (if installed)
-  check        : run all the above checks
+  presubmit     : run "gofmt", "go test", and "go vet" over all packages
+  test, tests   : run "go test" over all packages
+  vet           : run "go vet" over all packages
+  fmt, format   : run "gofmt -s" over all packages
+  lint          : run "golint" over all packages (if installed)
+  static        : run "staticheck" over all packages (if installed)
+  check         : run all the above checks
+
+  install-tools : install external commands (staticcheck, golint)
 
   install-hook [subcommand]
-               : install pre-push hook in the current repo.
-                 subcommand defaults to "presubmit"
+                : install pre-push hook in the current repo.
+                  subcommand defaults to "presubmit"
 
 Set GITGO_<tag>=warn to convert failures into warnings, where tag is one of
   TEST, VET, LINT, FMT, STATIC
@@ -74,6 +76,8 @@ func run() error {
 		} else {
 			return err
 		}
+	} else if flag.Arg(0) == "install-tools" {
+		return installTools()
 	} else if flag.Arg(0) == "help" {
 		flag.Usage()
 		return nil
@@ -207,6 +211,22 @@ git go %s
 `, subcommand)
 
 	return ioutil.WriteFile(path, []byte(content), 0755)
+}
+
+func installTools() error {
+	for _, tool := range []string{
+		"golang.org/x/lint/golint",
+		"honnef.co/go/tools/cmd/staticcheck@2020.1.5",
+	} {
+		cmd := exec.Command("go", "get", "-u", tool)
+		cmd.Dir = os.TempDir()
+		cmd.Env = append(os.Environ(), "GO111MODULE=on")
+		fmt.Fprintf(out, "[INSTALL] %s\n", tool)
+		if err := cmd.Run(); err != nil {
+			return fmt.Errorf("installing %q: %v", tool, err)
+		}
+	}
+	return nil
 }
 
 func tagMode(tag string) string {
