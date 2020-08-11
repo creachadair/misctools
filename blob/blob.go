@@ -26,7 +26,7 @@ import (
 	"github.com/creachadair/ffs/blob/store"
 	"github.com/creachadair/getpass"
 	"github.com/creachadair/keyfile"
-	"github.com/creachadair/vocab"
+	"github.com/creachadair/misctools/internal/vocab"
 	"golang.org/x/xerrors"
 )
 

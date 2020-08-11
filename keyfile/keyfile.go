@@ -16,7 +16,7 @@ import (
 	"github.com/creachadair/atomicfile"
 	"github.com/creachadair/getpass"
 	"github.com/creachadair/keyfile"
-	"github.com/creachadair/vocab"
+	"github.com/creachadair/misctools/internal/vocab"
 	"golang.org/x/xerrors"
 )
 
