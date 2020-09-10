@@ -7,7 +7,6 @@ require (
 	bitbucket.org/creachadair/stringset v0.0.8
 	github.com/DataDog/zstd v1.4.5 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
-	github.com/creachadair/atomicfile v0.2.1
 	github.com/creachadair/badgerstore v0.0.6
 	github.com/creachadair/ffs v0.0.0-20200813060701-ae0d21c7a862
 	github.com/creachadair/getpass v0.1.0
