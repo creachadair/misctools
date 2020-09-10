@@ -10,7 +10,7 @@ require (
 	github.com/creachadair/badgerstore v0.0.6
 	github.com/creachadair/ffs v0.0.0-20200813060701-ae0d21c7a862
 	github.com/creachadair/getpass v0.1.0
-	github.com/creachadair/keyfile v0.2.0
+	github.com/creachadair/keyfile v0.3.0
 	github.com/creachadair/vocab v0.0.3
 	github.com/creachadair/vql v0.0.19
 	github.com/dgraph-io/badger/v2 v2.2007.1 // indirect
