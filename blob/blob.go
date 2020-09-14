@@ -169,9 +169,8 @@ func init() {
 }
 
 var listCmd = &command.C{
-	Name:  "list",
-	Usage: "list",
-	Help:  "List keys in the store",
+	Name: "list",
+	Help: "List keys in the store",
 
 	Run: func(ctx *command.Context, args []string) error {
 		if len(args) != 0 {
@@ -197,9 +196,8 @@ var listCmd = &command.C{
 }
 
 var lenCmd = &command.C{
-	Name:  "len",
-	Usage: "len",
-	Help:  "Print the number of stored keys",
+	Name: "len",
+	Help: "Print the number of stored keys",
 
 	Run: func(ctx *command.Context, args []string) error {
 		if len(args) != 0 {
@@ -252,7 +250,9 @@ func readData(ctx context.Context, cmd string, args []string) (data []byte, err 
 var casPutCmd = &command.C{
 	Name:  "put",
 	Usage: "put",
-	Help:  "Write a content-addressed blob to the store",
+	Help: `Write a content-addressed blob to the store.
+
+The contents of the blob are read from stdin.`,
 
 	Run: func(ctx *command.Context, args []string) error {
 		cas, err := casFromContext(ctx)
@@ -304,6 +304,8 @@ type settings struct {
 
 var tool = &command.C{
 	Name: filepath.Base(os.Args[0]),
+	Usage: `[options] command [args...]
+help [command]`,
 	Help: `Manipulate the contents of a blob store.
 
 To specify blob keys literally, prefix them with @.
