@@ -3,7 +3,6 @@ module github.com/creachadair/misctools
 go 1.13
 
 require (
-	bitbucket.org/creachadair/shell v0.0.6
 	bitbucket.org/creachadair/stringset v0.0.8
 	github.com/DataDog/zstd v1.4.5 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
