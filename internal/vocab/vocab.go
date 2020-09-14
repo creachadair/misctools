@@ -27,6 +27,7 @@ package vocab
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -38,7 +39,6 @@ import (
 	"time"
 
 	"bitbucket.org/creachadair/stringset"
-	"golang.org/x/xerrors"
 )
 
 // A Runner executes the behaviour of a command. If a command implements the
@@ -139,7 +139,7 @@ func New(name string, root interface{}) (*Item, error) {
 	if err != nil {
 		return nil, err
 	} else if itm.init == nil && itm.run == nil && len(itm.items) == 0 {
-		return nil, xerrors.New("value does not implement any vocabulary")
+		return nil, errors.New("value does not implement any vocabulary")
 	}
 	return itm, nil
 }
@@ -261,7 +261,7 @@ func (m *Item) Dispatch(ctx context.Context, args []string) error {
 	if err := m.fs.Parse(args); err == flag.ErrHelp {
 		return nil // the usage message already contains the short help
 	} else if err != nil {
-		return xerrors.Errorf("parsing flags for %q: %w", m.name, err)
+		return fmt.Errorf("parsing flags for %q: %w", m.name, err)
 	} else {
 		args = m.fs.Args()
 	}
@@ -274,7 +274,7 @@ func (m *Item) Dispatch(ctx context.Context, args []string) error {
 			if m.init != nil {
 				pctx, err := m.init(ctx, sub.name, args)
 				if err != nil {
-					return xerrors.Errorf("subcommand %q: %w", m.name, err)
+					return fmt.Errorf("subcommand %q: %w", m.name, err)
 				} else if pctx != nil {
 					ctx = pctx
 				}
@@ -290,7 +290,7 @@ func (m *Item) Dispatch(ctx context.Context, args []string) error {
 	if m.run != nil {
 		return m.run(ctx, args)
 	} else if len(args) != 0 {
-		return xerrors.Errorf("no command found matching %q", args)
+		return fmt.Errorf("no command found matching %q", args)
 	}
 	m.shortHelp()
 	return nil // TODO: Return something like flag.ErrHelp
@@ -319,7 +319,7 @@ func newItem(name string, x interface{}) (*Item, error) {
 	v := reflect.Indirect(reflect.ValueOf(x))
 	isStruct := v.Kind() == reflect.Struct
 	if !isRunner && !isStruct {
-		return nil, xerrors.Errorf("value must be a struct (have %v)", v.Kind())
+		return nil, fmt.Errorf("value must be a struct (have %v)", v.Kind())
 	}
 
 	item := &Item{
@@ -369,18 +369,18 @@ func newItem(name string, x interface{}) (*Item, error) {
 		if tag := ft.Tag.Get("flag"); tag != "" && ft.PkgPath == "" {
 			if fv.Kind() != reflect.Ptr {
 				if !fv.CanAddr() {
-					return nil, xerrors.Errorf("cannot flag field %q of type %T", ft.Name, x)
+					return nil, fmt.Errorf("cannot flag field %q of type %T", ft.Name, x)
 				}
 				fv = fv.Addr()
 			} else if !fv.Elem().IsValid() {
-				return nil, xerrors.Errorf("cannot flag pointer field %q with nil value", ft.Name)
+				return nil, fmt.Errorf("cannot flag pointer field %q with nil value", ft.Name)
 			}
 			fname, help := tag, tag
 			if i := strings.Index(tag, ","); i >= 0 {
 				fname, help = tag[:i], tag[i+1:]
 			}
 			if err := registerFlag(item.fs, fv.Interface(), fname, help); err != nil {
-				return nil, xerrors.Errorf("flagged field %q: %w", ft.Name, err)
+				return nil, fmt.Errorf("flagged field %q: %w", ft.Name, err)
 			}
 			item.hasFlags = true
 			continue
@@ -393,13 +393,13 @@ func newItem(name string, x interface{}) (*Item, error) {
 				fv = fv.Addr()
 			}
 			if !fv.CanInterface() {
-				return nil, xerrors.Errorf("vocab field %q: cannot capture unexported value", ft.Name)
+				return nil, fmt.Errorf("vocab field %q: cannot capture unexported value", ft.Name)
 			}
 			sub, err := newItem(names[0], fv.Interface())
 			if err != nil {
-				return nil, xerrors.Errorf("vocab field %q: %w", ft.Name, err)
+				return nil, fmt.Errorf("vocab field %q: %w", ft.Name, err)
 			} else if _, ok := item.items[sub.name]; ok {
-				return nil, xerrors.Errorf("duplicate subcommand %q", name)
+				return nil, fmt.Errorf("duplicate subcommand %q", name)
 			}
 
 			// If the field returned a command but lacks documentation, check for
@@ -418,7 +418,7 @@ func newItem(name string, x interface{}) (*Item, error) {
 			item.items[sub.name] = sub
 			for _, a := range names[1:] {
 				if old, ok := item.alias[a]; ok && old != sub.name {
-					return nil, xerrors.Errorf("duplicate alias %q (%q, %q)", a, old, sub.name)
+					return nil, fmt.Errorf("duplicate alias %q (%q, %q)", a, old, sub.name)
 				}
 				item.alias[a] = sub.name
 			}
@@ -461,7 +461,7 @@ func registerFlag(fs *flag.FlagSet, fv interface{}, name, help string) error {
 	case *uint:
 		fs.UintVar(t, name, *t, help)
 	default:
-		return xerrors.Errorf("type %T does not implement flag.Value", fv)
+		return fmt.Errorf("type %T does not implement flag.Value", fv)
 	}
 	return nil
 }

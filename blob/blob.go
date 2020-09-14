@@ -9,6 +9,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"hash"
 	"io/ioutil"
@@ -27,7 +28,6 @@ import (
 	"github.com/creachadair/getpass"
 	"github.com/creachadair/keyfile"
 	"github.com/creachadair/misctools/internal/vocab"
-	"golang.org/x/xerrors"
 )
 
 func init() {
@@ -60,7 +60,7 @@ type getCmd struct{}
 
 func (getCmd) Run(ctx context.Context, args []string) error {
 	if len(args) != 1 {
-		return xerrors.New("usage is: get <key>")
+		return errors.New("usage is: get <key>")
 	}
 	key, err := parseKey(args[0])
 	if err != nil {
@@ -84,7 +84,7 @@ type putCmd struct {
 
 func (p putCmd) Run(ctx context.Context, args []string) error {
 	if len(args) == 0 || len(args) > 2 {
-		return xerrors.New("usage is: put <key> [<path>]")
+		return errors.New("usage is: put <key> [<path>]")
 	}
 	key, err := parseKey(args[0])
 	if err != nil {
@@ -110,7 +110,7 @@ type sizeCmd struct{}
 
 func (sizeCmd) Run(ctx context.Context, args []string) error {
 	if len(args) != 1 {
-		return xerrors.New("usage is: size <key>")
+		return errors.New("usage is: size <key>")
 	}
 	key, err := parseKey(args[0])
 	if err != nil {
@@ -132,7 +132,7 @@ type delCmd struct{}
 
 func (delCmd) Run(ctx context.Context, args []string) error {
 	if len(args) != 1 {
-		return xerrors.New("usage is: delete <key>")
+		return errors.New("usage is: delete <key>")
 	}
 	key, err := parseKey(args[0])
 	if err != nil {
@@ -144,7 +144,7 @@ func (delCmd) Run(ctx context.Context, args []string) error {
 	}
 	del, ok := bs.(blob.Deleter)
 	if !ok {
-		return xerrors.New("store does not support deletion")
+		return errors.New("store does not support deletion")
 	}
 	return del.Delete(ctx, key)
 }
@@ -156,7 +156,7 @@ type listCmd struct {
 
 func (c listCmd) Run(ctx context.Context, args []string) error {
 	if len(args) != 0 {
-		return xerrors.New("usage is: list")
+		return errors.New("usage is: list")
 	}
 	start, err := parseKey(c.Start)
 	if err != nil {
@@ -180,7 +180,7 @@ type lenCmd struct{}
 
 func (lenCmd) Run(ctx context.Context, args []string) error {
 	if len(args) != 0 {
-		return xerrors.New("usage is: len")
+		return errors.New("usage is: len")
 	}
 	bs, err := storeFromContext(ctx)
 	if err != nil {
@@ -277,7 +277,7 @@ type toolKey struct{}
 func storeFromContext(ctx context.Context) (blob.Store, error) {
 	t := ctx.Value(toolKey{}).(*tool)
 	if t.Addr == "" {
-		return nil, xerrors.New("no -store address was specified")
+		return nil, errors.New("no -store address was specified")
 	}
 	st, err := store.Default.Open(ctx, t.Addr)
 	if err != nil {
@@ -323,7 +323,7 @@ func hashFromContext(ctx context.Context) (func() hash.Hash, error) {
 	case "2", "sha256":
 		return sha256.New, nil
 	case "":
-		return nil, xerrors.New("hash not specified")
+		return nil, errors.New("hash not specified")
 	default:
 		return nil, fmt.Errorf("unknown hash algorithm %q", c.Hash)
 	}

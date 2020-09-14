@@ -4,9 +4,8 @@ package vocab
 
 import (
 	"context"
+	"fmt"
 	"strings"
-
-	"golang.org/x/xerrors"
 )
 
 // The Helper interface may be optionally implemented by a command to generate
@@ -37,7 +36,7 @@ type Help struct {
 func (Help) Run(ctx context.Context, args []string) error {
 	target, tail := parentItem(ctx).Resolve(args)
 	if len(tail) != 0 {
-		return xerrors.Errorf("help: unable to resolve %q", strings.Join(args, " "))
+		return fmt.Errorf("help: unable to resolve %q", strings.Join(args, " "))
 	}
 	target.longHelp()
 	return nil

@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"bitbucket.org/creachadair/shell"
-	"github.com/creachadair/vocab"
+	"github.com/creachadair/misctools/internal/vocab"
 )
 
 type doNothing struct{}
