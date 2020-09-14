@@ -29,6 +29,8 @@ github.com/creachadair/atomicfile v0.2.1 h1:lR7a+aLj4eeIM3ihqozxEoxjT6MUY9XXAhtZ
 github.com/creachadair/atomicfile v0.2.1/go.mod h1:Tvr/wsb3lQY4dj+9utcmJ7Gp6wi3LKA8jRNqoxUhA2M=
 github.com/creachadair/badgerstore v0.0.6 h1:MrHAKtmIP7zUcXDpKrNwIlkbm4COeCDcudjLRVDtwLo=
 github.com/creachadair/badgerstore v0.0.6/go.mod h1:ArYXEklCYYLdRGWZeIcxEh0YX8FjnYrOD97FNAVU8Ak=
+github.com/creachadair/command v0.0.0-20200910004628-e48505ecfece h1:OmnuY/NawdDxihrHov1GWaz9V3cBMuwy8phnGzMKor8=
+github.com/creachadair/command v0.0.0-20200910004628-e48505ecfece/go.mod h1:1gjWc20HW18glN4C5bWrxmna/BzCALnR6ZFPbam9iwc=
 github.com/creachadair/ffs v0.0.0-20190826173232-ca263fb5bffc h1:V5rskBI+6xvLqKk/si9nmICfATDsZd8/UfxrzEPvTKY=
 github.com/creachadair/ffs v0.0.0-20190826173232-ca263fb5bffc/go.mod h1:hg0Cpr+OA2VWLqznFeiop8u2I2PnEYbhKWej3BXN2pE=
 github.com/creachadair/ffs v0.0.0-20200813060701-ae0d21c7a862 h1:Ue0QJ6UjU4sv1zwkfnIXm92tp6KynrbSyIEiSOeF95E=
