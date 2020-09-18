@@ -5,6 +5,7 @@ package main
 import (
 	"context"
 	"crypto/aes"
+	"crypto/hmac"
 	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/base64"
@@ -300,6 +301,8 @@ type settings struct {
 	Keyfile string
 	Store   string
 	Hash    string
+
+	newHash func() hash.Hash
 }
 
 var tool = &command.C{
@@ -359,16 +362,19 @@ func storeFromContext(ctx *command.Context) (blob.Store, error) {
 			return nil, fmt.Errorf("creating cipher: %v", err)
 		}
 		st = encoded.New(st, encrypted.New(c, nil))
+		t.newHash = func() hash.Hash {
+			return hmac.New(sha256.New, key)
+		}
 	}
 	return st, err
 }
 
 func casFromContext(ctx *command.Context) (blob.CAS, error) {
-	h, err := hashFromContext(ctx)
+	bs, err := storeFromContext(ctx)
 	if err != nil {
 		return blob.CAS{}, err
 	}
-	bs, err := storeFromContext(ctx)
+	h, err := hashFromContext(ctx)
 	if err != nil {
 		return blob.CAS{}, err
 	}
@@ -377,6 +383,9 @@ func casFromContext(ctx *command.Context) (blob.CAS, error) {
 
 func hashFromContext(ctx *command.Context) (func() hash.Hash, error) {
 	c := ctx.Config.(*settings)
+	if c.newHash != nil {
+		return c.newHash, nil
+	}
 	switch c.Hash {
 	case "1", "sha1":
 		return sha1.New, nil
