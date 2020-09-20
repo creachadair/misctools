@@ -35,8 +35,8 @@ github.com/creachadair/ffs v0.0.0-20200916045332-33ad94347b93 h1:a9p2UOj9fpNFYRc
 github.com/creachadair/ffs v0.0.0-20200916045332-33ad94347b93/go.mod h1:Wj9WJFbPLwLiV5d4dJK7TQ8bIvw4HZcLrZ0zr4NWWgw=
 github.com/creachadair/getpass v0.1.0 h1:L/bEjfydVpDLP+0VIqK9z4rFktOz/5hYBDVeyWe61zg=
 github.com/creachadair/getpass v0.1.0/go.mod h1:Wup04NkmcX+Af5Z2pt3FJFySTC7bs9PcsqS2zC2Ar7M=
-github.com/creachadair/keyfile v0.3.0 h1:zys8lAvQiMi9h5fvW6/04cgdqAyW6ExNDG4HTDf0uw0=
-github.com/creachadair/keyfile v0.3.0/go.mod h1:SvYQVPPd2vU7gXOd15LOzb+Cshdl+MfpTU1vGwPkYUY=
+github.com/creachadair/keyfile v0.4.0 h1:ShhBiGVLvKNrx1477s0fAbzokpjuQ3f3gUZWENd3ERo=
+github.com/creachadair/keyfile v0.4.0/go.mod h1:GzZF8srsVdUL3tT+ntdWF1y2hQFgbW5/0YoRv/P1/js=
 github.com/creachadair/staticfile v0.1.2/go.mod h1:a3qySzCIXEprDGxk6tSxSI+dBBdLzqeBOMhZ+o2d3pM=
 github.com/creachadair/vql v0.0.19 h1:8yUL9DrLZuALGzUf9dcPT2cmYTfvJ2SwHpoacusaS/0=
 github.com/creachadair/vql v0.0.19/go.mod h1:KNmBr/lJOumdnm9de6kuwiInP7M1IqobgOw5dPHN60s=
@@ -146,7 +146,6 @@ github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:
 golang.org/x/crypto v0.0.0-20181203042331-505ab145d0a9/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
-golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a h1:vclmkQCjlDX5OydZ9wv8rBCcS0QyQY66Mpf/7BZbInM=
 golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/exp v0.0.0-20190121172915-509febef88a4/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=

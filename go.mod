@@ -10,7 +10,7 @@ require (
 	github.com/creachadair/command v0.0.0-20200910004628-e48505ecfece
 	github.com/creachadair/ffs v0.0.0-20200916045332-33ad94347b93
 	github.com/creachadair/getpass v0.1.0
-	github.com/creachadair/keyfile v0.3.0
+	github.com/creachadair/keyfile v0.4.0
 	github.com/creachadair/vql v0.0.19
 	github.com/dgraph-io/badger/v2 v2.2007.2 // indirect
 	github.com/dgraph-io/ristretto v0.0.3 // indirect
@@ -19,7 +19,6 @@ require (
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/stretchr/testify v1.6.1 // indirect
 	github.com/tdewolff/minify/v2 v2.9.4
-	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
 	golang.org/x/net v0.0.0-20200904194848-62affa334b73 // indirect
 	golang.org/x/sys v0.0.0-20200909081042-eff7692f9009 // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
