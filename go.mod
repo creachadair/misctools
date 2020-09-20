@@ -8,9 +8,9 @@ require (
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/creachadair/badgerstore v0.0.6
 	github.com/creachadair/command v0.0.0-20200910004628-e48505ecfece
-	github.com/creachadair/ffs v0.0.0-20200916045332-33ad94347b93
+	github.com/creachadair/ffs v0.0.0-20200921143012-1a2e18206fca
 	github.com/creachadair/getpass v0.1.0
-	github.com/creachadair/keyfile v0.4.0
+	github.com/creachadair/keyfile v0.4.2
 	github.com/creachadair/vql v0.0.19
 	github.com/dgraph-io/badger/v2 v2.2007.2 // indirect
 	github.com/dgraph-io/ristretto v0.0.3 // indirect

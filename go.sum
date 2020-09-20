@@ -31,12 +31,12 @@ github.com/creachadair/command v0.0.0-20200910004628-e48505ecfece h1:OmnuY/NawdD
 github.com/creachadair/command v0.0.0-20200910004628-e48505ecfece/go.mod h1:1gjWc20HW18glN4C5bWrxmna/BzCALnR6ZFPbam9iwc=
 github.com/creachadair/ffs v0.0.0-20190826173232-ca263fb5bffc h1:V5rskBI+6xvLqKk/si9nmICfATDsZd8/UfxrzEPvTKY=
 github.com/creachadair/ffs v0.0.0-20190826173232-ca263fb5bffc/go.mod h1:hg0Cpr+OA2VWLqznFeiop8u2I2PnEYbhKWej3BXN2pE=
-github.com/creachadair/ffs v0.0.0-20200916045332-33ad94347b93 h1:a9p2UOj9fpNFYRcgLSY4f2bZsRErK20geA3XSSIY9Hs=
-github.com/creachadair/ffs v0.0.0-20200916045332-33ad94347b93/go.mod h1:Wj9WJFbPLwLiV5d4dJK7TQ8bIvw4HZcLrZ0zr4NWWgw=
+github.com/creachadair/ffs v0.0.0-20200921143012-1a2e18206fca h1:16m2VmyyHxH2XmFZuxQF6IgWY7jMG+3a2UCWXWr7hgQ=
+github.com/creachadair/ffs v0.0.0-20200921143012-1a2e18206fca/go.mod h1:SzgjluEgqkthDTojTxgWWhqVqTSUT9Nm1DhApcIclrg=
 github.com/creachadair/getpass v0.1.0 h1:L/bEjfydVpDLP+0VIqK9z4rFktOz/5hYBDVeyWe61zg=
 github.com/creachadair/getpass v0.1.0/go.mod h1:Wup04NkmcX+Af5Z2pt3FJFySTC7bs9PcsqS2zC2Ar7M=
-github.com/creachadair/keyfile v0.4.0 h1:ShhBiGVLvKNrx1477s0fAbzokpjuQ3f3gUZWENd3ERo=
-github.com/creachadair/keyfile v0.4.0/go.mod h1:GzZF8srsVdUL3tT+ntdWF1y2hQFgbW5/0YoRv/P1/js=
+github.com/creachadair/keyfile v0.4.2 h1:MPunYGond9Ed0UDx7U8VWoEkKoiUzQtn9ZHPfka0V58=
+github.com/creachadair/keyfile v0.4.2/go.mod h1:GzZF8srsVdUL3tT+ntdWF1y2hQFgbW5/0YoRv/P1/js=
 github.com/creachadair/staticfile v0.1.2/go.mod h1:a3qySzCIXEprDGxk6tSxSI+dBBdLzqeBOMhZ+o2d3pM=
 github.com/creachadair/vql v0.0.19 h1:8yUL9DrLZuALGzUf9dcPT2cmYTfvJ2SwHpoacusaS/0=
 github.com/creachadair/vql v0.0.19/go.mod h1:KNmBr/lJOumdnm9de6kuwiInP7M1IqobgOw5dPHN60s=
@@ -82,6 +82,8 @@ github.com/golang/protobuf v1.4.2 h1:+Z5KGCizgyZCbGh1KZqA0fcLLkwbsjIzS4aV2v7wJX0
 github.com/golang/protobuf v1.4.2/go.mod h1:oDoupMAO8OvCJWAcko0GGGIgR6R6ocIYbsSw735rRwI=
 github.com/golang/snappy v0.0.1 h1:Qgr9rKW7uDUkrbSmQeiDsGa8SjGyCOGtuasMWwvp2P4=
 github.com/golang/snappy v0.0.1/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
+github.com/golang/snappy v0.0.2 h1:aeE13tS0IiQgFjYdoL8qN3K1N2bXXtI6Vi51/y7BpMw=
+github.com/golang/snappy v0.0.2/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
 github.com/google/go-cmp v0.2.0/go.mod h1:oXzfMopK8JAjlY9xF4vHSVASa0yLyX7SntLO5aqRK0M=
 github.com/google/go-cmp v0.3.0 h1:crn/baboCvb5fXaQ0IJ1SGTsTVrWpDsCWC8EGETZijY=
 github.com/google/go-cmp v0.3.0/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
