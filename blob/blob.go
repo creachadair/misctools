@@ -21,6 +21,7 @@ import (
 	"strings"
 
 	"github.com/creachadair/badgerstore"
+	"github.com/creachadair/boltstore"
 	"github.com/creachadair/command"
 	"github.com/creachadair/ffs/blob"
 	"github.com/creachadair/ffs/blob/codecs/encrypted"
@@ -35,6 +36,7 @@ import (
 var stores = store.Registry{
 	"badger": badgerstore.Opener,
 	"file":   filestore.Opener,
+	"bolt":   boltstore.Opener,
 }
 
 func init() {
