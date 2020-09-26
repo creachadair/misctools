@@ -7,7 +7,7 @@ require (
 	github.com/DataDog/zstd v1.4.5 // indirect
 	github.com/creachadair/badgerstore v0.0.6
 	github.com/creachadair/command v0.0.0-20200910004628-e48505ecfece
-	github.com/creachadair/ffs v0.0.0-20200926183222-90e67b338409
+	github.com/creachadair/ffs v0.0.0-20200926202826-66eeaa8e9e7d
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/keyfile v0.5.2
 	github.com/creachadair/vql v0.0.19
