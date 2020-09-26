@@ -297,7 +297,7 @@ var casKeyCmd = &command.C{
 }
 
 func init() {
-	tool.Flags.String("store", "", "store,Blob store address (required)")
+	tool.Flags.String("store", "", "Blob store address (required)")
 	tool.Flags.String("keyfile", os.Getenv("KEYFILE_PATH"), "Path of encryption key file")
 }
 
