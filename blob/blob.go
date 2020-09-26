@@ -32,16 +32,19 @@ import (
 	"github.com/creachadair/keyfile"
 )
 
+var stores = store.Registry{
+	"badger": badgerstore.Opener,
+	"file":   filestore.Opener,
+}
+
 func init() {
-	store.Default.Register("badger", badgerstore.Opener)
-	store.Default.Register("file", filestore.Opener)
-	store.Default.Register("zlib", func(ctx context.Context, addr string) (blob.Store, error) {
-		s, err := store.Default.Open(ctx, addr)
+	stores["zlib"] = func(ctx context.Context, addr string) (blob.Store, error) {
+		s, err := stores.Open(ctx, addr)
 		if err != nil {
 			return nil, err
 		}
 		return encoded.New(s, zlib.NewCodec(zlib.LevelDefault)), nil
-	})
+	}
 }
 
 func main() {
@@ -344,7 +347,7 @@ func storeFromContext(ctx *command.Context) (blob.Store, error) {
 	if t.Store == "" {
 		return nil, errors.New("no -store address was specified")
 	}
-	st, err := store.Default.Open(t.Context, t.Store)
+	st, err := stores.Open(t.Context, t.Store)
 	if err != nil {
 		return nil, err
 	}
