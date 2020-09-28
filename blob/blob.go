@@ -161,11 +161,7 @@ var delCmd = &command.C{
 		if err != nil {
 			return err
 		}
-		del, ok := bs.(blob.Deleter)
-		if !ok {
-			return errors.New("store does not support deletion")
-		}
-		return del.Delete(getContext(ctx), key)
+		return bs.Delete(getContext(ctx), key)
 	},
 }
 
