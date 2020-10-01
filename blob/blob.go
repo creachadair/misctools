@@ -77,12 +77,13 @@ var getCmd = &command.C{
 		if err != nil {
 			return err
 		}
+		defer blob.CloseStore(getContext(ctx), bs)
 		data, err := bs.Get(getContext(ctx), key)
 		if err != nil {
 			return err
 		}
-		_, err = os.Stdout.Write(data)
-		return err
+		os.Stdout.Write(data)
+		return nil
 	},
 }
 
@@ -95,7 +96,7 @@ var putCmd = &command.C{
 	Usage: "put <key> [<path>]",
 	Help:  "Write a blob to the store",
 
-	Run: func(ctx *command.Context, args []string) error {
+	Run: func(ctx *command.Context, args []string) (err error) {
 		if len(args) == 0 || len(args) > 2 {
 			return errors.New("usage is: put <key> [<path>]")
 		}
@@ -107,6 +108,11 @@ var putCmd = &command.C{
 		if err != nil {
 			return nil
 		}
+		defer func() {
+			if cerr := blob.CloseStore(getContext(ctx), bs); err == nil {
+				err = cerr
+			}
+		}()
 		data, err := readData(getContext(ctx), "put", args[1:])
 		if err != nil {
 			return err
@@ -137,6 +143,7 @@ var sizeCmd = &command.C{
 		if err != nil {
 			return err
 		}
+		defer blob.CloseStore(getContext(ctx), bs)
 		size, err := bs.Size(getContext(ctx), key)
 		if err != nil {
 			return err
@@ -151,7 +158,7 @@ var delCmd = &command.C{
 	Usage: "delete <key>",
 	Help:  "Delete a blob from the store",
 
-	Run: func(ctx *command.Context, args []string) error {
+	Run: func(ctx *command.Context, args []string) (err error) {
 		if len(args) != 1 {
 			return errors.New("usage is: delete <key>")
 		}
@@ -163,6 +170,11 @@ var delCmd = &command.C{
 		if err != nil {
 			return err
 		}
+		defer func() {
+			if cerr := blob.CloseStore(getContext(ctx), bs); err == nil {
+				err = cerr
+			}
+		}()
 		return bs.Delete(getContext(ctx), key)
 	},
 }
@@ -188,6 +200,7 @@ var listCmd = &command.C{
 		if err != nil {
 			return err
 		}
+		defer blob.CloseStore(getContext(ctx), bs)
 		return bs.List(getContext(ctx), start, func(key string) error {
 			if getFlag(ctx, "raw").(bool) {
 				fmt.Println(key)
@@ -211,6 +224,7 @@ var lenCmd = &command.C{
 		if err != nil {
 			return err
 		}
+		defer blob.CloseStore(getContext(ctx), bs)
 		n, err := bs.Len(getContext(ctx))
 		if err != nil {
 			return err
@@ -258,11 +272,16 @@ var casPutCmd = &command.C{
 
 The contents of the blob are read from stdin.`,
 
-	Run: func(ctx *command.Context, args []string) error {
+	Run: func(ctx *command.Context, args []string) (err error) {
 		cas, err := casFromContext(ctx)
 		if err != nil {
 			return err
 		}
+		defer func() {
+			if cerr := blob.CloseStore(getContext(ctx), cas); err == nil {
+				err = cerr
+			}
+		}()
 		data, err := readData(getContext(ctx), "put", args)
 		if err != nil {
 			return err
