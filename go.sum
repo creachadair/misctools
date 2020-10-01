@@ -37,8 +37,8 @@ github.com/creachadair/getpass v0.1.1 h1:NBy01Vx3sEG75JbSgjsObwe06ISDJL9WS88pFNn
 github.com/creachadair/getpass v0.1.1/go.mod h1:amWqqvJdxnT/Tk6PPgpFWX5Ik2RH4dnvfXequlcSXSc=
 github.com/creachadair/keyfile v0.5.2 h1:FFF8LYvFwFHvKLrNyUus254GdnTTtUyj5t2X7L3tLRU=
 github.com/creachadair/keyfile v0.5.2/go.mod h1:xQ8Aue875GrfNDUKJkihmfad4ICimEQZZAN8jhAHGB8=
-github.com/creachadair/sqlitestore v0.0.0-20201001171143-3a4b23ab04bc h1:oPau+HvMf8TdSCkvjxDbV4WCEKAXEZxExE95m8VgkUU=
-github.com/creachadair/sqlitestore v0.0.0-20201001171143-3a4b23ab04bc/go.mod h1:x+xzCgNbuURx9/8LGh0n83ciMzt7RYxOSvBq5lJ9ejw=
+github.com/creachadair/sqlitestore v0.0.0-20201001181217-283d415e2ec5 h1:yN6HD69Pl55fVK02Qh+J8dB0a7PKHWXZlN5ZB/Gtn4U=
+github.com/creachadair/sqlitestore v0.0.0-20201001181217-283d415e2ec5/go.mod h1:8OfDNgINGEejTz/hnIonuOu1wpBnm2HNOKHbFZMOD7k=
 github.com/creachadair/staticfile v0.1.3/go.mod h1:a3qySzCIXEprDGxk6tSxSI+dBBdLzqeBOMhZ+o2d3pM=
 github.com/creachadair/vql v0.0.19 h1:8yUL9DrLZuALGzUf9dcPT2cmYTfvJ2SwHpoacusaS/0=
 github.com/creachadair/vql v0.0.19/go.mod h1:KNmBr/lJOumdnm9de6kuwiInP7M1IqobgOw5dPHN60s=

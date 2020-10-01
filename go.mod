@@ -10,7 +10,7 @@ require (
 	github.com/creachadair/ffs v0.0.0-20201001165948-38dc36928df1
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/keyfile v0.5.2
-	github.com/creachadair/sqlitestore v0.0.0-20201001171143-3a4b23ab04bc
+	github.com/creachadair/sqlitestore v0.0.0-20201001181217-283d415e2ec5
 	github.com/creachadair/vql v0.0.19
 	github.com/tdewolff/minify/v2 v2.9.4
 	golang.org/x/crypto v0.0.0-20200930160638-afb6bcd081ae // indirect
