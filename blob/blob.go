@@ -31,12 +31,14 @@ import (
 	"github.com/creachadair/ffs/blob/store"
 	"github.com/creachadair/getpass"
 	"github.com/creachadair/keyfile"
+	"github.com/creachadair/sqlitestore"
 )
 
 var stores = store.Registry{
 	"badger": badgerstore.Opener,
-	"file":   filestore.Opener,
 	"bolt":   boltstore.Opener,
+	"file":   filestore.Opener,
+	"sqlite": sqlitestore.Opener,
 }
 
 func init() {
