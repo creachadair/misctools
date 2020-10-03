@@ -32,6 +32,7 @@ import (
 	"github.com/creachadair/getpass"
 	"github.com/creachadair/keyfile"
 	"github.com/creachadair/sqlitestore"
+	"golang.org/x/crypto/sha3"
 )
 
 var stores = store.Registry{
@@ -234,19 +235,9 @@ var lenCmd = &command.C{
 	},
 }
 
-func init() {
-	casGroup.Flags.String("hash", "1", "CAS hash algorithm")
-}
-
 var casGroup = &command.C{
 	Name: "cas",
 	Help: "Manipulate a content-addressable blob store",
-
-	Init: func(ctx *command.Context) error {
-		cfg := ctx.Config.(*settings)
-		cfg.Hash = getFlag(ctx, "hash").(string)
-		return nil
-	},
 
 	Commands: []*command.C{
 		casKeyCmd,
@@ -316,6 +307,7 @@ var casKeyCmd = &command.C{
 func init() {
 	tool.Flags.String("store", "", "Blob store address (required)")
 	tool.Flags.String("keyfile", os.Getenv("KEYFILE_PATH"), "Path of encryption key file")
+	tool.Flags.String("hash", "3", "CAS hash algorithm (1, 2, 3)")
 }
 
 type settings struct {
@@ -344,6 +336,7 @@ Otherwise, keys must be encoded in hexadecimal.
 			Context: context.Background(),
 			Keyfile: getFlag(ctx, "keyfile").(string),
 			Store:   getFlag(ctx, "store").(string),
+			Hash:    getFlag(ctx, "hash").(string),
 		}
 		return nil
 	},
@@ -371,6 +364,10 @@ func storeFromContext(ctx *command.Context) (blob.Store, error) {
 		return nil, err
 	}
 	if t.Keyfile != "" {
+		h, err := hashFromContext(ctx)
+		if err != nil {
+			return nil, fmt.Errorf("getting hash: %w", err)
+		}
 		pp, err := getpass.Prompt("Passphrase: ")
 		if err != nil {
 			return nil, fmt.Errorf("reading passphrase: %v", err)
@@ -385,7 +382,7 @@ func storeFromContext(ctx *command.Context) (blob.Store, error) {
 		}
 		st = encoded.New(st, encrypted.New(c, nil))
 		t.newHash = func() hash.Hash {
-			return hmac.New(sha256.New, key)
+			return hmac.New(h, key)
 		}
 	}
 	return st, err
@@ -413,6 +410,8 @@ func hashFromContext(ctx *command.Context) (func() hash.Hash, error) {
 		return sha1.New, nil
 	case "2", "sha256":
 		return sha256.New, nil
+	case "3", "sha3":
+		return sha3.New256, nil
 	case "":
 		return nil, errors.New("hash not specified")
 	default:
