@@ -42,16 +42,6 @@ var stores = store.Registry{
 	"sqlite": sqlitestore.Opener,
 }
 
-func init() {
-	stores["zlib"] = func(ctx context.Context, addr string) (blob.Store, error) {
-		s, err := stores.Open(ctx, addr)
-		if err != nil {
-			return nil, err
-		}
-		return encoded.New(s, zlib.NewCodec(zlib.LevelDefault)), nil
-	}
-}
-
 func main() {
 	if err := command.Execute(tool.NewContext(nil), os.Args[1:]); err != nil {
 		if errors.Is(err, command.ErrUsage) {
@@ -308,6 +298,7 @@ func init() {
 	tool.Flags.String("store", "", "Blob store address (required)")
 	tool.Flags.String("keyfile", os.Getenv("KEYFILE_PATH"), "Path of encryption key file")
 	tool.Flags.String("hash", "3", "CAS hash algorithm (1, 2, 3)")
+	tool.Flags.Int("zlib", 0, "ZLIB compression level (0=off)")
 }
 
 type settings struct {
@@ -315,6 +306,7 @@ type settings struct {
 	Keyfile string
 	Store   string
 	Hash    string
+	Level   int
 
 	newHash func() hash.Hash
 }
@@ -337,6 +329,7 @@ Otherwise, keys must be encoded in hexadecimal.
 			Keyfile: getFlag(ctx, "keyfile").(string),
 			Store:   getFlag(ctx, "store").(string),
 			Hash:    getFlag(ctx, "hash").(string),
+			Level:   getFlag(ctx, "zlib").(int),
 		}
 		return nil
 	},
@@ -362,6 +355,9 @@ func storeFromContext(ctx *command.Context) (blob.Store, error) {
 	st, err := stores.Open(t.Context, t.Store)
 	if err != nil {
 		return nil, err
+	}
+	if t.Level > 0 {
+		st = encoded.New(st, zlib.NewCodec(zlib.Level(t.Level)))
 	}
 	if t.Keyfile != "" {
 		h, err := hashFromContext(ctx)
