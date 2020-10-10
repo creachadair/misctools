@@ -29,6 +29,7 @@ import (
 	"github.com/creachadair/ffs/blob/encoded"
 	"github.com/creachadair/ffs/blob/filestore"
 	"github.com/creachadair/ffs/blob/store"
+	"github.com/creachadair/gcsstore"
 	"github.com/creachadair/getpass"
 	"github.com/creachadair/keyfile"
 	"github.com/creachadair/sqlitestore"
@@ -39,6 +40,7 @@ var stores = store.Registry{
 	"badger": badgerstore.Opener,
 	"bolt":   boltstore.Opener,
 	"file":   filestore.Opener,
+	"gcs":    gcsstore.Opener,
 	"sqlite": sqlitestore.Opener,
 }
 

@@ -8,6 +8,7 @@ require (
 	github.com/creachadair/boltstore v0.0.0-20201003170606-ae1eaff430c7
 	github.com/creachadair/command v0.0.0-20200910004628-e48505ecfece
 	github.com/creachadair/ffs v0.0.0-20201010032336-806306054c66
+	github.com/creachadair/gcsstore v0.0.0-20201010062713-39d506042ce6
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/keyfile v0.5.3
 	github.com/creachadair/sqlitestore v0.0.0-20201001181217-283d415e2ec5
