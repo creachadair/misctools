@@ -55,27 +55,31 @@ func main() {
 
 var getCmd = &command.C{
 	Name:  "get",
-	Usage: "get <key>",
-	Help:  "Read a blob from the store",
+	Usage: "get <key>...",
+	Help:  "Read blobs from the store",
 
 	Run: func(ctx *command.Context, args []string) error {
-		if len(args) != 1 {
-			return errors.New("usage is: get <key>")
-		}
-		key, err := parseKey(args[0])
-		if err != nil {
-			return err
+		if len(args) == 0 {
+			return errors.New("usage is: get <key>...")
 		}
 		bs, err := storeFromContext(ctx)
 		if err != nil {
 			return err
 		}
 		defer blob.CloseStore(getContext(ctx), bs)
-		data, err := bs.Get(getContext(ctx), key)
-		if err != nil {
-			return err
+
+		nctx := getContext(ctx)
+		for _, arg := range args {
+			key, err := parseKey(arg)
+			if err != nil {
+				return err
+			}
+			data, err := bs.Get(nctx, key)
+			if err != nil {
+				return err
+			}
+			os.Stdout.Write(data)
 		}
-		os.Stdout.Write(data)
 		return nil
 	},
 }
@@ -121,27 +125,31 @@ var putCmd = &command.C{
 
 var sizeCmd = &command.C{
 	Name:  "size",
-	Usage: "size <key>",
-	Help:  "Print the size of a stored blob",
+	Usage: "size <key>...",
+	Help:  "Print the sizes of stored blobs",
 
 	Run: func(ctx *command.Context, args []string) error {
-		if len(args) != 1 {
-			return errors.New("usage is: size <key>")
-		}
-		key, err := parseKey(args[0])
-		if err != nil {
-			return err
+		if len(args) == 0 {
+			return errors.New("usage is: size <key>...")
 		}
 		bs, err := storeFromContext(ctx)
 		if err != nil {
 			return err
 		}
 		defer blob.CloseStore(getContext(ctx), bs)
-		size, err := bs.Size(getContext(ctx), key)
-		if err != nil {
-			return err
+
+		nctx := getContext(ctx)
+		for _, arg := range args {
+			key, err := parseKey(arg)
+			if err != nil {
+				return err
+			}
+			size, err := bs.Size(nctx, key)
+			if err != nil {
+				return err
+			}
+			fmt.Println(hex.EncodeToString([]byte(key)), size)
 		}
-		fmt.Println(size)
 		return nil
 	},
 }
