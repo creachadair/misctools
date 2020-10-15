@@ -60,6 +60,7 @@ var getCmd = &command.C{
 
 	Run: func(ctx *command.Context, args []string) error {
 		if len(args) == 0 {
+			//lint:ignore ST1005 The punctuation signifies repetition to the user.
 			return errors.New("usage is: get <key>...")
 		}
 		bs, err := storeFromContext(ctx)
@@ -130,6 +131,7 @@ var sizeCmd = &command.C{
 
 	Run: func(ctx *command.Context, args []string) error {
 		if len(args) == 0 {
+			//lint:ignore ST1005 The punctuation signifies repetition to the user.
 			return errors.New("usage is: size <key>...")
 		}
 		bs, err := storeFromContext(ctx)
