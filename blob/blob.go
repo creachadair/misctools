@@ -162,23 +162,33 @@ var delCmd = &command.C{
 	Help:  "Delete a blob from the store",
 
 	Run: func(ctx *command.Context, args []string) (err error) {
-		if len(args) != 1 {
-			return errors.New("usage is: delete <key>")
-		}
-		key, err := parseKey(args[0])
-		if err != nil {
-			return err
+		if len(args) == 0 {
+			//lint:ignore ST1005 The punctuation signifies repetition to the user.
+			return errors.New("usage is: size <key>...")
 		}
 		bs, err := storeFromContext(ctx)
 		if err != nil {
 			return err
 		}
+		nctx := getContext(ctx)
 		defer func() {
-			if cerr := blob.CloseStore(getContext(ctx), bs); err == nil {
+			if cerr := blob.CloseStore(nctx, bs); err == nil {
 				err = cerr
 			}
 		}()
-		return bs.Delete(getContext(ctx), key)
+		for _, arg := range args {
+			key, err := parseKey(arg)
+			if err != nil {
+				return err
+			}
+			if err := bs.Delete(nctx, key); errors.Is(err, blob.ErrKeyNotFound) {
+				continue
+			} else if err != nil {
+				return err
+			}
+			fmt.Println(hex.EncodeToString([]byte(key)))
+		}
+		return nil
 	},
 }
 
