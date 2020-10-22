@@ -8,7 +8,7 @@ require (
 	github.com/creachadair/badgerstore v0.0.8
 	github.com/creachadair/boltstore v0.0.0-20201016181728-d7a013eca088
 	github.com/creachadair/command v0.0.0-20200910004628-e48505ecfece
-	github.com/creachadair/ffs v0.0.0-20201016181435-0d4dccf55695
+	github.com/creachadair/ffs v0.0.0-20201022033014-0557f6a14caa
 	github.com/creachadair/gcsstore v0.0.0-20201015161812-5f1a8a28aaca
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/keyfile v0.5.3
