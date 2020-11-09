@@ -68,6 +68,7 @@ func main() {
 		log.Fatalf("Listen: %v", err)
 	}
 	if ntype == "unix" {
+		os.Chmod(*listenAddr, 0600)
 		defer os.Remove(*listenAddr)
 	}
 	log.Printf("Service: %q", *listenAddr)
