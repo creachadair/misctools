@@ -4,16 +4,11 @@ package main
 
 import (
 	"context"
-	"crypto/aes"
-	"crypto/hmac"
-	"crypto/sha1"
-	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
 	"errors"
 	"flag"
 	"fmt"
-	"hash"
 	"io/ioutil"
 	"log"
 	"net"
@@ -23,15 +18,9 @@ import (
 
 	"github.com/creachadair/command"
 	"github.com/creachadair/ffs/blob"
-	"github.com/creachadair/ffs/blob/codecs/encrypted"
-	"github.com/creachadair/ffs/blob/codecs/zlib"
-	"github.com/creachadair/ffs/blob/encoded"
 	"github.com/creachadair/ffs/blob/rpcstore"
-	"github.com/creachadair/getpass"
 	"github.com/creachadair/jrpc2"
 	"github.com/creachadair/jrpc2/channel"
-	"github.com/creachadair/keyfile"
-	"golang.org/x/crypto/sha3"
 )
 
 func main() {
@@ -266,7 +255,7 @@ var casPutCmd = &command.C{
 The contents of the blob are read from stdin.`,
 
 	Run: func(ctx *command.Context, args []string) (err error) {
-		cas, err := casFromContext(ctx)
+		cas, err := storeFromContext(ctx)
 		if err != nil {
 			return err
 		}
@@ -293,34 +282,30 @@ var casKeyCmd = &command.C{
 	Help: "Compute the key for a blob without writing it",
 
 	Run: func(ctx *command.Context, args []string) error {
+		cas, err := storeFromContext(ctx)
+		if err != nil {
+			return err
+		}
 		data, err := readData(getContext(ctx), "key", args)
 		if err != nil {
 			return err
 		}
-		h, err := hashFromContext(ctx)
+		key, err := cas.CASKey(getContext(ctx), data)
 		if err != nil {
 			return err
 		}
-		fmt.Printf("%x\n", blob.NewCAS(nil, h).Key(data))
+		fmt.Printf("%x\n", key)
 		return nil
 	},
 }
 
 func init() {
 	tool.Flags.String("store", "", "Blob store address (required)")
-	tool.Flags.String("keyfile", os.Getenv("KEYFILE_PATH"), "Path of encryption key file")
-	tool.Flags.String("hash", "3", "CAS hash algorithm (1, 2, 3)")
-	tool.Flags.Int("zlib", 0, "ZLIB compression level (0=off)")
 }
 
 type settings struct {
 	Context context.Context
-	Keyfile string
 	Store   string
-	Hash    string
-	Level   int
-
-	newHash func() hash.Hash
 }
 
 var tool = &command.C{
@@ -338,10 +323,7 @@ Otherwise, keys must be encoded in hexadecimal.
 	Init: func(ctx *command.Context) error {
 		ctx.Config = &settings{
 			Context: context.Background(),
-			Keyfile: getFlag(ctx, "keyfile").(string),
 			Store:   getFlag(ctx, "store").(string),
-			Hash:    getFlag(ctx, "hash").(string),
-			Level:   getFlag(ctx, "zlib").(int),
 		}
 		return nil
 	},
@@ -359,75 +341,17 @@ Otherwise, keys must be encoded in hexadecimal.
 	},
 }
 
-func storeFromContext(ctx *command.Context) (blob.Store, error) {
+func storeFromContext(ctx *command.Context) (rpcstore.Store, error) {
 	t := ctx.Config.(*settings)
 	if t.Store == "" {
-		return nil, errors.New("no -store address was specified")
+		return rpcstore.Store{}, errors.New("no -store address was specified")
 	}
 	conn, err := net.Dial(jrpc2.Network(t.Store), t.Store)
 	if err != nil {
-		return nil, fmt.Errorf("dialing: %w", err)
+		return rpcstore.Store{}, fmt.Errorf("dialing: %w", err)
 	}
 	cli := jrpc2.NewClient(channel.Line(conn, conn), nil)
-	var st blob.Store = rpcstore.NewClient(cli, "")
-
-	if t.Level > 0 {
-		st = encoded.New(st, zlib.NewCodec(zlib.Level(t.Level)))
-	}
-	if t.Keyfile != "" {
-		h, err := hashFromContext(ctx)
-		if err != nil {
-			return nil, fmt.Errorf("getting hash: %w", err)
-		}
-		pp, err := getpass.Prompt("Passphrase: ")
-		if err != nil {
-			return nil, fmt.Errorf("reading passphrase: %v", err)
-		}
-		key, err := keyfile.LoadKey(t.Keyfile, pp)
-		if err != nil {
-			return nil, fmt.Errorf("loading encryption key: %v", err)
-		}
-		c, err := aes.NewCipher(key)
-		if err != nil {
-			return nil, fmt.Errorf("creating cipher: %v", err)
-		}
-		st = encoded.New(st, encrypted.New(c, nil))
-		t.newHash = func() hash.Hash {
-			return hmac.New(h, key)
-		}
-	}
-	return st, err
-}
-
-func casFromContext(ctx *command.Context) (blob.CAS, error) {
-	bs, err := storeFromContext(ctx)
-	if err != nil {
-		return blob.CAS{}, err
-	}
-	h, err := hashFromContext(ctx)
-	if err != nil {
-		return blob.CAS{}, err
-	}
-	return blob.NewCAS(bs, h), nil
-}
-
-func hashFromContext(ctx *command.Context) (func() hash.Hash, error) {
-	c := ctx.Config.(*settings)
-	if c.newHash != nil {
-		return c.newHash, nil
-	}
-	switch c.Hash {
-	case "1", "sha1":
-		return sha1.New, nil
-	case "2", "sha256":
-		return sha256.New, nil
-	case "3", "sha3":
-		return sha3.New256, nil
-	case "":
-		return nil, errors.New("hash not specified")
-	default:
-		return nil, fmt.Errorf("unknown hash algorithm %q", c.Hash)
-	}
+	return rpcstore.NewClient(cli, ""), nil
 }
 
 func parseKey(s string) (string, error) {

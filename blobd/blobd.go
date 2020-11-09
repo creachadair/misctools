@@ -4,8 +4,10 @@ package main
 import (
 	"context"
 	"crypto/aes"
+	"crypto/hmac"
 	"flag"
 	"fmt"
+	"hash"
 	"io/ioutil"
 	"log"
 	"net"
@@ -31,6 +33,7 @@ import (
 	"github.com/creachadair/jrpc2/server"
 	"github.com/creachadair/keyfile"
 	"github.com/creachadair/sqlitestore"
+	"golang.org/x/crypto/sha3"
 )
 
 var (
@@ -57,6 +60,7 @@ spec. The server listens at the specified address, which may be a host:port or t
 of a Unix-domain socket.
 
 With -keyfile, the store is opened with AES encryption.
+Use -cache to enable a memory cache over the underlying store.
 
 Options:
 `, filepath.Base(os.Args[0]))
@@ -74,7 +78,7 @@ func main() {
 	}
 
 	ctx := context.Background()
-	bs := mustOpenStore(ctx)
+	bs, hash := mustOpenStore(ctx)
 	defer func() {
 		if err := blob.CloseStore(ctx, bs); err != nil {
 			log.Printf("Warning: closing store: %v", err)
@@ -82,7 +86,9 @@ func main() {
 	}()
 	log.Printf("Store: %q", *storeAddr)
 
-	svc := server.NewStatic(handler.NewService(rpcstore.NewService(bs)))
+	svc := server.NewStatic(handler.NewService(
+		rpcstore.NewService(bs, &rpcstore.ServiceOpts{Hash: hash})))
+
 	ntype := jrpc2.Network(*listenAddr)
 	lst, err := net.Listen(ntype, *listenAddr)
 	if err != nil {
@@ -112,7 +118,7 @@ func main() {
 	}
 }
 
-func mustOpenStore(ctx context.Context) blob.Store {
+func mustOpenStore(ctx context.Context) (blob.Store, func() hash.Hash) {
 	bs, err := stores.Open(ctx, *storeAddr)
 	if err != nil {
 		log.Fatalf("Opening store: %v", err)
@@ -122,7 +128,7 @@ func mustOpenStore(ctx context.Context) blob.Store {
 		log.Printf("Memory cache size: %d KiB", *cacheSize)
 	}
 	if *keyFile == "" {
-		return bs
+		return bs, sha3.New256
 	}
 
 	data, err := ioutil.ReadFile(*keyFile)
@@ -146,5 +152,7 @@ func mustOpenStore(ctx context.Context) blob.Store {
 	if err != nil {
 		log.Fatalf("Creating cipher: %v", err)
 	}
-	return encoded.New(bs, encrypted.New(c, nil))
+	return encoded.New(bs, encrypted.New(c, nil)), func() hash.Hash {
+		return hmac.New(sha3.New256, key)
+	}
 }
