@@ -17,6 +17,7 @@ import (
 	"github.com/creachadair/badgerstore"
 	"github.com/creachadair/boltstore"
 	"github.com/creachadair/ffs/blob"
+	"github.com/creachadair/ffs/blob/cachestore"
 	"github.com/creachadair/ffs/blob/codecs/encrypted"
 	"github.com/creachadair/ffs/blob/encoded"
 	"github.com/creachadair/ffs/blob/filestore"
@@ -36,6 +37,7 @@ var (
 	listenAddr = flag.String("listen", "", "Service address (required)")
 	storeAddr  = flag.String("store", "", "Store address (required)")
 	keyFile    = flag.String("keyfile", "", "Encryption key file")
+	cacheSize  = flag.Int("cache", 0, "Memory cache size in KiB (0 means no cache)")
 
 	stores = store.Registry{
 		"badger": badgerstore.Opener,
@@ -114,6 +116,10 @@ func mustOpenStore(ctx context.Context) blob.Store {
 	bs, err := stores.Open(ctx, *storeAddr)
 	if err != nil {
 		log.Fatalf("Opening store: %v", err)
+	}
+	if *cacheSize > 0 {
+		bs = cachestore.New(bs, *cacheSize<<10)
+		log.Printf("Memory cache size: %d KiB", *cacheSize)
 	}
 	if *keyFile == "" {
 		return bs
