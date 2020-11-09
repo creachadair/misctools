@@ -21,6 +21,7 @@ import (
 	"github.com/creachadair/ffs/blob"
 	"github.com/creachadair/ffs/blob/cachestore"
 	"github.com/creachadair/ffs/blob/codecs/encrypted"
+	"github.com/creachadair/ffs/blob/codecs/zlib"
 	"github.com/creachadair/ffs/blob/encoded"
 	"github.com/creachadair/ffs/blob/filestore"
 	"github.com/creachadair/ffs/blob/memstore"
@@ -43,6 +44,7 @@ var (
 	keyFile    = flag.String("keyfile", "", "Encryption key file")
 	cacheSize  = flag.Int("cache", 0, "Memory cache size in KiB (0 means no cache)")
 	doDebug    = flag.Bool("debug", false, "Enable server debug logging")
+	zlibLevel  = flag.Int("zlib", 0, "Enable ZLIB compression (0 means no compression)")
 
 	stores = store.Registry{
 		"badger": badgerstore.Opener,
@@ -90,6 +92,12 @@ func main() {
 		}
 	}()
 	log.Printf("Store address: %q", *storeAddr)
+	if *zlibLevel > 0 {
+		log.Printf("Compression enabled: ZLIB level %d", *zlibLevel)
+		if *keyFile != "" {
+			log.Printf(">> WARNING: Compression and encryption are both enabled")
+		}
+	}
 	if *cacheSize > 0 {
 		log.Printf("Memory cache size: %d KiB", *cacheSize)
 	}
@@ -140,6 +148,9 @@ func mustOpenStore(ctx context.Context) (blob.Store, func() hash.Hash) {
 	bs, err := stores.Open(ctx, *storeAddr)
 	if err != nil {
 		log.Fatalf("Opening store: %v", err)
+	}
+	if *zlibLevel > 0 {
+		bs = encoded.New(bs, zlib.NewCodec(zlib.Level(*zlibLevel)))
 	}
 	if *cacheSize > 0 {
 		bs = cachestore.New(bs, *cacheSize<<10)
