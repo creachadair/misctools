@@ -300,7 +300,7 @@ var casKeyCmd = &command.C{
 }
 
 func init() {
-	tool.Flags.String("store", "", "Blob store address (required)")
+	tool.Flags.String("store", os.Getenv("BLOB_STORE"), "Blob store address (required)")
 }
 
 type settings struct {
@@ -318,12 +318,17 @@ To specify blob keys literally, prefix them with @.
 To escape a leading @, double it.
 Prefix a base64-encoded key with "+".
 Otherwise, keys must be encoded in hexadecimal.
+
+The BLOB_STORE environment variable is read to choose a default
+blob store address; otherwise -store must be set.
+
 `,
 
 	Init: func(ctx *command.Context) error {
+		store := os.ExpandEnv(getFlag(ctx, "store").(string))
 		ctx.Config = &settings{
 			Context: context.Background(),
-			Store:   getFlag(ctx, "store").(string),
+			Store:   store,
 		}
 		return nil
 	},
