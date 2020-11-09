@@ -268,7 +268,7 @@ The contents of the blob are read from stdin.`,
 		if err != nil {
 			return err
 		}
-		key, err := cas.PutCAS(getContext(ctx), data)
+		key, err := cas.CASPut(getContext(ctx), data)
 		if err != nil {
 			return err
 		}
