@@ -23,6 +23,7 @@ import (
 	"github.com/creachadair/ffs/blob/codecs/encrypted"
 	"github.com/creachadair/ffs/blob/encoded"
 	"github.com/creachadair/ffs/blob/filestore"
+	"github.com/creachadair/ffs/blob/memstore"
 	"github.com/creachadair/ffs/blob/rpcstore"
 	"github.com/creachadair/ffs/blob/store"
 	"github.com/creachadair/gcsstore"
@@ -41,12 +42,14 @@ var (
 	storeAddr  = flag.String("store", "", "Store address (required)")
 	keyFile    = flag.String("keyfile", "", "Encryption key file")
 	cacheSize  = flag.Int("cache", 0, "Memory cache size in KiB (0 means no cache)")
+	doDebug    = flag.Bool("debug", false, "Enable server debug logging")
 
 	stores = store.Registry{
 		"badger": badgerstore.Opener,
 		"bolt":   boltstore.Opener,
 		"file":   filestore.Opener,
 		"gcs":    gcsstore.Opener,
+		"memory": memstore.Opener,
 		"sqlite": sqlitestore.Opener,
 	}
 )
@@ -119,8 +122,15 @@ func main() {
 		}
 	}()
 
+	var debug *log.Logger
+	if *doDebug {
+		debug = log.New(os.Stderr, "[blobd] ", log.LstdFlags)
+	}
 	if err := server.Loop(lst, svc, &server.LoopOptions{
 		Framing: channel.Line,
+		ServerOptions: &jrpc2.ServerOptions{
+			Logger: debug,
+		},
 	}); err != nil {
 		log.Fatalf("Loop: %v", err)
 	}
