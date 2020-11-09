@@ -1,14 +1,17 @@
+// Program blobd exports a blob.Store via JSON-RPC.
 package main
 
 import (
 	"context"
 	"crypto/aes"
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 
 	"github.com/creachadair/badgerstore"
@@ -42,6 +45,22 @@ var (
 		"sqlite": sqlitestore.Opener,
 	}
 )
+
+func init() {
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, `Usage: %[1]s [options] -store <spec> -listen <addr>
+
+Start a JSON-RPC server that serves content from the blob.Store described by the -store
+spec. The server listens at the specified address, which may be a host:port or the path
+of a Unix-domain socket.
+
+With -keyfile, the store is opened with AES encryption.
+
+Options:
+`, filepath.Base(os.Args[0]))
+		flag.PrintDefaults()
+	}
+}
 
 func main() {
 	flag.Parse()
