@@ -59,6 +59,8 @@ Start a JSON-RPC server that serves content from the blob.Store described by the
 spec. The server listens at the specified address, which may be a host:port or the path
 of a Unix-domain socket.
 
+JSON-RPC requests are delimited by newlines.
+
 With -keyfile, the store is opened with AES encryption.
 Use -cache to enable a memory cache over the underlying store.
 
@@ -84,7 +86,13 @@ func main() {
 			log.Printf("Warning: closing store: %v", err)
 		}
 	}()
-	log.Printf("Store: %q", *storeAddr)
+	log.Printf("Store address: %q", *storeAddr)
+	if *cacheSize > 0 {
+		log.Printf("Memory cache size: %d KiB", *cacheSize)
+	}
+	if *keyFile != "" {
+		log.Printf("Encryption key: %q", *keyFile)
+	}
 
 	svc := server.NewStatic(handler.NewService(
 		rpcstore.NewService(bs, &rpcstore.ServiceOpts{Hash: hash})))
@@ -125,7 +133,6 @@ func mustOpenStore(ctx context.Context) (blob.Store, func() hash.Hash) {
 	}
 	if *cacheSize > 0 {
 		bs = cachestore.New(bs, *cacheSize<<10)
-		log.Printf("Memory cache size: %d KiB", *cacheSize)
 	}
 	if *keyFile == "" {
 		return bs, sha3.New256
