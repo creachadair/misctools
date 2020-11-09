@@ -16,33 +16,23 @@ import (
 	"hash"
 	"io/ioutil"
 	"log"
+	"net"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/creachadair/badgerstore"
-	"github.com/creachadair/boltstore"
 	"github.com/creachadair/command"
 	"github.com/creachadair/ffs/blob"
 	"github.com/creachadair/ffs/blob/codecs/encrypted"
 	"github.com/creachadair/ffs/blob/codecs/zlib"
 	"github.com/creachadair/ffs/blob/encoded"
-	"github.com/creachadair/ffs/blob/filestore"
-	"github.com/creachadair/ffs/blob/store"
-	"github.com/creachadair/gcsstore"
+	"github.com/creachadair/ffs/blob/rpcstore"
 	"github.com/creachadair/getpass"
+	"github.com/creachadair/jrpc2"
+	"github.com/creachadair/jrpc2/channel"
 	"github.com/creachadair/keyfile"
-	"github.com/creachadair/sqlitestore"
 	"golang.org/x/crypto/sha3"
 )
-
-var stores = store.Registry{
-	"badger": badgerstore.Opener,
-	"bolt":   boltstore.Opener,
-	"file":   filestore.Opener,
-	"gcs":    gcsstore.Opener,
-	"sqlite": sqlitestore.Opener,
-}
 
 func main() {
 	if err := command.Execute(tool.NewContext(nil), os.Args[1:]); err != nil {
@@ -374,10 +364,13 @@ func storeFromContext(ctx *command.Context) (blob.Store, error) {
 	if t.Store == "" {
 		return nil, errors.New("no -store address was specified")
 	}
-	st, err := stores.Open(t.Context, t.Store)
+	conn, err := net.Dial(jrpc2.Network(t.Store), t.Store)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("dialing: %w", err)
 	}
+	cli := jrpc2.NewClient(channel.Line(conn, conn), nil)
+	var st blob.Store = rpcstore.NewClient(cli, "")
+
 	if t.Level > 0 {
 		st = encoded.New(st, zlib.NewCodec(zlib.Level(t.Level)))
 	}
