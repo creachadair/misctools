@@ -268,7 +268,7 @@ The contents of the blob are read from stdin.`,
 		if err != nil {
 			return err
 		}
-		key, err := cas.CASPut(getContext(ctx), data)
+		key, err := cas.PutCAS(getContext(ctx), data)
 		if err != nil {
 			return err
 		}
@@ -290,7 +290,7 @@ var casKeyCmd = &command.C{
 		if err != nil {
 			return err
 		}
-		key, err := cas.CASKey(getContext(ctx), data)
+		key, err := cas.Key(getContext(ctx), data)
 		if err != nil {
 			return err
 		}
@@ -351,7 +351,7 @@ func storeFromContext(ctx *command.Context) (rpcstore.Store, error) {
 		return rpcstore.Store{}, fmt.Errorf("dialing: %w", err)
 	}
 	cli := jrpc2.NewClient(channel.Line(conn, conn), nil)
-	return rpcstore.NewClient(cli, ""), nil
+	return rpcstore.NewClient(cli, nil), nil
 }
 
 func parseKey(s string) (string, error) {
