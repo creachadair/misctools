@@ -14,6 +14,8 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"sort"
+	"strings"
 	"syscall"
 
 	"github.com/creachadair/badgerstore"
@@ -57,6 +59,11 @@ var (
 )
 
 func init() {
+	var keys []string
+	for key := range stores {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, `Usage: %[1]s [options] -store <spec> -listen <addr>
 
@@ -64,13 +71,16 @@ Start a JSON-RPC server that serves content from the blob.Store described by the
 spec. The server listens at the specified address, which may be a host:port or the path
 of a Unix-domain socket.
 
+A store spec is a storage type and address: type:address
+The types understood are: %[2]s
+
 JSON-RPC requests are delimited by newlines.
 
 With -keyfile, the store is opened with AES encryption.
 Use -cache to enable a memory cache over the underlying store.
 
 Options:
-`, filepath.Base(os.Args[0]))
+`, filepath.Base(os.Args[0]), strings.Join(keys, ", "))
 		flag.PrintDefaults()
 	}
 }
