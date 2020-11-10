@@ -77,11 +77,11 @@ github.com/creachadair/boltstore v0.0.0-20201108194349-10e56cb7e706 h1:ROezphZXe
 github.com/creachadair/boltstore v0.0.0-20201108194349-10e56cb7e706/go.mod h1:jTBdkDrnBCZly0q4+i5g/bpAYqzBoKY2FwCSubJ0e2I=
 github.com/creachadair/command v0.0.0-20200910004628-e48505ecfece h1:OmnuY/NawdDxihrHov1GWaz9V3cBMuwy8phnGzMKor8=
 github.com/creachadair/command v0.0.0-20200910004628-e48505ecfece/go.mod h1:1gjWc20HW18glN4C5bWrxmna/BzCALnR6ZFPbam9iwc=
+github.com/creachadair/ctrl v0.1.0 h1:d1UdGOjUbRfU3gybtLitz2LFMzfKxKoUN9x+LsgaiBY=
+github.com/creachadair/ctrl v0.1.0/go.mod h1:QORxQsErPqDEuQxtRDa907Chq+IwJUkMAhkHFsphops=
 github.com/creachadair/ffs v0.0.0-20201015022807-e2e481d341ed/go.mod h1:eXGKRFZnZqcZHbEIulKJsE0MvgIeiYNACxsidH9eh2I=
 github.com/creachadair/ffs v0.0.0-20201106211445-fbd5cb51780c h1:f8bhRBEMOwBlG+Twur4Z3hR67WSzrkg02oTColzNeSs=
 github.com/creachadair/ffs v0.0.0-20201106211445-fbd5cb51780c/go.mod h1:YxEvbcAv1eptdQrCfhpcx4n0huJAYL/QgyNJZFkGdG8=
-github.com/creachadair/ffs v0.0.0-20201109195622-f063fd2ea277 h1:ClFpnpFZTXa7fKMwwv3cxt6DivuOOqqytsy1mL1vtwg=
-github.com/creachadair/ffs v0.0.0-20201109195622-f063fd2ea277/go.mod h1:YxEvbcAv1eptdQrCfhpcx4n0huJAYL/QgyNJZFkGdG8=
 github.com/creachadair/ffs v0.0.0-20201109202603-b6f098ff703f h1:Llsw0bT4V6wrttK1B0Dqilld4FqRzEsPuCzgaPlWdI4=
 github.com/creachadair/ffs v0.0.0-20201109202603-b6f098ff703f/go.mod h1:YxEvbcAv1eptdQrCfhpcx4n0huJAYL/QgyNJZFkGdG8=
 github.com/creachadair/gcsstore v0.0.0-20201108194514-7100a1a9d112 h1:1ln+NMh79ib+e7Qnb77SW3cmpVAZgSMcM+RuV2syY3Q=

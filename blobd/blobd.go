@@ -20,6 +20,7 @@ import (
 
 	"github.com/creachadair/badgerstore"
 	"github.com/creachadair/boltstore"
+	"github.com/creachadair/ctrl"
 	"github.com/creachadair/ffs/blob"
 	"github.com/creachadair/ffs/blob/cachestore"
 	"github.com/creachadair/ffs/blob/codecs/encrypted"
@@ -87,77 +88,80 @@ Options:
 
 func main() {
 	flag.Parse()
-	switch {
-	case *listenAddr == "":
-		log.Fatal("You must provide a non-empty -listen address")
-	case *storeAddr == "":
-		log.Fatal("You must provide a non-empty -store address")
-	}
-
-	ctx := context.Background()
-	bs, hash := mustOpenStore(ctx)
-	defer func() {
-		if err := blob.CloseStore(ctx, bs); err != nil {
-			log.Printf("Warning: closing store: %v", err)
+	ctrl.Run(func() error {
+		switch {
+		case *listenAddr == "":
+			ctrl.Exitf(1, "You must provide a non-empty -listen address")
+		case *storeAddr == "":
+			ctrl.Exitf(1, "You must provide a non-empty -store address")
 		}
-	}()
-	log.Printf("Store address: %q", *storeAddr)
-	if *zlibLevel > 0 {
-		log.Printf("Compression enabled: ZLIB level %d", *zlibLevel)
+
+		ctx := context.Background()
+		bs, hash := mustOpenStore(ctx)
+		defer func() {
+			if err := blob.CloseStore(ctx, bs); err != nil {
+				log.Printf("Warning: closing store: %v", err)
+			}
+		}()
+		log.Printf("Store address: %q", *storeAddr)
+		if *zlibLevel > 0 {
+			log.Printf("Compression enabled: ZLIB level %d", *zlibLevel)
+			if *keyFile != "" {
+				log.Printf(">> WARNING: Compression and encryption are both enabled")
+			}
+		}
+		if *cacheSize > 0 {
+			log.Printf("Memory cache size: %d KiB", *cacheSize)
+		}
 		if *keyFile != "" {
-			log.Printf(">> WARNING: Compression and encryption are both enabled")
+			log.Printf("Encryption key: %q", *keyFile)
 		}
-	}
-	if *cacheSize > 0 {
-		log.Printf("Memory cache size: %d KiB", *cacheSize)
-	}
-	if *keyFile != "" {
-		log.Printf("Encryption key: %q", *keyFile)
-	}
 
-	svc := server.NewStatic(handler.NewService(
-		rpcstore.NewService(bs, &rpcstore.ServiceOpts{Hash: hash})))
+		svc := server.NewStatic(handler.NewService(
+			rpcstore.NewService(bs, &rpcstore.ServiceOpts{Hash: hash})))
 
-	ntype := jrpc2.Network(*listenAddr)
-	lst, err := net.Listen(ntype, *listenAddr)
-	if err != nil {
-		log.Fatalf("Listen: %v", err)
-	}
-	if ntype == "unix" {
-		os.Chmod(*listenAddr, 0600)
-		defer os.Remove(*listenAddr)
-	}
-	log.Printf("Service: %q", *listenAddr)
-
-	sig := make(chan os.Signal, 2)
-	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
-	go func() {
-		s, ok := <-sig
-		if ok {
-			log.Printf("Received signal: %v, closing listener", s)
-			lst.Close()
-			signal.Reset(syscall.SIGINT, syscall.SIGTERM)
+		ntype := jrpc2.Network(*listenAddr)
+		lst, err := net.Listen(ntype, *listenAddr)
+		if err != nil {
+			ctrl.Fatalf("Listen: %v", err)
 		}
-	}()
+		if ntype == "unix" {
+			os.Chmod(*listenAddr, 0600) // best-effort
+			defer os.Remove(*listenAddr)
+		}
+		log.Printf("Service: %q", *listenAddr)
 
-	var debug *log.Logger
-	if *doDebug {
-		debug = log.New(os.Stderr, "[blobd] ", log.LstdFlags)
-	}
-	if err := server.Loop(lst, svc, &server.LoopOptions{
-		Framing: channel.Line,
-		ServerOptions: &jrpc2.ServerOptions{
-			Logger: debug,
-		},
-	}); err != nil {
-		log.Fatalf("Loop: %v", err)
-	}
+		sig := make(chan os.Signal, 2)
+		signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
+		go func() {
+			s, ok := <-sig
+			if ok {
+				log.Printf("Received signal: %v, closing listener", s)
+				lst.Close()
+				signal.Reset(syscall.SIGINT, syscall.SIGTERM)
+			}
+		}()
+
+		var debug *log.Logger
+		if *doDebug {
+			debug = log.New(os.Stderr, "[blobd] ", log.LstdFlags)
+		}
+		if err := server.Loop(lst, svc, &server.LoopOptions{
+			Framing: channel.Line,
+			ServerOptions: &jrpc2.ServerOptions{
+				Logger: debug,
+			},
+		}); err != nil {
+			ctrl.Fatalf("Loop: %v", err)
+		}
+		return nil
+	})
 }
 
 func mustOpenStore(ctx context.Context) (blob.Store, func() hash.Hash) {
 	bs, err := stores.Open(ctx, *storeAddr)
 	if err != nil {
-		log.Fatalf("Opening store: %v", err)
+		ctrl.Fatalf("Opening store: %v", err)
 	}
 	if *zlibLevel > 0 {
 		bs = encoded.New(bs, zlib.NewCodec(zlib.Level(*zlibLevel)))
@@ -171,24 +175,24 @@ func mustOpenStore(ctx context.Context) (blob.Store, func() hash.Hash) {
 
 	data, err := ioutil.ReadFile(*keyFile)
 	if err != nil {
-		log.Fatalf("Reading key file: %v", err)
+		ctrl.Fatalf("Reading key file: %v", err)
 	}
 	kf, err := keyfile.Parse(data)
 	if err != nil {
-		log.Fatalf("Parsing key file: %v", err)
+		ctrl.Fatalf("Parsing key file: %v", err)
 	}
 	pp, err := getpass.Prompt("Passphrase: ")
 	if err != nil {
-		log.Fatalf("Reading passphrase: %v", err)
+		ctrl.Fatalf("Reading passphrase: %v", err)
 	}
 	key, err := kf.Get(pp)
 	if err != nil {
-		log.Fatalf("Loading encryption key: %v", err)
+		ctrl.Fatalf("Loading encryption key: %v", err)
 	}
 
 	c, err := aes.NewCipher(key)
 	if err != nil {
-		log.Fatalf("Creating cipher: %v", err)
+		ctrl.Fatalf("Creating cipher: %v", err)
 	}
 	return encoded.New(bs, encrypted.New(c, nil)), func() hash.Hash {
 		return hmac.New(sha3.New256, key)
