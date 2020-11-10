@@ -174,6 +174,7 @@ var delCmd = &command.C{
 func init() {
 	listCmd.Flags.Bool("raw", false, "Print raw keys without hex encoding")
 	listCmd.Flags.String("start", "", "List keys lexicographically greater than or equal to this")
+	listCmd.Flags.String("prefix", "", "List only keys having this prefix")
 }
 
 var listCmd = &command.C{
@@ -188,13 +189,26 @@ var listCmd = &command.C{
 		if err != nil {
 			return err
 		}
+		pfx, err := parseKey(getFlag(ctx, "prefix").(string))
+		if err != nil {
+			return err
+		}
+		if pfx != "" && start == "" {
+			start = pfx
+		}
 		bs, err := storeFromContext(ctx)
 		if err != nil {
 			return err
 		}
 		defer blob.CloseStore(getContext(ctx), bs)
+
 		return bs.List(getContext(ctx), start, func(key string) error {
-			if getFlag(ctx, "raw").(bool) {
+			if !strings.HasPrefix(key, pfx) {
+				if key > pfx {
+					return blob.ErrStopListing
+				}
+				return nil
+			} else if getFlag(ctx, "raw").(bool) {
 				fmt.Println(key)
 			} else {
 				fmt.Printf("%x\n", key)
