@@ -315,11 +315,13 @@ var casKeyCmd = &command.C{
 
 func init() {
 	tool.Flags.String("store", os.Getenv("BLOB_STORE"), "Blob store address (required)")
+	tool.Flags.Bool("debug", false, "Enable client debug logging")
 }
 
 type settings struct {
 	Context context.Context
 	Store   string
+	Debug   bool
 }
 
 var tool = &command.C{
@@ -343,6 +345,7 @@ blob store address; otherwise -store must be set.
 		ctx.Config = &settings{
 			Context: context.Background(),
 			Store:   store,
+			Debug:   getFlag(ctx, "debug").(bool),
 		}
 		return nil
 	},
@@ -369,7 +372,13 @@ func storeFromContext(ctx *command.Context) (rpcstore.Store, error) {
 	if err != nil {
 		return rpcstore.Store{}, fmt.Errorf("dialing: %w", err)
 	}
-	cli := jrpc2.NewClient(channel.Line(conn, conn), nil)
+	var logger *log.Logger
+	if t.Debug {
+		logger = log.New(os.Stderr, "[client] ", log.LstdFlags)
+	}
+	cli := jrpc2.NewClient(channel.Line(conn, conn), &jrpc2.ClientOptions{
+		Logger: logger,
+	})
 	return rpcstore.NewClient(cli, nil), nil
 }
 
