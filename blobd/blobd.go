@@ -35,6 +35,7 @@ import (
 	"github.com/creachadair/jrpc2"
 	"github.com/creachadair/jrpc2/channel"
 	"github.com/creachadair/jrpc2/handler"
+	"github.com/creachadair/jrpc2/metrics"
 	"github.com/creachadair/jrpc2/server"
 	"github.com/creachadair/keyfile"
 	"github.com/creachadair/sqlitestore"
@@ -149,7 +150,8 @@ func main() {
 		if err := server.Loop(lst, svc, &server.LoopOptions{
 			Framing: channel.Line,
 			ServerOptions: &jrpc2.ServerOptions{
-				Logger: debug,
+				Logger:  debug,
+				Metrics: metrics.New(),
 			},
 		}); err != nil {
 			ctrl.Fatalf("Loop: %v", err)
