@@ -17,6 +17,7 @@ import (
 	"sort"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/creachadair/badgerstore"
 	"github.com/creachadair/boltstore"
@@ -150,8 +151,9 @@ func main() {
 		if err := server.Loop(lst, svc, &server.LoopOptions{
 			Framing: channel.Line,
 			ServerOptions: &jrpc2.ServerOptions{
-				Logger:  debug,
-				Metrics: metrics.New(),
+				Logger:    debug,
+				Metrics:   metrics.New(),
+				StartTime: time.Now(),
 			},
 		}); err != nil {
 			ctrl.Fatalf("Loop: %v", err)
