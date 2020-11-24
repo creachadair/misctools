@@ -8,7 +8,6 @@ import (
 	"flag"
 	"fmt"
 	"hash"
-	"io/ioutil"
 	"log"
 	"net"
 	"os"
@@ -177,19 +176,9 @@ func mustOpenStore(ctx context.Context) (blob.Store, func() hash.Hash) {
 		return bs, sha3.New256
 	}
 
-	data, err := ioutil.ReadFile(*keyFile)
-	if err != nil {
-		ctrl.Fatalf("Reading key file: %v", err)
-	}
-	kf, err := keyfile.Parse(data)
-	if err != nil {
-		ctrl.Fatalf("Parsing key file: %v", err)
-	}
-	pp, err := getpass.Prompt("Passphrase: ")
-	if err != nil {
-		ctrl.Fatalf("Reading passphrase: %v", err)
-	}
-	key, err := kf.Get(pp)
+	key, err := keyfile.LoadKey(*keyFile, func() (string, error) {
+		return getpass.Prompt("Passphrase: ")
+	})
 	if err != nil {
 		ctrl.Fatalf("Loading encryption key: %v", err)
 	}

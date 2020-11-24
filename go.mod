@@ -12,7 +12,7 @@ require (
 	github.com/creachadair/gcsstore v0.0.0-20201108194514-7100a1a9d112
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.11.0
-	github.com/creachadair/keyfile v0.5.3
+	github.com/creachadair/keyfile v0.6.0
 	github.com/creachadair/sqlitestore v0.0.0-20201116175206-ab888adbd7f0
 	github.com/creachadair/vql v0.0.19
 	github.com/tdewolff/minify/v2 v2.9.7
