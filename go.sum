@@ -92,6 +92,8 @@ github.com/creachadair/jrpc2 v0.10.5 h1:Zy6lpAkDGRZkLCEfRUNQPBZNXx8gwgAVsWcOSitK
 github.com/creachadair/jrpc2 v0.10.5/go.mod h1:3bmpl8Re0jezHL05J9v1Jt++37WMVcNXfnCE3hdqNzY=
 github.com/creachadair/jrpc2 v0.11.0 h1:5HqeLfsxYXcpc1hEfpAuyn7BejbCoPKZedMNr5EF8pY=
 github.com/creachadair/jrpc2 v0.11.0/go.mod h1:3bmpl8Re0jezHL05J9v1Jt++37WMVcNXfnCE3hdqNzY=
+github.com/creachadair/jrpc2 v0.11.1 h1:6K5X7D7RUESJo8C9qzNaxeousZsp0+Y7S+pU2y3PSfw=
+github.com/creachadair/jrpc2 v0.11.1/go.mod h1:3bmpl8Re0jezHL05J9v1Jt++37WMVcNXfnCE3hdqNzY=
 github.com/creachadair/keyfile v0.6.0 h1:tvrfaZrwP824Lrt/ldVYYiUdG93Rvh1K9d7tNTOU21M=
 github.com/creachadair/keyfile v0.6.0/go.mod h1:GW5EQoulDDOum53qeqlEFZmI1gQ328uhyUqQC+jQxX0=
 github.com/creachadair/staticfile v0.1.3/go.mod h1:a3qySzCIXEprDGxk6tSxSI+dBBdLzqeBOMhZ+o2d3pM=

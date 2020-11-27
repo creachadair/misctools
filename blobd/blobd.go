@@ -143,6 +143,13 @@ func main() {
 			}
 		}()
 
+		mx := metrics.New()
+		mx.SetLabel("blobd.store", *storeAddr)
+		mx.SetLabel("blobd.pid", os.Getpid())
+		mx.SetLabel("blobd.encrypted", *keyFile != "")
+		mx.SetLabel("blobd.compressed", *zlibLevel > 0)
+		mx.SetLabel("blobd.cacheSize", *cacheSize)
+
 		var debug *log.Logger
 		if *doDebug {
 			debug = log.New(os.Stderr, "[blobd] ", log.LstdFlags)
@@ -151,7 +158,7 @@ func main() {
 			Framing: channel.Line,
 			ServerOptions: &jrpc2.ServerOptions{
 				Logger:    debug,
-				Metrics:   metrics.New(),
+				Metrics:   mx,
 				StartTime: time.Now(),
 			},
 		}); err != nil {
