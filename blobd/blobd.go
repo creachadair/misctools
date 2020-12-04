@@ -159,7 +159,7 @@ func main() {
 			ServerOptions: &jrpc2.ServerOptions{
 				Logger:    debug,
 				Metrics:   mx,
-				StartTime: time.Now(),
+				StartTime: time.Now().In(time.UTC),
 			},
 		}); err != nil {
 			ctrl.Fatalf("Loop: %v", err)
