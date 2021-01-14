@@ -6,6 +6,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -313,6 +314,28 @@ var casKeyCmd = &command.C{
 	},
 }
 
+var statCmd = &command.C{
+	Name: "status",
+	Help: "Print blob server status",
+
+	Run: func(ctx *command.Context, args []string) error {
+		s, err := storeFromContext(ctx)
+		if err != nil {
+			return err
+		}
+		si, err := s.ServerInfo(getContext(ctx))
+		if err != nil {
+			return err
+		}
+		msg, err := json.Marshal(si)
+		if err != nil {
+			return err
+		}
+		fmt.Println(string(msg))
+		return nil
+	},
+}
+
 func init() {
 	tool.Flags.String("store", os.Getenv("BLOB_STORE"), "Blob store address (required)")
 	tool.Flags.Bool("debug", false, "Enable client debug logging")
@@ -351,7 +374,7 @@ blob store address; otherwise -store must be set.
 	},
 
 	Commands: []*command.C{
-		getCmd, putCmd, sizeCmd, delCmd, listCmd, lenCmd, casGroup,
+		getCmd, putCmd, sizeCmd, delCmd, listCmd, lenCmd, casGroup, statCmd,
 		{
 			Name:  "help",
 			Usage: "[topic/command]",
