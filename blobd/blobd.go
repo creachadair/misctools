@@ -28,7 +28,6 @@ import (
 	"github.com/creachadair/ffs/blob/encoded"
 	"github.com/creachadair/ffs/blob/filestore"
 	"github.com/creachadair/ffs/blob/memstore"
-	"github.com/creachadair/ffs/blob/rpcstore"
 	"github.com/creachadair/ffs/blob/store"
 	"github.com/creachadair/gcsstore"
 	"github.com/creachadair/getpass"
@@ -38,6 +37,7 @@ import (
 	"github.com/creachadair/jrpc2/metrics"
 	"github.com/creachadair/jrpc2/server"
 	"github.com/creachadair/keyfile"
+	"github.com/creachadair/rpcstore"
 	"github.com/creachadair/sqlitestore"
 	"golang.org/x/crypto/sha3"
 )

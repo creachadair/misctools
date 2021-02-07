@@ -8,11 +8,12 @@ require (
 	github.com/creachadair/boltstore v0.0.0-20210206083712-994fbcba7ab6
 	github.com/creachadair/command v0.0.0-20200910004628-e48505ecfece
 	github.com/creachadair/ctrl v0.1.0
-	github.com/creachadair/ffs v0.0.0-20210203193155-101302c70704
+	github.com/creachadair/ffs v0.0.0-20210207180800-4247e2ad1f50
 	github.com/creachadair/gcsstore v0.0.0-20210206172114-f3fa62d6c271
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.11.2
 	github.com/creachadair/keyfile v0.6.0
+	github.com/creachadair/rpcstore v0.0.0-20210207181022-97f67dd83fbc
 	github.com/creachadair/sqlitestore v0.0.0-20210206172244-e9db02f51df2
 	github.com/creachadair/vql v0.0.19
 	github.com/tdewolff/minify/v2 v2.9.11
