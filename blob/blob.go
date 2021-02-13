@@ -136,6 +136,10 @@ var sizeCmd = &command.C{
 	},
 }
 
+func init() {
+	delCmd.Flags.Bool("missing-ok", false, "Do not report an error for missing keys")
+}
+
 var delCmd = &command.C{
 	Name:  "delete",
 	Usage: "delete <key>",
@@ -156,12 +160,13 @@ var delCmd = &command.C{
 				err = cerr
 			}
 		}()
+		missingOK := getFlag(ctx, "missing-ok").(bool)
 		for _, arg := range args {
 			key, err := parseKey(arg)
 			if err != nil {
 				return err
 			}
-			if err := bs.Delete(nctx, key); errors.Is(err, blob.ErrKeyNotFound) {
+			if err := bs.Delete(nctx, key); errors.Is(err, blob.ErrKeyNotFound) && missingOK {
 				continue
 			} else if err != nil {
 				return err
