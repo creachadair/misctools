@@ -144,7 +144,7 @@ var delCmd = &command.C{
 	Run: func(ctx *command.Context, args []string) (err error) {
 		if len(args) == 0 {
 			//lint:ignore ST1005 The punctuation signifies repetition to the user.
-			return errors.New("usage is: size <key>...")
+			return errors.New("usage is: delete <key>...")
 		}
 		bs, err := storeFromContext(ctx)
 		if err != nil {
