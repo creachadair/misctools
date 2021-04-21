@@ -37,6 +37,7 @@ import (
 	"github.com/creachadair/jrpc2/metrics"
 	"github.com/creachadair/jrpc2/server"
 	"github.com/creachadair/keyfile"
+	"github.com/creachadair/pebblestore"
 	"github.com/creachadair/rpcstore"
 	"github.com/creachadair/sqlitestore"
 	"golang.org/x/crypto/sha3"
@@ -56,6 +57,7 @@ var (
 		"file":   filestore.Opener,
 		"gcs":    gcsstore.Opener,
 		"memory": memstore.Opener,
+		"pebble": pebblestore.Opener,
 		"sqlite": sqlitestore.Opener,
 	}
 )
