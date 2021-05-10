@@ -19,7 +19,7 @@ require (
 	github.com/creachadair/sqlitestore v0.0.0-20210330140548-b8c83c455a73
 	github.com/creachadair/vql v0.0.19
 	github.com/tdewolff/minify/v2 v2.9.16
-	github.com/tdewolff/parse/v2 v2.5.15 // indirect
+	github.com/tdewolff/parse/v2 v2.5.16 // indirect
 	golang.org/x/crypto v0.0.0-20210506145944-38f3c27a63bf
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 )
