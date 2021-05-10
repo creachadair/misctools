@@ -33,7 +33,6 @@ import (
 	"github.com/creachadair/getpass"
 	"github.com/creachadair/jrpc2"
 	"github.com/creachadair/jrpc2/channel"
-	"github.com/creachadair/jrpc2/handler"
 	"github.com/creachadair/jrpc2/metrics"
 	"github.com/creachadair/jrpc2/server"
 	"github.com/creachadair/keyfile"
@@ -120,8 +119,8 @@ func main() {
 			log.Printf("Encryption key: %q", *keyFile)
 		}
 
-		svc := server.NewStatic(handler.NewService(
-			rpcstore.NewService(bs, &rpcstore.ServiceOpts{Hash: hash})))
+		svc := server.NewStatic(
+			rpcstore.NewService(bs, &rpcstore.ServiceOpts{Hash: hash}).Methods())
 
 		ntype := jrpc2.Network(*listenAddr)
 		lst, err := net.Listen(ntype, *listenAddr)
