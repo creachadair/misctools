@@ -119,7 +119,7 @@ func main() {
 			log.Printf("Encryption key: %q", *keyFile)
 		}
 
-		svc := server.NewStatic(
+		svc := server.Static(
 			rpcstore.NewService(bs, &rpcstore.ServiceOpts{Hash: hash}).Methods())
 
 		ntype := jrpc2.Network(*listenAddr)
