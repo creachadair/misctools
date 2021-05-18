@@ -127,6 +127,8 @@ github.com/creachadair/pebblestore v0.0.0-20210508191318-c7d35231b37b h1:svzr8+b
 github.com/creachadair/pebblestore v0.0.0-20210508191318-c7d35231b37b/go.mod h1:qKeUmN+KXpnJvl/+C6/BodJ7BRrOg92m47rQoJ0UAF0=
 github.com/creachadair/rpcstore v0.0.0-20210510033421-38296c60a7e9 h1:+eWYlnjbGbdNFUYcH4SCpma4TB4HpMBcUyQC8eK4gnY=
 github.com/creachadair/rpcstore v0.0.0-20210510033421-38296c60a7e9/go.mod h1:9yO6F9VXgZXrfpomwvzqwcQU0dn5GPMuiP8juuZ2D04=
+github.com/creachadair/sqlitestore v0.0.0-20210330140548-b8c83c455a73 h1:Kc2y6FLDRYV4NL1bcijSnF1j6+6NbnhY6Go1+RpqZAg=
+github.com/creachadair/sqlitestore v0.0.0-20210330140548-b8c83c455a73/go.mod h1:Q+pzVyI9VS8xhq6oFOqf3edsmYtUouzvi8kyjmPXbo0=
 github.com/creachadair/staticfile v0.1.3/go.mod h1:a3qySzCIXEprDGxk6tSxSI+dBBdLzqeBOMhZ+o2d3pM=
 github.com/creachadair/vql v0.0.19 h1:8yUL9DrLZuALGzUf9dcPT2cmYTfvJ2SwHpoacusaS/0=
 github.com/creachadair/vql v0.0.19/go.mod h1:KNmBr/lJOumdnm9de6kuwiInP7M1IqobgOw5dPHN60s=
