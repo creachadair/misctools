@@ -396,7 +396,7 @@ func storeFromContext(ctx *command.Context) (rpcstore.Store, error) {
 	if t.Store == "" {
 		return rpcstore.Store{}, errors.New("no -store address was specified")
 	}
-	conn, err := net.Dial(jrpc2.Network(t.Store), t.Store)
+	conn, err := net.Dial(jrpc2.Network(t.Store))
 	if err != nil {
 		return rpcstore.Store{}, fmt.Errorf("dialing: %w", err)
 	}
