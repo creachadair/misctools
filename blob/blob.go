@@ -25,7 +25,7 @@ import (
 )
 
 func main() {
-	if err := command.Execute(tool.NewContext(nil), os.Args[1:]); err != nil {
+	if err := command.Execute(tool.NewEnv(nil), os.Args[1:]); err != nil {
 		if errors.Is(err, command.ErrUsage) {
 			os.Exit(2)
 		}
@@ -38,18 +38,18 @@ var getCmd = &command.C{
 	Usage: "get <key>...",
 	Help:  "Read blobs from the store",
 
-	Run: func(ctx *command.Context, args []string) error {
+	Run: func(env *command.Env, args []string) error {
 		if len(args) == 0 {
 			//lint:ignore ST1005 The punctuation signifies repetition to the user.
 			return errors.New("usage is: get <key>...")
 		}
-		bs, err := storeFromContext(ctx)
+		bs, err := storeFromEnv(env)
 		if err != nil {
 			return err
 		}
-		defer blob.CloseStore(getContext(ctx), bs)
+		defer blob.CloseStore(getContext(env), bs)
 
-		nctx := getContext(ctx)
+		nctx := getContext(env)
 		for _, arg := range args {
 			key, err := parseKey(arg)
 			if err != nil {
@@ -74,7 +74,7 @@ var putCmd = &command.C{
 	Usage: "put <key> [<path>]",
 	Help:  "Write a blob to the store",
 
-	Run: func(ctx *command.Context, args []string) (err error) {
+	Run: func(env *command.Env, args []string) (err error) {
 		if len(args) == 0 || len(args) > 2 {
 			return errors.New("usage is: put <key> [<path>]")
 		}
@@ -82,24 +82,24 @@ var putCmd = &command.C{
 		if err != nil {
 			return err
 		}
-		bs, err := storeFromContext(ctx)
+		bs, err := storeFromEnv(env)
 		if err != nil {
 			return nil
 		}
 		defer func() {
-			if cerr := blob.CloseStore(getContext(ctx), bs); err == nil {
+			if cerr := blob.CloseStore(getContext(env), bs); err == nil {
 				err = cerr
 			}
 		}()
-		data, err := readData(getContext(ctx), "put", args[1:])
+		data, err := readData(getContext(env), "put", args[1:])
 		if err != nil {
 			return err
 		}
 
-		return bs.Put(getContext(ctx), blob.PutOptions{
+		return bs.Put(getContext(env), blob.PutOptions{
 			Key:     key,
 			Data:    data,
-			Replace: getFlag(ctx, "replace").(bool),
+			Replace: getFlag(env, "replace").(bool),
 		})
 	},
 }
@@ -109,18 +109,18 @@ var sizeCmd = &command.C{
 	Usage: "size <key>...",
 	Help:  "Print the sizes of stored blobs",
 
-	Run: func(ctx *command.Context, args []string) error {
+	Run: func(env *command.Env, args []string) error {
 		if len(args) == 0 {
 			//lint:ignore ST1005 The punctuation signifies repetition to the user.
 			return errors.New("usage is: size <key>...")
 		}
-		bs, err := storeFromContext(ctx)
+		bs, err := storeFromEnv(env)
 		if err != nil {
 			return err
 		}
-		defer blob.CloseStore(getContext(ctx), bs)
+		defer blob.CloseStore(getContext(env), bs)
 
-		nctx := getContext(ctx)
+		nctx := getContext(env)
 		for _, arg := range args {
 			key, err := parseKey(arg)
 			if err != nil {
@@ -145,22 +145,22 @@ var delCmd = &command.C{
 	Usage: "delete <key>",
 	Help:  "Delete a blob from the store",
 
-	Run: func(ctx *command.Context, args []string) (err error) {
+	Run: func(env *command.Env, args []string) (err error) {
 		if len(args) == 0 {
 			//lint:ignore ST1005 The punctuation signifies repetition to the user.
 			return errors.New("usage is: delete <key>...")
 		}
-		bs, err := storeFromContext(ctx)
+		bs, err := storeFromEnv(env)
 		if err != nil {
 			return err
 		}
-		nctx := getContext(ctx)
+		nctx := getContext(env)
 		defer func() {
 			if cerr := blob.CloseStore(nctx, bs); err == nil {
 				err = cerr
 			}
 		}()
-		missingOK := getFlag(ctx, "missing-ok").(bool)
+		missingOK := getFlag(env, "missing-ok").(bool)
 		for _, arg := range args {
 			key, err := parseKey(arg)
 			if err != nil {
@@ -187,34 +187,34 @@ var listCmd = &command.C{
 	Name: "list",
 	Help: "List keys in the store",
 
-	Run: func(ctx *command.Context, args []string) error {
+	Run: func(env *command.Env, args []string) error {
 		if len(args) != 0 {
 			return errors.New("usage is: list")
 		}
-		start, err := parseKey(getFlag(ctx, "start").(string))
+		start, err := parseKey(getFlag(env, "start").(string))
 		if err != nil {
 			return err
 		}
-		pfx, err := parseKey(getFlag(ctx, "prefix").(string))
+		pfx, err := parseKey(getFlag(env, "prefix").(string))
 		if err != nil {
 			return err
 		}
 		if pfx != "" && start == "" {
 			start = pfx
 		}
-		bs, err := storeFromContext(ctx)
+		bs, err := storeFromEnv(env)
 		if err != nil {
 			return err
 		}
-		defer blob.CloseStore(getContext(ctx), bs)
+		defer blob.CloseStore(getContext(env), bs)
 
-		return bs.List(getContext(ctx), start, func(key string) error {
+		return bs.List(getContext(env), start, func(key string) error {
 			if !strings.HasPrefix(key, pfx) {
 				if key > pfx {
 					return blob.ErrStopListing
 				}
 				return nil
-			} else if getFlag(ctx, "raw").(bool) {
+			} else if getFlag(env, "raw").(bool) {
 				fmt.Println(key)
 			} else {
 				fmt.Printf("%x\n", key)
@@ -228,16 +228,16 @@ var lenCmd = &command.C{
 	Name: "len",
 	Help: "Print the number of stored keys",
 
-	Run: func(ctx *command.Context, args []string) error {
+	Run: func(env *command.Env, args []string) error {
 		if len(args) != 0 {
 			return errors.New("usage is: len")
 		}
-		bs, err := storeFromContext(ctx)
+		bs, err := storeFromEnv(env)
 		if err != nil {
 			return err
 		}
-		defer blob.CloseStore(getContext(ctx), bs)
-		n, err := bs.Len(getContext(ctx))
+		defer blob.CloseStore(getContext(env), bs)
+		n, err := bs.Len(getContext(env))
 		if err != nil {
 			return err
 		}
@@ -274,21 +274,21 @@ var casPutCmd = &command.C{
 
 The contents of the blob are read from stdin.`,
 
-	Run: func(ctx *command.Context, args []string) (err error) {
-		cas, err := storeFromContext(ctx)
+	Run: func(env *command.Env, args []string) (err error) {
+		cas, err := storeFromEnv(env)
 		if err != nil {
 			return err
 		}
 		defer func() {
-			if cerr := blob.CloseStore(getContext(ctx), cas); err == nil {
+			if cerr := blob.CloseStore(getContext(env), cas); err == nil {
 				err = cerr
 			}
 		}()
-		data, err := readData(getContext(ctx), "put", args)
+		data, err := readData(getContext(env), "put", args)
 		if err != nil {
 			return err
 		}
-		key, err := cas.PutCAS(getContext(ctx), data)
+		key, err := cas.PutCAS(getContext(env), data)
 		if err != nil {
 			return err
 		}
@@ -301,16 +301,16 @@ var casKeyCmd = &command.C{
 	Name: "key",
 	Help: "Compute the key for a blob without writing it",
 
-	Run: func(ctx *command.Context, args []string) error {
-		cas, err := storeFromContext(ctx)
+	Run: func(env *command.Env, args []string) error {
+		cas, err := storeFromEnv(env)
 		if err != nil {
 			return err
 		}
-		data, err := readData(getContext(ctx), "key", args)
+		data, err := readData(getContext(env), "key", args)
 		if err != nil {
 			return err
 		}
-		key, err := cas.Key(getContext(ctx), data)
+		key, err := cas.Key(getContext(env), data)
 		if err != nil {
 			return err
 		}
@@ -323,12 +323,12 @@ var statCmd = &command.C{
 	Name: "status",
 	Help: "Print blob server status",
 
-	Run: func(ctx *command.Context, args []string) error {
-		s, err := storeFromContext(ctx)
+	Run: func(env *command.Env, args []string) error {
+		s, err := storeFromEnv(env)
 		if err != nil {
 			return err
 		}
-		si, err := s.ServerInfo(getContext(ctx))
+		si, err := s.ServerInfo(getContext(env))
 		if err != nil {
 			return err
 		}
@@ -368,12 +368,12 @@ blob store address; otherwise -store must be set.
 
 `,
 
-	Init: func(ctx *command.Context) error {
-		store := os.ExpandEnv(getFlag(ctx, "store").(string))
-		ctx.Config = &settings{
+	Init: func(env *command.Env) error {
+		store := os.ExpandEnv(getFlag(env, "store").(string))
+		env.Config = &settings{
 			Context: context.Background(),
 			Store:   store,
-			Debug:   getFlag(ctx, "debug").(bool),
+			Debug:   getFlag(env, "debug").(bool),
 		}
 		return nil
 	},
@@ -391,8 +391,8 @@ blob store address; otherwise -store must be set.
 	},
 }
 
-func storeFromContext(ctx *command.Context) (rpcstore.Store, error) {
-	t := ctx.Config.(*settings)
+func storeFromEnv(env *command.Env) (rpcstore.Store, error) {
+	t := env.Config.(*settings)
 	if t.Store == "" {
 		return rpcstore.Store{}, errors.New("no -store address was specified")
 	}
@@ -427,11 +427,11 @@ func parseKey(s string) (string, error) {
 	return string(key), nil
 }
 
-func getFlag(ctx *command.Context, name string) interface{} {
-	v := ctx.Command.Flags.Lookup(name).Value
+func getFlag(env *command.Env, name string) interface{} {
+	v := env.Command.Flags.Lookup(name).Value
 	return v.(flag.Getter).Get()
 }
 
-func getContext(ctx *command.Context) context.Context {
-	return ctx.Config.(*settings).Context
+func getContext(env *command.Env) context.Context {
+	return env.Config.(*settings).Context
 }
