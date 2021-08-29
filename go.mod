@@ -18,6 +18,7 @@ require (
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.21.0
 	github.com/creachadair/keyfile v0.6.0
+	github.com/creachadair/leveldbstore v0.0.0-20210829153518-49d456e521ca
 	github.com/creachadair/pebblestore v0.0.0-20210729233453-f49e52498b1d
 	github.com/creachadair/rpcstore v0.0.0-20210805215038-f710b69304ff
 	github.com/creachadair/sqlitestore v0.0.0-20210729233620-509dbb8e3d17

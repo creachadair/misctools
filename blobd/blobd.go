@@ -36,6 +36,7 @@ import (
 	"github.com/creachadair/jrpc2/metrics"
 	"github.com/creachadair/jrpc2/server"
 	"github.com/creachadair/keyfile"
+	"github.com/creachadair/leveldbstore"
 	"github.com/creachadair/pebblestore"
 	"github.com/creachadair/rpcstore"
 	"github.com/creachadair/sqlitestore"
@@ -51,13 +52,14 @@ var (
 	zlibLevel  = flag.Int("zlib", 0, "Enable ZLIB compression (0 means no compression)")
 
 	stores = store.Registry{
-		"badger": badgerstore.Opener,
-		"bolt":   boltstore.Opener,
-		"file":   filestore.Opener,
-		"gcs":    gcsstore.Opener,
-		"memory": memstore.Opener,
-		"pebble": pebblestore.Opener,
-		"sqlite": sqlitestore.Opener,
+		"badger":  badgerstore.Opener,
+		"bolt":    boltstore.Opener,
+		"file":    filestore.Opener,
+		"gcs":     gcsstore.Opener,
+		"leveldb": leveldbstore.Opener,
+		"memory":  memstore.Opener,
+		"pebble":  pebblestore.Opener,
+		"sqlite":  sqlitestore.Opener,
 	}
 )
 
