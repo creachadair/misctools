@@ -16,7 +16,7 @@ require (
 	github.com/creachadair/ffs v0.0.0-20210330135354-d2fe618a7bf6
 	github.com/creachadair/gcsstore v0.0.0-20210807162935-0087de1c2bba
 	github.com/creachadair/getpass v0.1.1
-	github.com/creachadair/jrpc2 v0.21.0
+	github.com/creachadair/jrpc2 v0.23.0
 	github.com/creachadair/keyfile v0.6.0
 	github.com/creachadair/leveldbstore v0.0.0-20210829153518-49d456e521ca
 	github.com/creachadair/pebblestore v0.0.0-20210729233453-f49e52498b1d
