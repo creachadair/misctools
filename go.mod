@@ -17,11 +17,11 @@ require (
 	github.com/creachadair/ffs v0.0.0-20210911194355-060548b2f70f
 	github.com/creachadair/gcsstore v0.0.0-20210911195107-b7f184355263
 	github.com/creachadair/getpass v0.1.1
-	github.com/creachadair/jrpc2 v0.24.3
+	github.com/creachadair/jrpc2 v0.25.0
 	github.com/creachadair/keyfile v0.6.0
 	github.com/creachadair/leveldbstore v0.0.0-20210829153518-49d456e521ca
 	github.com/creachadair/pebblestore v0.0.0-20210911195133-568a2eeecd46
-	github.com/creachadair/rpcstore v0.0.0-20210909005038-6f34190d8104
+	github.com/creachadair/rpcstore v0.0.0-20210912203322-c95830084867
 	github.com/creachadair/sqlitestore v0.0.0-20210911195239-3ec1538a3c87
 	github.com/creachadair/vql v0.0.19
 	github.com/dgraph-io/badger/v2 v2.2007.4 // indirect
