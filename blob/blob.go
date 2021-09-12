@@ -166,7 +166,7 @@ var delCmd = &command.C{
 			if err != nil {
 				return err
 			}
-			if err := bs.Delete(nctx, key); errors.Is(err, blob.ErrKeyNotFound) && missingOK {
+			if err := bs.Delete(nctx, key); blob.IsKeyNotFound(err) && missingOK {
 				continue
 			} else if err != nil {
 				return err
