@@ -144,8 +144,9 @@ github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e/go.mod h1:F5haX7
 github.com/coreos/pkg v0.0.0-20160727233714-3ac0863d7acf/go.mod h1:E3G3o1h8I7cfcXa63jLwjI0eiQQMgzzUDFVpN/nH/eA=
 github.com/cpuguy83/go-md2man v1.0.10/go.mod h1:SmD6nW6nTyfqj6ABTjUi3V3JVMnlJmwcJI5acqYI6dE=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
-github.com/creachadair/atomicfile v0.2.1 h1:lR7a+aLj4eeIM3ihqozxEoxjT6MUY9XXAhtZtR6eLuw=
 github.com/creachadair/atomicfile v0.2.1/go.mod h1:Tvr/wsb3lQY4dj+9utcmJ7Gp6wi3LKA8jRNqoxUhA2M=
+github.com/creachadair/atomicfile v0.2.2 h1:/qnts+ZoRBH9CSxWO7VWrWlUw4J7c4/cAvAU8/h/eo0=
+github.com/creachadair/atomicfile v0.2.2/go.mod h1:BRq8Une6ckFneYXZQ+kO7p1ZZP3I2fzVzf28JxrIkBc=
 github.com/creachadair/badgerstore v0.0.8 h1:e6hLVyXA1udAHZuQBytMcBAgTsge08LEmqVC387pNDw=
 github.com/creachadair/badgerstore v0.0.8/go.mod h1:qfPxUj/eMTuP0+3sM41PmtY1BHh0eRtypGVgb+UsSlE=
 github.com/creachadair/binpack v0.0.1/go.mod h1:zmlHeuQ87UnfV9tZuheYLABUqmtE71g5oiMtikDJTd8=
@@ -157,8 +158,9 @@ github.com/creachadair/ctrl v0.1.1 h1:sztvK/haLnCSL1IY4mFxEgg5ksAvQMRUFcjB0EeuGY
 github.com/creachadair/ctrl v0.1.1/go.mod h1:QORxQsErPqDEuQxtRDa907Chq+IwJUkMAhkHFsphops=
 github.com/creachadair/ffs v0.0.0-20201015022807-e2e481d341ed/go.mod h1:eXGKRFZnZqcZHbEIulKJsE0MvgIeiYNACxsidH9eh2I=
 github.com/creachadair/ffs v0.0.0-20210912232853-435760c497ea/go.mod h1:CSnP5V18bT/O59GgdLDcoir8FpeLjW7i8l6tOh+UMAE=
-github.com/creachadair/ffs v0.0.0-20210914142155-62a96784b059 h1:CIUAgq8ruutms76RNK1eY92jRVolVv4MHkToF+MDSJw=
 github.com/creachadair/ffs v0.0.0-20210914142155-62a96784b059/go.mod h1:CSnP5V18bT/O59GgdLDcoir8FpeLjW7i8l6tOh+UMAE=
+github.com/creachadair/ffs v0.0.0-20210914233950-fd12a3be94a7 h1:jXC+Cym1kGgYtXZAEbqDziEOLLw2kxTaAbL6EcxDktM=
+github.com/creachadair/ffs v0.0.0-20210914233950-fd12a3be94a7/go.mod h1:UFarWkKZFPsDC4O/YUmAJBCalVtoJthev4bihRGik1c=
 github.com/creachadair/gcsstore v0.0.0-20210914200529-5dce63aa14fe h1:H+PLCCKe9VbT3RuOQ4D+5az/TgBY0eeXzwPyjZZ6ffg=
 github.com/creachadair/gcsstore v0.0.0-20210914200529-5dce63aa14fe/go.mod h1:cKbh09TYYbwBIkjRG2ytkchm+yEKgjmS8ViwcAzWDVg=
 github.com/creachadair/getpass v0.1.1 h1:NBy01Vx3sEG75JbSgjsObwe06ISDJL9WS88pFNnVSpg=

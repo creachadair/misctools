@@ -14,7 +14,7 @@ require (
 	github.com/creachadair/boltstore v0.0.0-20210914200440-571681cb0b1a
 	github.com/creachadair/command v0.0.0-20210805142246-c89757d6f4ee
 	github.com/creachadair/ctrl v0.1.1
-	github.com/creachadair/ffs v0.0.0-20210914142155-62a96784b059
+	github.com/creachadair/ffs v0.0.0-20210914233950-fd12a3be94a7
 	github.com/creachadair/gcsstore v0.0.0-20210914200529-5dce63aa14fe
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.25.1
@@ -43,7 +43,7 @@ require (
 	github.com/cockroachdb/logtags v0.0.0-20190617123548-eb05cc24525f // indirect
 	github.com/cockroachdb/redact v1.1.3 // indirect
 	github.com/cockroachdb/sentry-go v0.6.1-cockroachdb.2 // indirect
-	github.com/creachadair/atomicfile v0.2.1 // indirect
+	github.com/creachadair/atomicfile v0.2.2 // indirect
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect

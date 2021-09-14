@@ -4,6 +4,7 @@ package main
 import (
 	"context"
 	"crypto/aes"
+	"crypto/cipher"
 	"crypto/hmac"
 	"flag"
 	"fmt"
@@ -196,7 +197,11 @@ func mustOpenStore(ctx context.Context) (blob.Store, func() hash.Hash) {
 	if err != nil {
 		ctrl.Fatalf("Creating cipher: %v", err)
 	}
-	return encoded.New(bs, encrypted.New(c, nil)), func() hash.Hash {
+	gcm, err := cipher.NewGCM(c)
+	if err != nil {
+		ctrl.Fatalf("Creating GCM instance: %v", err)
+	}
+	return encoded.New(bs, encrypted.New(gcm, nil)), func() hash.Hash {
 		return hmac.New(sha3.New256, key)
 	}
 }
