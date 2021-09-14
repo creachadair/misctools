@@ -124,16 +124,15 @@ func main() {
 		svc := server.Static(
 			rpcstore.NewService(bs, &rpcstore.ServiceOpts{Hash: hash}).Methods())
 
-		ntype, addr := jrpc2.Network(*listenAddr)
-		lst, err := net.Listen(ntype, addr)
+		lst, err := net.Listen(jrpc2.Network(*listenAddr))
 		if err != nil {
 			ctrl.Fatalf("Listen: %v", err)
 		}
-		if ntype == "unix" {
+		if lst.Addr().Network() == "unix" {
 			os.Chmod(*listenAddr, 0600) // best-effort
-			defer os.Remove(addr)
+			defer os.Remove(*listenAddr)
 		}
-		log.Printf("Service: %q", addr)
+		log.Printf("Service: %q", *listenAddr)
 
 		sig := make(chan os.Signal, 2)
 		signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
