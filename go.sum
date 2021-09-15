@@ -167,8 +167,8 @@ github.com/creachadair/getpass v0.1.1 h1:NBy01Vx3sEG75JbSgjsObwe06ISDJL9WS88pFNn
 github.com/creachadair/getpass v0.1.1/go.mod h1:amWqqvJdxnT/Tk6PPgpFWX5Ik2RH4dnvfXequlcSXSc=
 github.com/creachadair/jrpc2 v0.25.1 h1:ly3JcezD54FCsVeqYTDs+NE967cYO5A7CixMq7rdEdI=
 github.com/creachadair/jrpc2 v0.25.1/go.mod h1:w+GXZGc+NwsH0xsUOgeLBIIRM0jBOSTXhv28KaWGRZU=
-github.com/creachadair/keyfile v0.6.0 h1:tvrfaZrwP824Lrt/ldVYYiUdG93Rvh1K9d7tNTOU21M=
-github.com/creachadair/keyfile v0.6.0/go.mod h1:GW5EQoulDDOum53qeqlEFZmI1gQ328uhyUqQC+jQxX0=
+github.com/creachadair/keyfile v0.7.0 h1:CAZNWNpwfYHj8d5FTWC/g6nuyuCNV4kydITS3tV/rts=
+github.com/creachadair/keyfile v0.7.0/go.mod h1:kzXUh2yqee7jLtZuJPBute2307T9ryGBKuX+hiuwF8I=
 github.com/creachadair/leveldbstore v0.0.0-20210914200533-709ed20e3855 h1:G2uyNzLhGZL0MWP2aPQj6qatjKXGr/NDjmaWbMXH8pE=
 github.com/creachadair/leveldbstore v0.0.0-20210914200533-709ed20e3855/go.mod h1:HocQN+qrYZQIUzh3IGGog4AG6s2y31yzq0+GvVjJCs4=
 github.com/creachadair/pebblestore v0.0.0-20210914200634-c7dfdcc3aa6b h1:HVK0xpi9eYeOkrySwL9YytYM2q/mFZIhkd++sKvWABk=
@@ -656,7 +656,7 @@ golang.org/x/crypto v0.0.0-20190605123033-f99c8df09eb5/go.mod h1:yigFU9vqHzYiE8U
 golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
-golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
+golang.org/x/crypto v0.0.0-20210506145944-38f3c27a63bf/go.mod h1:P+XmwS30IXTQdn5tA2iutPOUgjI07+tq3H3K9MVA1s8=
 golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 h1:HWj/xjIHfjYU5nVXpTM0s39J9CbLn7Cc5a7IC5rwsMQ=
 golang.org/x/crypto v0.0.0-20210817164053-32db794688a5/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
 golang.org/x/exp v0.0.0-20190121172915-509febef88a4/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
@@ -829,7 +829,6 @@ golang.org/x/sys v0.0.0-20200803210538-64077c9b5642/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.0.0-20200905004654-be1d3432aa8f/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200923182605-d9f96fdee20d/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/sys v0.0.0-20201107080550-4d91cf3a1aaf/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20201119102817-f84b799fce68/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20201201145000-ef89a241ccb3/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20210104204734-6f8348627aad/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
@@ -840,6 +839,7 @@ golang.org/x/sys v0.0.0-20210315160823-c6e025ad8005/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.0.0-20210320140829-1e4c9ba3b0c4/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20210330210617-4fbd30eecc44/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20210423082822-04245dca01da/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20210507161434-a76c4d0a0096/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20210510120138-977fb7262007/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20210514084401-e8d321eab015/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20210603125802-9665404d3644/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
