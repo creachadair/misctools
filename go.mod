@@ -14,13 +14,14 @@ require (
 	github.com/creachadair/boltstore v0.0.0-20210918232333-010ac90224c4
 	github.com/creachadair/command v0.0.0-20210914203923-f9e894bbcc32
 	github.com/creachadair/ctrl v0.1.1
-	github.com/creachadair/ffs v0.0.0-20210921025335-0d620ae7c07d
+	github.com/creachadair/ffs v0.0.0-20210921145610-c001019ed835
 	github.com/creachadair/gcsstore v0.0.0-20210918232953-022f8a9c76d5
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.25.2
 	github.com/creachadair/keyfile v0.7.1
 	github.com/creachadair/leveldbstore v0.0.0-20210914200533-709ed20e3855
 	github.com/creachadair/pebblestore v0.0.0-20210918233404-84de213f76e8
+	github.com/creachadair/pogrebstore v0.0.0-20210922195118-7f56240050ba
 	github.com/creachadair/rpcstore v0.0.0-20210918233437-8c36c4b5743a
 	github.com/creachadair/sqlitestore v0.0.0-20210918233631-8a21a9ec4cbb
 	github.com/creachadair/vql v0.0.19
@@ -39,6 +40,7 @@ require (
 
 require (
 	github.com/DataDog/zstd v1.4.8 // indirect
+	github.com/akrylysov/pogreb v0.10.1 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cockroachdb/logtags v0.0.0-20190617123548-eb05cc24525f // indirect
 	github.com/cockroachdb/redact v1.1.3 // indirect

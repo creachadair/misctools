@@ -19,29 +19,33 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/creachadair/badgerstore"
-	"github.com/creachadair/boltstore"
+	"golang.org/x/crypto/sha3"
+
 	"github.com/creachadair/ctrl"
 	"github.com/creachadair/ffs/blob"
 	"github.com/creachadair/ffs/blob/cachestore"
 	"github.com/creachadair/ffs/blob/codecs/encrypted"
 	"github.com/creachadair/ffs/blob/codecs/zlib"
 	"github.com/creachadair/ffs/blob/encoded"
-	"github.com/creachadair/ffs/blob/filestore"
-	"github.com/creachadair/ffs/blob/memstore"
 	"github.com/creachadair/ffs/blob/store"
-	"github.com/creachadair/gcsstore"
 	"github.com/creachadair/getpass"
 	"github.com/creachadair/jrpc2"
 	"github.com/creachadair/jrpc2/channel"
 	"github.com/creachadair/jrpc2/metrics"
 	"github.com/creachadair/jrpc2/server"
 	"github.com/creachadair/keyfile"
+
+	// Storage implementations (see the stores registry below).
+	"github.com/creachadair/badgerstore"
+	"github.com/creachadair/boltstore"
+	"github.com/creachadair/ffs/blob/filestore"
+	"github.com/creachadair/ffs/blob/memstore"
+	"github.com/creachadair/gcsstore"
 	"github.com/creachadair/leveldbstore"
 	"github.com/creachadair/pebblestore"
+	"github.com/creachadair/pogrebstore"
 	"github.com/creachadair/rpcstore"
 	"github.com/creachadair/sqlitestore"
-	"golang.org/x/crypto/sha3"
 )
 
 var (
@@ -60,6 +64,7 @@ var (
 		"leveldb": leveldbstore.Opener,
 		"memory":  memstore.Opener,
 		"pebble":  pebblestore.Opener,
+		"pogreb":  pogrebstore.Opener,
 		"sqlite":  sqlitestore.Opener,
 	}
 )
