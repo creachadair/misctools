@@ -155,6 +155,9 @@ func main() {
 		mx.SetLabel("blobd.store", *storeAddr)
 		mx.SetLabel("blobd.pid", os.Getpid())
 		mx.SetLabel("blobd.encrypted", *keyFile != "")
+		if *keyFile != "" {
+			mx.SetLabel("blobd.encrypted.keyfile", *keyFile)
+		}
 		mx.SetLabel("blobd.compressed", *zlibLevel > 0)
 		mx.SetLabel("blobd.cacheSize", *cacheSize)
 
