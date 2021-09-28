@@ -19,6 +19,7 @@ import (
 var (
 	useBranch string // default: current branch
 	lineSpan  string // default: link to the file
+	useHash   bool   // 	use the commit hash rather than the branch name
 	doBrowse  bool   // open in the browser
 )
 
@@ -63,10 +64,15 @@ func main() {
 					if err != nil {
 						return err
 					}
+					target, err := resolveBranch(useBranch)
+					if err != nil {
+						return fmt.Errorf("resolving branch: %v", err)
+					}
 					lo, hi, err := parseLineSpan(lineSpan)
 					if err != nil {
 						return fmt.Errorf("invalid line span: %v", err)
 					}
+
 					for _, path := range args {
 						real, err := fixPath(dir, path)
 						if err != nil {
@@ -75,7 +81,7 @@ func main() {
 						var buf bytes.Buffer
 						buf.WriteString(githubBase)
 						buf.WriteString(repo)
-						buf.WriteString("/blob/" + useBranch + "/")
+						buf.WriteString("/blob/" + target + "/")
 						buf.WriteString(real)
 
 						if lo > 0 {
@@ -102,6 +108,13 @@ func main() {
 }
 
 func currentBranch() (string, error) { return git("branch", "--show-current") }
+
+func resolveBranch(branch string) (string, error) {
+	if useHash {
+		return git("rev-parse", branch)
+	}
+	return branch, nil
+}
 
 func firstRemote() (string, error) {
 	rems, err := git("remote", "show", "-n")
@@ -173,5 +186,6 @@ func printOrOpen(s string) error {
 func setStdFlags(fs *flag.FlagSet) {
 	fs.StringVar(&useBranch, "b", "", "Link to this branch (default is current)")
 	fs.BoolVar(&doBrowse, "open", false, "Open link in browser")
-	fs.StringVar(&lineSpan, "line", "", "Specify a line span to refer to")
+	fs.BoolVar(&useHash, "H", false, "Use commit hash instead of branch name")
+	fs.StringVar(&lineSpan, "L", "", "Specify a line span to refer to (LINE or LO-HI)")
 }
