@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -18,9 +19,10 @@ import (
 
 var (
 	useBranch string // default: current branch
-	lineSpan  string // default: link to the file
 	useHash   bool   // 	use the commit hash rather than the branch name
 	doBrowse  bool   // open in the browser
+
+	spanRE = regexp.MustCompile(`:(\d+)(?:-(\d+))?$`)
 )
 
 const (
@@ -68,12 +70,12 @@ func main() {
 					if err != nil {
 						return fmt.Errorf("resolving branch: %v", err)
 					}
-					lo, hi, err := parseLineSpan(lineSpan)
-					if err != nil {
-						return fmt.Errorf("invalid line span: %v", err)
-					}
 
-					for _, path := range args {
+					for _, raw := range args {
+						path, lo, hi, err := parseFile(raw)
+						if err != nil {
+							return fmt.Errorf("invalid file: %v", err)
+						}
 						real, err := fixPath(dir, path)
 						if err != nil {
 							return fmt.Errorf("invalid path: %v", err)
@@ -163,16 +165,17 @@ func fixPath(dir, path string) (string, error) {
 	return filepath.Rel(dir, abs)
 }
 
-func parseLineSpan(s string) (lo, hi int, err error) {
-	if s == "" {
-		return 0, 0, nil
+func parseFile(s string) (path string, lo, hi int, err error) {
+	m := spanRE.FindStringSubmatchIndex(s)
+	if m == nil {
+		return s, 0, 0, nil // no span indicators
 	}
-	parts := strings.SplitN(s, "-", 2)
-	lo, err = strconv.Atoi(parts[0])
-	if err == nil && len(parts) == 2 {
-		hi, err = strconv.Atoi(parts[1])
+	path = s[:m[0]]
+	lo, err = strconv.Atoi(s[m[2]:m[3]])
+	if err == nil && m[4] >= 0 {
+		hi, err = strconv.Atoi(s[m[4]:m[5]])
 	}
-	return lo, hi, err
+	return path, lo, hi, err
 }
 
 func printOrOpen(s string) error {
@@ -187,5 +190,4 @@ func setStdFlags(fs *flag.FlagSet) {
 	fs.StringVar(&useBranch, "b", "", "Link to this branch (default is current)")
 	fs.BoolVar(&doBrowse, "open", false, "Open link in browser")
 	fs.BoolVar(&useHash, "H", false, "Use commit hash instead of branch name")
-	fs.StringVar(&lineSpan, "L", "", "Specify a line span to refer to (LINE or LO-HI)")
 }
