@@ -1,3 +1,4 @@
+// Program hublink generates URLs to files stored in GitHub.
 package main
 
 import (
@@ -16,9 +17,9 @@ import (
 )
 
 var (
-	useBranch string
-	lineSpan  string
-	doBrowse  bool
+	useBranch string // default: current branch
+	lineSpan  string // default: link to the file
+	doBrowse  bool   // open in the browser
 )
 
 const (
@@ -58,7 +59,7 @@ func main() {
 					if len(args) == 0 {
 						return errors.New("no paths specified")
 					}
-					repo, err := repoName()
+					repo, dir, err := repoNameRoot()
 					if err != nil {
 						return err
 					}
@@ -67,11 +68,15 @@ func main() {
 						return fmt.Errorf("invalid line span: %v", err)
 					}
 					for _, path := range args {
+						real, err := fixPath(dir, path)
+						if err != nil {
+							return fmt.Errorf("invalid path: %v", err)
+						}
 						var buf bytes.Buffer
 						buf.WriteString(githubBase)
 						buf.WriteString(repo)
 						buf.WriteString("/blob/" + useBranch + "/")
-						buf.WriteString(path)
+						buf.WriteString(real)
 
 						if lo > 0 {
 							fmt.Fprintf(&buf, "#L%d", lo)
@@ -106,19 +111,23 @@ func firstRemote() (string, error) {
 	return strings.SplitN(rems, "\n", 2)[0], nil
 }
 
-func repoName() (string, error) {
+func repoNameRoot() (name, dir string, _ error) {
+	dir, err := git("rev-parse", "--show-toplevel")
+	if err != nil {
+		return "", "", fmt.Errorf("getting repository root: %v", err)
+	}
 	remote, err := firstRemote()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	url, err := git("remote", "get-url", remote)
 	if err != nil {
-		return "", fmt.Errorf("getting remote URL: %v", err)
+		return "", "", fmt.Errorf("getting remote URL: %v", err)
 	}
 	if strings.HasPrefix(url, "git@") {
-		return strings.TrimSuffix(strings.TrimPrefix(url, "git@github.com:"), ".git"), nil
+		return strings.TrimSuffix(strings.TrimPrefix(url, "git@github.com:"), ".git"), dir, nil
 	}
-	return strings.TrimSuffix(strings.TrimPrefix(url, githubBase), ".git"), nil
+	return strings.TrimSuffix(strings.TrimPrefix(url, githubBase), ".git"), dir, nil
 }
 
 func git(cmd string, args ...string) (string, error) {
@@ -131,6 +140,14 @@ func git(cmd string, args ...string) (string, error) {
 		return "", err
 	}
 	return strings.TrimSpace(string(out)), nil
+}
+
+func fixPath(dir, path string) (string, error) {
+	abs, err := filepath.Abs(path)
+	if err != nil {
+		return "", err
+	}
+	return filepath.Rel(dir, abs)
 }
 
 func parseLineSpan(s string) (lo, hi int, err error) {
