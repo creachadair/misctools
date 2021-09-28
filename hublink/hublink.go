@@ -41,22 +41,17 @@ func main() {
 			}
 		},
 
-		Init: func(*command.Env) error {
-			if useBranch == "" {
-				cur, err := currentBranch()
-				if err != nil {
-					return fmt.Errorf("finding current branch: %v", err)
-				}
-				useBranch = cur
-			}
-			return nil
-		},
-
 		Commands: []*command.C{
 			{
-				Name:  "file",
-				Usage: "<path>",
-				Help:  "Generate a link to the specified repository file",
+				Name: "file",
+				Usage: `
+<path>        -- link to entire file
+<path>:LINE   -- link to specific line    
+<path>:LO-HI  -- link to a range of lines (LO < HI)`,
+				Help: `Generate a link to the specified repository files.
+
+By default, a link is generated for the current branch.
+The repository name is derived from the first remote.`,
 
 				Run: func(env *command.Env, args []string) error {
 					if len(args) == 0 {
@@ -112,6 +107,13 @@ func main() {
 func currentBranch() (string, error) { return git("branch", "--show-current") }
 
 func resolveBranch(branch string) (string, error) {
+	if branch == "" {
+		cur, err := currentBranch()
+		if err != nil {
+			return "", fmt.Errorf("finding current branch: %v", err)
+		}
+		branch = cur
+	}
 	if useHash {
 		return git("rev-parse", branch)
 	}
