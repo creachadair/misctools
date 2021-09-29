@@ -14,7 +14,7 @@ require (
 	github.com/creachadair/boltstore v0.0.0-20210929011402-8fa5c110ee2d
 	github.com/creachadair/command v0.0.0-20210928192034-e8716ad13352
 	github.com/creachadair/ctrl v0.1.1
-	github.com/creachadair/ffs v0.0.0-20210929010822-62d1aadf71e8
+	github.com/creachadair/ffs v0.0.0-20210929142253-4bd1e3781578
 	github.com/creachadair/gcsstore v0.0.0-20210929011504-946724b264c2
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.26.0
