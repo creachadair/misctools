@@ -35,7 +35,8 @@ func main() {
 		Usage: "<command> [arguments]",
 		Help:  "A command-line to link to objects in GitHub",
 
-		SetFlags: func(env *command.Env, _ *flag.FlagSet) {
+		SetFlags: func(env *command.Env, fs *flag.FlagSet) {
+			fs.BoolVar(&doBrowse, "open", false, "Open link in browser")
 			for _, cmd := range env.Command.Commands {
 				setStdFlags(&cmd.Flags)
 			}
@@ -190,6 +191,5 @@ func printOrOpen(s string) error {
 
 func setStdFlags(fs *flag.FlagSet) {
 	fs.StringVar(&useBranch, "b", "", "Link to this branch (default is current)")
-	fs.BoolVar(&doBrowse, "open", false, "Open link in browser")
 	fs.BoolVar(&useHash, "H", false, "Use commit hash instead of branch name")
 }
