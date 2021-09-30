@@ -358,13 +358,17 @@ var tool = &command.C{
 help [command]`,
 	Help: `Manipulate the contents of a blob store.
 
-To specify blob keys literally, prefix them with @.
-To escape a leading @, double it.
-Prefix a base64-encoded key with "+".
-Otherwise, keys must be encoded in hexadecimal.
+Since blob keys are usually binary, key arguments are assumed to be encoded.
 
-The BLOB_STORE environment variable is read to choose a default
-blob store address; otherwise -store must be set.
+Rule                                                     Example
+- To specify blob keys literally, prefix them with "@"   @foo
+  To escape a leading @, double it                       @@foo
+- If a key starts with "+" it is treated as base64       +Zm9vCg==
+- If not, but it is all hex digits, decode it as hex     666f6f0a
+- Otherwise, it is treated as base64.                    Zm9vCg==
+
+The BLOB_STORE environment variable is read to choose a default store address;
+otherwise -store must be set.
 
 `,
 
@@ -413,14 +417,16 @@ func storeFromEnv(env *command.Env) (rpcstore.Store, error) {
 func parseKey(s string) (string, error) {
 	if strings.HasPrefix(s, "@") {
 		return s[1:], nil
-	} else if strings.HasPrefix(s, "+") {
-		key, err := base64.StdEncoding.DecodeString(s[1:])
-		if err != nil {
-			return "", fmt.Errorf("invalid key %q: %w", s, err)
-		}
-		return string(key), nil
 	}
-	key, err := hex.DecodeString(s)
+	var key []byte
+	var err error
+	if t := strings.TrimPrefix(s, "+"); t != s {
+		key, err = base64.StdEncoding.DecodeString(t)
+	} else if isAllHex(s) {
+		key, err = hex.DecodeString(s)
+	} else {
+		key, err = base64.StdEncoding.DecodeString(s)
+	}
 	if err != nil {
 		return "", fmt.Errorf("invalid key %q: %w", s, err)
 	}
@@ -434,4 +440,13 @@ func getFlag(env *command.Env, name string) interface{} {
 
 func getContext(env *command.Env) context.Context {
 	return env.Config.(*settings).Context
+}
+
+func isAllHex(s string) bool {
+	for _, c := range s {
+		if !(c >= '0' && c <= '9' || c >= 'a' && c <= 'f' || c >= 'A' && c <= 'F') {
+			return false
+		}
+	}
+	return true
 }
