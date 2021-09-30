@@ -421,8 +421,10 @@ func parseKey(s string) (string, error) {
 	var err error
 	if isAllHex(s) {
 		key, err = hex.DecodeString(s)
-	} else {
+	} else if strings.HasSuffix(s, "=") {
 		key, err = base64.StdEncoding.DecodeString(s)
+	} else {
+		key, err = base64.RawStdEncoding.DecodeString(s) // tolerate missing padding
 	}
 	if err != nil {
 		return "", fmt.Errorf("invalid key %q: %w", s, err)
