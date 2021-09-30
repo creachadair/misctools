@@ -363,8 +363,7 @@ Since blob keys are usually binary, key arguments are assumed to be encoded.
 Rule                                                     Example
 - To specify blob keys literally, prefix them with "@"   @foo
   To escape a leading @, double it                       @@foo
-- If a key starts with "+" it is treated as base64       +Zm9vCg==
-- If not, but it is all hex digits, decode it as hex     666f6f0a
+- If the key is all hex digits, decode it as hex         666f6f0a
 - Otherwise, it is treated as base64.                    Zm9vCg==
 
 The BLOB_STORE environment variable is read to choose a default store address;
@@ -420,9 +419,7 @@ func parseKey(s string) (string, error) {
 	}
 	var key []byte
 	var err error
-	if t := strings.TrimPrefix(s, "+"); t != s {
-		key, err = base64.StdEncoding.DecodeString(t)
-	} else if isAllHex(s) {
+	if isAllHex(s) {
 		key, err = hex.DecodeString(s)
 	} else {
 		key, err = base64.StdEncoding.DecodeString(s)
