@@ -161,8 +161,8 @@ github.com/creachadair/gcsstore v0.0.0-20210929011504-946724b264c2 h1:FJRez759CA
 github.com/creachadair/gcsstore v0.0.0-20210929011504-946724b264c2/go.mod h1:GV5KXtXTm8CssdrTAMkZuoNlggmUFgdmizUGg6uc8rU=
 github.com/creachadair/getpass v0.1.1 h1:NBy01Vx3sEG75JbSgjsObwe06ISDJL9WS88pFNnVSpg=
 github.com/creachadair/getpass v0.1.1/go.mod h1:amWqqvJdxnT/Tk6PPgpFWX5Ik2RH4dnvfXequlcSXSc=
-github.com/creachadair/jrpc2 v0.26.0 h1:osFFznmP4tyQ1Dg4DQhM0EJ+wHjCvXr9RjvYwFsxRMw=
-github.com/creachadair/jrpc2 v0.26.0/go.mod h1:w+GXZGc+NwsH0xsUOgeLBIIRM0jBOSTXhv28KaWGRZU=
+github.com/creachadair/jrpc2 v0.26.1 h1:5i6kkw2hmeocwwFHjNkiQ6jePMufdhcfWOlV6ACU5y8=
+github.com/creachadair/jrpc2 v0.26.1/go.mod h1:w+GXZGc+NwsH0xsUOgeLBIIRM0jBOSTXhv28KaWGRZU=
 github.com/creachadair/keyfile v0.7.1 h1:XN5VztUPSIbUv4xKCZ2lULM+UsYHAkqz1EvgmXCu3YA=
 github.com/creachadair/keyfile v0.7.1/go.mod h1:kzXUh2yqee7jLtZuJPBute2307T9ryGBKuX+hiuwF8I=
 github.com/creachadair/leveldbstore v0.0.0-20210929011542-a181f8301139 h1:eZ8jVJsw4ZR6todxfkCwmBwRRhqF6p7vfjU3NoSOH8c=
@@ -171,8 +171,8 @@ github.com/creachadair/pebblestore v0.0.0-20210929011805-48b61ac77c11 h1:rwKyuzP
 github.com/creachadair/pebblestore v0.0.0-20210929011805-48b61ac77c11/go.mod h1:Ln4RLYCs2E5S/LLB66G5BEEFFwBkNAvj4GT9/V6w/FU=
 github.com/creachadair/pogrebstore v0.0.0-20210929011828-85b0604c8498 h1:ulOI9w0l01TzSQYDGAzi88kyqvkZnCH0SiY7ogHjF5Y=
 github.com/creachadair/pogrebstore v0.0.0-20210929011828-85b0604c8498/go.mod h1:ERtKCEdVzDV+RewQFexZSs9EWvzByHkcbHN6uzI2Q5k=
-github.com/creachadair/rpcstore v0.0.0-20210929025311-70aa0b214b24 h1:1N8zWZePN4vc/AF+pToiiW/czqTmltGJyE0IjZ0Lnak=
-github.com/creachadair/rpcstore v0.0.0-20210929025311-70aa0b214b24/go.mod h1:KgYs5KpG/OkCRhfjCMPeeRPsKgXdYc+PT9OzVFMvbsA=
+github.com/creachadair/rpcstore v0.0.0-20211001185836-d2e6d68428fd h1:b4LXpgJW5zFi8ldYESKKIA/FtlmQg5RgeAEwanYpzB8=
+github.com/creachadair/rpcstore v0.0.0-20211001185836-d2e6d68428fd/go.mod h1:2VCT1ZvxAUm3F4bIF43ZngwXkliTMvN2vUqU9peOH6Y=
 github.com/creachadair/sqlitestore v0.0.0-20210929011205-2c44ba7144ef h1:ezFwLE5yUfhmDsKYMWa10sY2pU8dNmWawhihlf91LeY=
 github.com/creachadair/sqlitestore v0.0.0-20210929011205-2c44ba7144ef/go.mod h1:ZOnvAVbr5awfla2xQd1d+JnvV9GZVCrk4680+NlRrWA=
 github.com/creachadair/staticfile v0.1.3/go.mod h1:a3qySzCIXEprDGxk6tSxSI+dBBdLzqeBOMhZ+o2d3pM=
