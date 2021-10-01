@@ -76,10 +76,11 @@ The repository name is derived from the first remote.`,
 						if err != nil {
 							return fmt.Errorf("invalid path: %v", err)
 						}
+
 						var buf bytes.Buffer
 						buf.WriteString(githubBase)
 						buf.WriteString(repo)
-						buf.WriteString("/blob/" + target + "/")
+						fmt.Fprintf(&buf, "/%s/%s/", gitObjectType(real), target)
 						buf.WriteString(real)
 
 						if lo > 0 {
@@ -179,6 +180,14 @@ func parseFile(s string) (path string, lo, hi int, err error) {
 		hi, err = strconv.Atoi(s[m[4]:m[5]])
 	}
 	return path, lo, hi, err
+}
+
+func gitObjectType(path string) string {
+	fi, err := os.Stat(path)
+	if err == nil && fi.IsDir() {
+		return "tree"
+	}
+	return "blob"
 }
 
 func printOrOpen(s string) error {
