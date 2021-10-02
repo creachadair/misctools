@@ -7,7 +7,7 @@ import (
 )
 
 func TestLookup(t *testing.T) {
-	const name = "nobody"
+	const name = "nogroup"
 
 	g1, err := group.Lookup(name)
 	if err != nil {
