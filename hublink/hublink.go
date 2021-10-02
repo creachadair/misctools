@@ -6,6 +6,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -21,8 +22,6 @@ var (
 	useBranch string // default: current branch
 	useHash   bool   // 	use the commit hash rather than the branch name
 	doBrowse  bool   // open in the browser
-
-	spanRE = regexp.MustCompile(`:(\d+)(?:-(\d+))?$`)
 )
 
 const (
@@ -46,9 +45,11 @@ func main() {
 			{
 				Name: "file",
 				Usage: `
-<path>        -- link to entire file
-<path>:LINE   -- link to specific line    
-<path>:LO-HI  -- link to a range of lines (LO < HI)`,
+<path>       -- link to entire file
+<path>:LINE  -- link to a single specific line
+<path>:LO-HI -- link to a range of lines (LO < HI)
+<path>:@RE   -- link to the first match of this regexp (RE2)
+`,
 				Help: `Generate a link to the specified repository files.
 
 By default, a link is generated for the current branch.
@@ -70,7 +71,7 @@ The repository name is derived from the first remote.`,
 					for _, raw := range args {
 						path, lo, hi, err := parseFile(raw)
 						if err != nil {
-							return fmt.Errorf("invalid file: %v", err)
+							return fmt.Errorf("invalid file spec: %v", err)
 						}
 						real, err := fixPath(dir, path)
 						if err != nil {
@@ -86,7 +87,7 @@ The repository name is derived from the first remote.`,
 						if lo > 0 {
 							fmt.Fprintf(&buf, "#L%d", lo)
 							if hi > lo {
-								fmt.Fprintf(&buf, "-%d", hi)
+								fmt.Fprintf(&buf, "-L%d", hi)
 							}
 						}
 						if err := printOrOpen(buf.String()); err != nil {
@@ -169,17 +170,50 @@ func fixPath(dir, path string) (string, error) {
 	return filepath.Rel(dir, abs)
 }
 
+// parseFile parses a file path with an optional coda specifying a location
+// within the file. The coda may have the following forms
+//
+//   :dd
+//   :dd-dd
+//   :@re
+//
+// where "dd" represents decimal digits and "re" represents an RE2 regular
+// expression. The first two forms indicate a single line or range of lines,
+// the third indicates the line or range corresponding to the first match of
+// the given regular expression in the file content.
 func parseFile(s string) (path string, lo, hi int, err error) {
-	m := spanRE.FindStringSubmatchIndex(s)
-	if m == nil {
-		return s, 0, 0, nil // no span indicators
+	if i := strings.LastIndex(s, ":"); i < 0 {
+		return s, 0, 0, nil
+	} else {
+		path, s = s[:i], s[i+1:]
 	}
-	path = s[:m[0]]
-	lo, err = strconv.Atoi(s[m[2]:m[3]])
-	if err == nil && m[4] >= 0 {
-		hi, err = strconv.Atoi(s[m[4]:m[5]])
+	if strings.HasPrefix(s, "@") {
+		re, err := regexp.Compile("(?msU)" + s[1:])
+		if err != nil {
+			return path, 0, 0, fmt.Errorf("invalid regexp: %w", err)
+		}
+		return grepFile(path, re)
+	}
+	span := strings.SplitN(s, "-", 2)
+	lo, err = strconv.Atoi(span[0])
+	if err == nil && len(span) == 2 {
+		hi, err = strconv.Atoi(span[1])
 	}
 	return path, lo, hi, err
+}
+
+func grepFile(path string, re *regexp.Regexp) (_ string, lo, hi int, err error) {
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		return path, 0, 0, err
+	}
+	m := re.FindIndex(data)
+	if m == nil {
+		return path, 0, 0, fmt.Errorf("no match for regexp %v", re)
+	}
+	lo = bytes.Count(data[:m[0]], []byte("\n")) + 1
+	hi = lo + bytes.Count(data[m[0]:m[1]], []byte("\n"))
+	return path, lo, hi, nil
 }
 
 func gitObjectType(path string) string {
