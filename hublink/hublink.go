@@ -166,7 +166,13 @@ func fixPath(dir, path string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return filepath.Rel(dir, abs)
+	rel, err := filepath.Rel(dir, abs)
+	if err != nil {
+		return "", err
+	} else if rel == "." {
+		return "", nil
+	}
+	return rel, nil
 }
 
 func parseFile(s string) (path string, lo, hi int, err error) {
