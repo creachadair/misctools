@@ -90,7 +90,7 @@ The repository name is derived from the first remote.`,
 								fmt.Fprintf(&buf, "-L%d", hi)
 							}
 						}
-						if err := printOrOpen(buf.String()); err != nil {
+						if err := printAndOpen(buf.String()); err != nil {
 							return nil
 						}
 					}
@@ -224,11 +224,11 @@ func gitObjectType(path string) string {
 	return "blob"
 }
 
-func printOrOpen(s string) error {
+func printAndOpen(s string) error {
+	fmt.Println(s)
 	if doBrowse {
 		return exec.Command("open", s).Run()
 	}
-	fmt.Println(s)
 	return nil
 }
 
