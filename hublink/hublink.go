@@ -41,6 +41,8 @@ func main() {
 			}
 		},
 
+		Run: runLinkFile,
+
 		Commands: []*command.C{
 			{
 				Name: "file",
@@ -55,47 +57,7 @@ func main() {
 By default, a link is generated for the current branch.
 The repository name is derived from the first remote.`,
 
-				Run: func(env *command.Env, args []string) error {
-					if len(args) == 0 {
-						return errors.New("no paths specified")
-					}
-					repo, dir, err := repoNameRoot()
-					if err != nil {
-						return err
-					}
-					target, err := resolveBranch(useBranch)
-					if err != nil {
-						return fmt.Errorf("resolving branch: %v", err)
-					}
-
-					for _, raw := range args {
-						path, lo, hi, err := parseFile(raw)
-						if err != nil {
-							return fmt.Errorf("invalid file spec: %v", err)
-						}
-						real, err := fixPath(dir, path)
-						if err != nil {
-							return fmt.Errorf("invalid path: %v", err)
-						}
-
-						var buf bytes.Buffer
-						buf.WriteString(githubBase)
-						buf.WriteString(repo)
-						fmt.Fprintf(&buf, "/%s/%s/", gitObjectType(real), target)
-						buf.WriteString(real)
-
-						if lo > 0 {
-							fmt.Fprintf(&buf, "#L%d", lo)
-							if hi > lo {
-								fmt.Fprintf(&buf, "-L%d", hi)
-							}
-						}
-						if err := printAndOpen(buf.String()); err != nil {
-							return nil
-						}
-					}
-					return nil
-				},
+				Run: runLinkFile,
 			},
 			command.HelpCommand(nil),
 		},
@@ -105,6 +67,48 @@ The repository name is derived from the first remote.`,
 	} else if err != nil {
 		log.Fatalf("Error: %v", err)
 	}
+}
+
+func runLinkFile(env *command.Env, args []string) error {
+	if len(args) == 0 {
+		return errors.New("no paths specified")
+	}
+	repo, dir, err := repoNameRoot()
+	if err != nil {
+		return err
+	}
+	target, err := resolveBranch(useBranch)
+	if err != nil {
+		return fmt.Errorf("resolving branch: %v", err)
+	}
+
+	for _, raw := range args {
+		path, lo, hi, err := parseFile(raw)
+		if err != nil {
+			return fmt.Errorf("invalid file spec: %v", err)
+		}
+		real, err := fixPath(dir, path)
+		if err != nil {
+			return fmt.Errorf("invalid path: %v", err)
+		}
+
+		var buf bytes.Buffer
+		buf.WriteString(githubBase)
+		buf.WriteString(repo)
+		fmt.Fprintf(&buf, "/%s/%s/", gitObjectType(real), target)
+		buf.WriteString(real)
+
+		if lo > 0 {
+			fmt.Fprintf(&buf, "#L%d", lo)
+			if hi > lo {
+				fmt.Fprintf(&buf, "-L%d", hi)
+			}
+		}
+		if err := printAndOpen(buf.String()); err != nil {
+			return nil
+		}
+	}
+	return nil
 }
 
 func currentBranch() (string, error) { return git("branch", "--show-current") }
