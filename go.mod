@@ -12,7 +12,7 @@ require (
 	github.com/cockroachdb/pebble v0.0.0-20210930201120-c73841491dd5 // indirect
 	github.com/creachadair/badgerstore v0.0.8
 	github.com/creachadair/boltstore v0.0.0-20211002022802-58ccb8ccd469
-	github.com/creachadair/command v0.0.0-20210928192034-e8716ad13352
+	github.com/creachadair/command v0.0.0-20211002145118-15c7b1937941
 	github.com/creachadair/ctrl v0.1.1
 	github.com/creachadair/ffs v0.0.0-20211002005615-6d714f537eed
 	github.com/creachadair/gcsstore v0.0.0-20211002022906-5e58a0859d07
