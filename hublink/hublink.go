@@ -20,7 +20,7 @@ import (
 
 var (
 	useBranch string // default: current branch
-	useHash   bool   // 	use the commit hash rather than the branch name
+	useHash   bool   // use the commit hash rather than the branch name
 	doBrowse  bool   // open in the browser
 )
 
