@@ -52,7 +52,7 @@ var (
 	listenAddr = flag.String("listen", "", "Service address (required)")
 	storeAddr  = flag.String("store", "", "Store address (required)")
 	keyFile    = flag.String("keyfile", "", "Encryption key file")
-	cacheSize  = flag.Int("cache", 0, "Memory cache size in KiB (0 means no cache)")
+	cacheSize  = flag.Int("cache", 0, "Memory cache size in MiB (0 means no cache)")
 	doDebug    = flag.Bool("debug", false, "Enable server debug logging")
 	zlibLevel  = flag.Int("zlib", 0, "Enable ZLIB compression (0 means no compression)")
 
@@ -121,7 +121,7 @@ func main() {
 			}
 		}
 		if *cacheSize > 0 {
-			log.Printf("Memory cache size: %d KiB", *cacheSize)
+			log.Printf("Memory cache size: %d MiB", *cacheSize)
 		}
 		if *keyFile != "" {
 			log.Printf("Encryption key: %q", *keyFile)
@@ -188,7 +188,7 @@ func mustOpenStore(ctx context.Context) (blob.Store, func() hash.Hash) {
 		bs = encoded.New(bs, zlib.NewCodec(zlib.Level(*zlibLevel)))
 	}
 	if *cacheSize > 0 {
-		bs = cachestore.New(bs, *cacheSize<<10)
+		bs = cachestore.New(bs, *cacheSize<<20)
 	}
 	if *keyFile == "" {
 		return bs, sha3.New256
