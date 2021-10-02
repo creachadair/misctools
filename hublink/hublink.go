@@ -22,10 +22,12 @@ var (
 	useBranch string // default: current branch
 	useHash   bool   // use the commit hash rather than the branch name
 	doBrowse  bool   // open in the browser
+	doRaw     bool   // link to raw file content
 )
 
 const (
-	githubBase = "https://github.com/"
+	githubBase    = "https://github.com/"
+	githubRawBase = "https://raw.githubusercontent.com/"
 )
 
 func main() {
@@ -94,15 +96,22 @@ func runLinkFile(env *command.Env, args []string) error {
 		}
 
 		var buf bytes.Buffer
-		buf.WriteString(githubBase)
-		buf.WriteString(repo)
-		fmt.Fprintf(&buf, "/%s/%s/", gitObjectType(real), target)
-		buf.WriteString(real)
+		if doRaw {
+			buf.WriteString(githubRawBase)
+			buf.WriteString(repo)
+			fmt.Fprintf(&buf, "/%s/", target)
+			buf.WriteString(real)
+		} else {
+			buf.WriteString(githubBase)
+			buf.WriteString(repo)
+			fmt.Fprintf(&buf, "/%s/%s/", gitObjectType(real), target)
+			buf.WriteString(real)
 
-		if lo > 0 {
-			fmt.Fprintf(&buf, "#L%d", lo)
-			if hi > lo {
-				fmt.Fprintf(&buf, "-L%d", hi)
+			if lo > 0 {
+				fmt.Fprintf(&buf, "#L%d", lo)
+				if hi > lo {
+					fmt.Fprintf(&buf, "-L%d", hi)
+				}
 			}
 		}
 		if err := printAndOpen(buf.String()); err != nil {
@@ -240,4 +249,5 @@ func printAndOpen(s string) error {
 func setStdFlags(fs *flag.FlagSet) {
 	fs.StringVar(&useBranch, "b", "", "Link to this branch (default is current)")
 	fs.BoolVar(&useHash, "H", false, "Use commit hash instead of branch name")
+	fs.BoolVar(&doRaw, "raw", false, "Link to raw file content (ignores offsets)")
 }
