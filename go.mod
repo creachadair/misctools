@@ -4,26 +4,26 @@ go 1.17
 
 require (
 	bitbucket.org/creachadair/stringset v0.0.9
-	cloud.google.com/go v0.96.0 // indirect
-	cloud.google.com/go/storage v1.16.1 // indirect
+	cloud.google.com/go v0.97.0 // indirect
+	cloud.google.com/go/storage v1.17.0 // indirect
 	crawshaw.io/sqlite v0.3.3-0.20210317204950-23d646f8ac00 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cockroachdb/errors v1.8.6 // indirect
-	github.com/cockroachdb/pebble v0.0.0-20210928214936-9d7ee5847c5e // indirect
+	github.com/cockroachdb/pebble v0.0.0-20210930201120-c73841491dd5 // indirect
 	github.com/creachadair/badgerstore v0.0.8
-	github.com/creachadair/boltstore v0.0.0-20210929011402-8fa5c110ee2d
+	github.com/creachadair/boltstore v0.0.0-20211002022802-58ccb8ccd469
 	github.com/creachadair/command v0.0.0-20210928192034-e8716ad13352
 	github.com/creachadair/ctrl v0.1.1
-	github.com/creachadair/ffs v0.0.0-20210929142253-4bd1e3781578
-	github.com/creachadair/gcsstore v0.0.0-20210929011504-946724b264c2
+	github.com/creachadair/ffs v0.0.0-20211002005615-6d714f537eed
+	github.com/creachadair/gcsstore v0.0.0-20211002022906-5e58a0859d07
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.26.1
 	github.com/creachadair/keyfile v0.7.1
-	github.com/creachadair/leveldbstore v0.0.0-20210929011542-a181f8301139
-	github.com/creachadair/pebblestore v0.0.0-20210929011805-48b61ac77c11
-	github.com/creachadair/pogrebstore v0.0.0-20210929011828-85b0604c8498
-	github.com/creachadair/rpcstore v0.0.0-20211001185836-d2e6d68428fd
-	github.com/creachadair/sqlitestore v0.0.0-20210929011205-2c44ba7144ef
+	github.com/creachadair/leveldbstore v0.0.0-20211002022929-f2889d198882
+	github.com/creachadair/pebblestore v0.0.0-20211002023041-62bd119d115a
+	github.com/creachadair/pogrebstore v0.0.0-20211002023105-50e16323acb8
+	github.com/creachadair/rpcstore v0.0.0-20211002023131-1fa1ba015596
+	github.com/creachadair/sqlitestore v0.0.0-20211002023151-f1dc0c4e9c0a
 	github.com/creachadair/vql v0.0.19
 	github.com/dgraph-io/badger/v2 v2.2007.4 // indirect
 	github.com/dgraph-io/ristretto v0.1.0 // indirect
@@ -32,10 +32,10 @@ require (
 	github.com/tdewolff/minify/v2 v2.9.22
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	golang.org/x/exp v0.0.0-20210916165020-5cb4fee858ee // indirect
-	golang.org/x/net v0.0.0-20210928044308-7d9f5e0b762b // indirect
+	golang.org/x/net v0.0.0-20210929193557-e81a3d93ecf6 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/api v0.58.0 // indirect
-	google.golang.org/genproto v0.0.0-20210928142010-c7af6a1a74c9 // indirect
+	google.golang.org/genproto v0.0.0-20211001223012-bfb93cce50d9 // indirect
 )
 
 require (
@@ -64,7 +64,7 @@ require (
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20210927094055-39ccf1dd6fa6 // indirect
+	golang.org/x/sys v0.0.0-20211001092434-39dca1131b70 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/grpc v1.41.0 // indirect
