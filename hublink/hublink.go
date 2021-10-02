@@ -36,6 +36,7 @@ func main() {
 
 		SetFlags: func(env *command.Env, fs *flag.FlagSet) {
 			fs.BoolVar(&doBrowse, "open", false, "Open link in browser")
+			setStdFlags(fs)
 			for _, cmd := range env.Command.Commands {
 				setStdFlags(&cmd.Flags)
 			}
