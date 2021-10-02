@@ -15,12 +15,21 @@ import (
 
 type settings struct {
 	Context context.Context
-	Store   string
-	Debug   bool
+
+	// Flag targets
+	Store     string // global
+	Debug     bool   // global
+	Replace   bool   // put
+	Raw       bool   // list
+	Start     string // list
+	Prefix    string // list
+	MissingOK bool   // delete
 }
 
 func main() {
-	if err := command.Execute(tool.NewEnv(nil), os.Args[1:]); err != nil {
+	if err := command.Execute(tool.NewEnv(&settings{
+		Context: context.Background(),
+	}), os.Args[1:]); err != nil {
 		if errors.Is(err, command.ErrUsage) {
 			os.Exit(2)
 		}
@@ -48,17 +57,14 @@ otherwise -store must be set.
 `,
 
 	SetFlags: func(env *command.Env, fs *flag.FlagSet) {
-		fs.String("store", os.Getenv("BLOB_STORE"), "Blob store address (required)")
-		fs.Bool("debug", false, "Enable client debug logging")
+		cfg := env.Config.(*settings)
+		fs.StringVar(&cfg.Store, "store", os.Getenv("BLOB_STORE"), "Blob store address (required)")
+		fs.BoolVar(&cfg.Debug, "debug", false, "Enable client debug logging")
 	},
 
 	Init: func(env *command.Env) error {
-		store := os.ExpandEnv(getFlag(env, "store").(string))
-		env.Config = &settings{
-			Context: context.Background(),
-			Store:   store,
-			Debug:   getFlag(env, "debug").(bool),
-		}
+		cfg := env.Config.(*settings)
+		cfg.Store = os.ExpandEnv(cfg.Store)
 		return nil
 	},
 
@@ -75,7 +81,8 @@ otherwise -store must be set.
 			Help:  "Write a blob to the store",
 
 			SetFlags: func(env *command.Env, fs *flag.FlagSet) {
-				fs.Bool("replace", false, "Replace an existing key")
+				cfg := env.Config.(*settings)
+				fs.BoolVar(&cfg.Replace, "replace", false, "Replace an existing key")
 			},
 			Run: putCmd,
 		},
@@ -91,7 +98,8 @@ otherwise -store must be set.
 			Help:  "Delete a blob from the store",
 
 			SetFlags: func(env *command.Env, fs *flag.FlagSet) {
-				fs.Bool("missing-ok", false, "Do not report an error for missing keys")
+				cfg := env.Config.(*settings)
+				fs.BoolVar(&cfg.MissingOK, "missing-ok", false, "Do not report an error for missing keys")
 			},
 			Run: delCmd,
 		},
@@ -100,9 +108,10 @@ otherwise -store must be set.
 			Help: "List keys in the store",
 
 			SetFlags: func(env *command.Env, fs *flag.FlagSet) {
-				fs.Bool("raw", false, "Print raw keys without hex encoding")
-				fs.String("start", "", "List keys lexicographically greater than or equal to this")
-				fs.String("prefix", "", "List only keys having this prefix")
+				cfg := env.Config.(*settings)
+				fs.BoolVar(&cfg.Raw, "raw", false, "Print raw keys without hex encoding")
+				fs.StringVar(&cfg.Start, "start", "", "List keys greater than or equal to this")
+				fs.StringVar(&cfg.Prefix, "prefix", "", "List only keys having this prefix")
 			},
 			Run: listCmd,
 		},

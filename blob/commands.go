@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -20,11 +19,6 @@ import (
 	"github.com/creachadair/jrpc2/channel"
 	"github.com/creachadair/rpcstore"
 )
-
-func getFlag(env *command.Env, name string) interface{} {
-	v := env.Command.Flags.Lookup(name).Value
-	return v.(flag.Getter).Get()
-}
 
 func getContext(env *command.Env) context.Context {
 	return env.Config.(*settings).Context
@@ -97,7 +91,7 @@ func delCmd(env *command.Env, args []string) (err error) {
 			err = cerr
 		}
 	}()
-	missingOK := getFlag(env, "missing-ok").(bool)
+	missingOK := env.Config.(*settings).MissingOK
 	for _, arg := range args {
 		key, err := parseKey(arg)
 		if err != nil {
@@ -117,11 +111,12 @@ func listCmd(env *command.Env, args []string) error {
 	if len(args) != 0 {
 		return errors.New("usage is: list")
 	}
-	start, err := parseKey(getFlag(env, "start").(string))
+	cfg := env.Config.(*settings)
+	start, err := parseKey(cfg.Start)
 	if err != nil {
 		return err
 	}
-	pfx, err := parseKey(getFlag(env, "prefix").(string))
+	pfx, err := parseKey(cfg.Prefix)
 	if err != nil {
 		return err
 	}
@@ -140,7 +135,7 @@ func listCmd(env *command.Env, args []string) error {
 				return blob.ErrStopListing
 			}
 			return nil
-		} else if getFlag(env, "raw").(bool) {
+		} else if cfg.Raw {
 			fmt.Println(key)
 		} else {
 			fmt.Printf("%x\n", key)
@@ -247,7 +242,7 @@ func putCmd(env *command.Env, args []string) (err error) {
 	return bs.Put(getContext(env), blob.PutOptions{
 		Key:     key,
 		Data:    data,
-		Replace: getFlag(env, "replace").(bool),
+		Replace: env.Config.(*settings).Replace,
 	})
 }
 
