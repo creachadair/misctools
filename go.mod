@@ -15,7 +15,7 @@ require (
 	github.com/creachadair/command v0.0.0-20211002145118-15c7b1937941
 	github.com/creachadair/ctrl v0.1.1
 	github.com/creachadair/ffs v0.0.0-20211002005615-6d714f537eed
-	github.com/creachadair/gcsstore v0.0.0-20211002022906-5e58a0859d07
+	github.com/creachadair/gcsstore v0.0.0-20211002161653-f098f616f09a
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.26.1
 	github.com/creachadair/keyfile v0.7.1
