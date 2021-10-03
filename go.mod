@@ -11,16 +11,16 @@ require (
 	github.com/cockroachdb/errors v1.8.6 // indirect
 	github.com/cockroachdb/pebble v0.0.0-20210930201120-c73841491dd5 // indirect
 	github.com/creachadair/badgerstore v0.0.8
-	github.com/creachadair/boltstore v0.0.0-20211003052323-042c81f36cc1
+	github.com/creachadair/boltstore v0.0.0-20211003200823-ae64dc6c75e4
 	github.com/creachadair/command v0.0.0-20211002170045-5bd7d4de7419
 	github.com/creachadair/ctrl v0.1.1
 	github.com/creachadair/ffs v0.0.0-20211003042612-1fdb18aded4d
-	github.com/creachadair/gcsstore v0.0.0-20211003052513-f92a62722055
+	github.com/creachadair/gcsstore v0.0.0-20211003201158-84164dfbbf85
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.26.1
 	github.com/creachadair/keyfile v0.7.1
 	github.com/creachadair/leveldbstore v0.0.0-20211003052532-44495f35c173
-	github.com/creachadair/pebblestore v0.0.0-20211003052737-36fe64938c72
+	github.com/creachadair/pebblestore v0.0.0-20211003201434-9105fd551b33
 	github.com/creachadair/pogrebstore v0.0.0-20211003052757-543cacc86c78
 	github.com/creachadair/rpcstore v0.0.0-20211003052846-c1cca98c179c
 	github.com/creachadair/sqlitestore v0.0.0-20211003052807-71aeb6e8b725
