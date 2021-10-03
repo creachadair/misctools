@@ -11,19 +11,19 @@ require (
 	github.com/cockroachdb/errors v1.8.6 // indirect
 	github.com/cockroachdb/pebble v0.0.0-20210930201120-c73841491dd5 // indirect
 	github.com/creachadair/badgerstore v0.0.8
-	github.com/creachadair/boltstore v0.0.0-20211002022802-58ccb8ccd469
+	github.com/creachadair/boltstore v0.0.0-20211003052323-042c81f36cc1
 	github.com/creachadair/command v0.0.0-20211002170045-5bd7d4de7419
 	github.com/creachadair/ctrl v0.1.1
-	github.com/creachadair/ffs v0.0.0-20211002005615-6d714f537eed
-	github.com/creachadair/gcsstore v0.0.0-20211002161653-f098f616f09a
+	github.com/creachadair/ffs v0.0.0-20211003042612-1fdb18aded4d
+	github.com/creachadair/gcsstore v0.0.0-20211003052513-f92a62722055
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.26.1
 	github.com/creachadair/keyfile v0.7.1
-	github.com/creachadair/leveldbstore v0.0.0-20211002022929-f2889d198882
-	github.com/creachadair/pebblestore v0.0.0-20211002023041-62bd119d115a
-	github.com/creachadair/pogrebstore v0.0.0-20211002023105-50e16323acb8
-	github.com/creachadair/rpcstore v0.0.0-20211002160507-629fb2632cfa
-	github.com/creachadair/sqlitestore v0.0.0-20211002023151-f1dc0c4e9c0a
+	github.com/creachadair/leveldbstore v0.0.0-20211003052532-44495f35c173
+	github.com/creachadair/pebblestore v0.0.0-20211003052737-36fe64938c72
+	github.com/creachadair/pogrebstore v0.0.0-20211003052757-543cacc86c78
+	github.com/creachadair/rpcstore v0.0.0-20211003052846-c1cca98c179c
+	github.com/creachadair/sqlitestore v0.0.0-20211003052807-71aeb6e8b725
 	github.com/creachadair/vql v0.0.19
 	github.com/dgraph-io/badger/v2 v2.2007.4 // indirect
 	github.com/dgraph-io/ristretto v0.1.0 // indirect
@@ -64,7 +64,7 @@ require (
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20211001092434-39dca1131b70 // indirect
+	golang.org/x/sys v0.0.0-20211002104244-808efd93c36d // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/grpc v1.41.0 // indirect
