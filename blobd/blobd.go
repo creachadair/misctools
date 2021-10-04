@@ -3,14 +3,9 @@ package main
 
 import (
 	"context"
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/hmac"
 	"flag"
 	"fmt"
-	"hash"
 	"log"
-	"net"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -19,21 +14,11 @@ import (
 	"syscall"
 	"time"
 
-	"golang.org/x/crypto/sha3"
-
 	"github.com/creachadair/ctrl"
 	"github.com/creachadair/ffs/blob"
-	"github.com/creachadair/ffs/blob/cachestore"
-	"github.com/creachadair/ffs/blob/codecs/encrypted"
-	"github.com/creachadair/ffs/blob/codecs/zlib"
-	"github.com/creachadair/ffs/blob/encoded"
 	"github.com/creachadair/ffs/blob/store"
-	"github.com/creachadair/getpass"
 	"github.com/creachadair/jrpc2"
-	"github.com/creachadair/jrpc2/channel"
 	"github.com/creachadair/jrpc2/metrics"
-	"github.com/creachadair/jrpc2/server"
-	"github.com/creachadair/keyfile"
 
 	// Storage implementations (see the stores registry below).
 	"github.com/creachadair/badgerstore"
@@ -44,7 +29,6 @@ import (
 	"github.com/creachadair/leveldbstore"
 	"github.com/creachadair/pebblestore"
 	"github.com/creachadair/pogrebstore"
-	"github.com/creachadair/rpcstore"
 	"github.com/creachadair/sqlitestore"
 )
 
@@ -127,30 +111,6 @@ func main() {
 			log.Printf("Encryption key: %q", *keyFile)
 		}
 
-		svc := server.Static(
-			rpcstore.NewService(bs, &rpcstore.ServiceOpts{Hash: hash}).Methods())
-
-		lst, err := net.Listen(jrpc2.Network(*listenAddr))
-		if err != nil {
-			ctrl.Fatalf("Listen: %v", err)
-		}
-		if lst.Addr().Network() == "unix" {
-			os.Chmod(*listenAddr, 0600) // best-effort
-			defer os.Remove(*listenAddr)
-		}
-		log.Printf("Service: %q", *listenAddr)
-
-		sig := make(chan os.Signal, 2)
-		signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
-		go func() {
-			s, ok := <-sig
-			if ok {
-				log.Printf("Received signal: %v, closing listener", s)
-				lst.Close()
-				signal.Reset(syscall.SIGINT, syscall.SIGTERM)
-			}
-		}()
-
 		mx := metrics.New()
 		mx.SetLabel("blobd.store", *storeAddr)
 		mx.SetLabel("blobd.pid", os.Getpid())
@@ -165,51 +125,27 @@ func main() {
 		if *doDebug {
 			debug = log.New(os.Stderr, "[blobd] ", log.LstdFlags)
 		}
-		if err := server.Loop(lst, svc, &server.LoopOptions{
-			Framing: channel.Line,
+		closer, errc := startNetServer(ctx, startConfig{
+			Store:   bs,
+			Address: *listenAddr,
+			NewHash: hash,
 			ServerOptions: &jrpc2.ServerOptions{
 				Logger:    debug,
 				Metrics:   mx,
 				StartTime: time.Now().In(time.UTC),
 			},
-		}); err != nil {
-			ctrl.Fatalf("Loop: %v", err)
-		}
-		return nil
+		})
+
+		sig := make(chan os.Signal, 2)
+		signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
+		go func() {
+			s, ok := <-sig
+			if ok {
+				log.Printf("Received signal: %v, closing listener", s)
+				closer()
+				signal.Reset(syscall.SIGINT, syscall.SIGTERM)
+			}
+		}()
+		return <-errc
 	})
-}
-
-func mustOpenStore(ctx context.Context) (blob.Store, func() hash.Hash) {
-	bs, err := stores.Open(ctx, *storeAddr)
-	if err != nil {
-		ctrl.Fatalf("Opening store: %v", err)
-	}
-	if *zlibLevel > 0 {
-		bs = encoded.New(bs, zlib.NewCodec(zlib.Level(*zlibLevel)))
-	}
-	if *cacheSize > 0 {
-		bs = cachestore.New(bs, *cacheSize<<20)
-	}
-	if *keyFile == "" {
-		return bs, sha3.New256
-	}
-
-	key, err := keyfile.LoadKey(*keyFile, func() (string, error) {
-		return getpass.Prompt("Passphrase: ")
-	})
-	if err != nil {
-		ctrl.Fatalf("Loading encryption key: %v", err)
-	}
-
-	c, err := aes.NewCipher(key)
-	if err != nil {
-		ctrl.Fatalf("Creating cipher: %v", err)
-	}
-	gcm, err := cipher.NewGCM(c)
-	if err != nil {
-		ctrl.Fatalf("Creating GCM instance: %v", err)
-	}
-	return encoded.New(bs, encrypted.New(gcm, nil)), func() hash.Hash {
-		return hmac.New(sha3.New256, key)
-	}
 }
