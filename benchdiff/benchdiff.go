@@ -28,9 +28,10 @@ var (
 	beforeBranch = flag.String("before", "", "Before branch (defaults to master)")
 	beforeTest   = flag.String("beforetest", "", "Before test (defaults to .)")
 	afterBranch  = flag.String("after", "", "After branch (defaults to current)")
-	afterTest    = flag.String("aftertest", "", "After test (defaults to .)")
+	afterTest    = flag.String("aftertest", "", "After test (defaults to -beforetest)")
 	benchPattern = flag.String("match", ".", "Run benchmarks matching this regexp")
 	washLevel    = flag.Float64("wash", 2, "Percentage below which differences are a wash")
+	ignoreErr    = flag.Bool("ignore-error", false, "Ignore errors from the test runner")
 )
 
 func main() {
@@ -49,6 +50,9 @@ func main() {
 	}
 	if *beforeBranch == *afterBranch {
 		log.Fatalf("The -before and -after branches must be different (%q)", *beforeBranch)
+	}
+	if *afterTest == "" {
+		*afterTest = *beforeTest
 	}
 
 	// Run the "before" benchmarks.
@@ -118,7 +122,11 @@ type result struct {
 func runBenchmark(ctx context.Context, test string) ([]result, error) {
 	out, err := exec.CommandContext(ctx, "go", "test", "-bench="+*benchPattern, "-run=^NONE", test).Output()
 	if err != nil {
-		return nil, err
+		if *ignoreErr {
+			log.Printf("Ignored error from test runner: %v", err)
+		} else {
+			return nil, err
+		}
 	}
 	var res []result
 	for _, line := range strings.Split(string(out), "\n") {
