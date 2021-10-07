@@ -22,7 +22,7 @@ require (
 	github.com/creachadair/leveldbstore v0.0.0-20211007061421-a4c3cfe8388a
 	github.com/creachadair/pebblestore v0.0.0-20211007061622-fed823560673
 	github.com/creachadair/pogrebstore v0.0.0-20211007061728-f93d452e39af
-	github.com/creachadair/rpcstore v0.0.0-20211007153012-5550ca962a1d
+	github.com/creachadair/rpcstore v0.0.0-20211007163040-3b14ab0a4be8
 	github.com/creachadair/sqlitestore v0.0.0-20211007061833-54ead6a635ad
 	github.com/creachadair/vql v0.0.19
 	github.com/dgraph-io/badger/v2 v2.2007.4 // indirect
