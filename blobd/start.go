@@ -21,24 +21,18 @@ import (
 	"github.com/creachadair/jrpc2/channel"
 	"github.com/creachadair/jrpc2/server"
 	"github.com/creachadair/keyfile"
-	"github.com/creachadair/rpcstore"
 	"golang.org/x/crypto/sha3"
 )
 
 type closer = func()
 
 type startConfig struct {
-	Store         blob.Store
 	Address       string
-	NewHash       func() hash.Hash
+	Methods       jrpc2.Assigner
 	ServerOptions *jrpc2.ServerOptions
 }
 
 func startNetServer(ctx context.Context, opts startConfig) (closer, <-chan error) {
-	svc := server.Static(rpcstore.NewService(opts.Store, &rpcstore.ServiceOpts{
-		Hash: opts.NewHash,
-	}).Methods())
-
 	lst, err := net.Listen(jrpc2.Network(opts.Address))
 	if err != nil {
 		ctrl.Fatalf("Listen: %v", err)
@@ -47,12 +41,13 @@ func startNetServer(ctx context.Context, opts startConfig) (closer, <-chan error
 	if isUnix {
 		os.Chmod(opts.Address, 0600) // best-effort
 	}
+
 	log.Printf("Service: %q", opts.Address)
 	errc := make(chan error, 1)
 	go func() {
 		defer close(errc)
-		errc <- server.Loop(lst, svc, &server.LoopOptions{
-			Framing:       channel.Line,
+		acc := server.NetAccepter(lst, channel.Line)
+		errc <- server.Loop(acc, server.Static(opts.Methods), &server.LoopOptions{
 			ServerOptions: opts.ServerOptions,
 		})
 	}()

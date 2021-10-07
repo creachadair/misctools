@@ -19,6 +19,7 @@ import (
 	"github.com/creachadair/ffs/blob/store"
 	"github.com/creachadair/jrpc2"
 	"github.com/creachadair/jrpc2/metrics"
+	"github.com/creachadair/rpcstore"
 
 	// Storage implementations (see the stores registry below).
 	"github.com/creachadair/badgerstore"
@@ -126,9 +127,9 @@ func main() {
 			debug = log.New(os.Stderr, "[blobd] ", log.LstdFlags)
 		}
 		closer, errc := startNetServer(ctx, startConfig{
-			Store:   bs,
 			Address: *listenAddr,
-			NewHash: hash,
+			Methods: rpcstore.NewService(bs, &rpcstore.ServiceOpts{Hash: hash}).Methods(),
+
 			ServerOptions: &jrpc2.ServerOptions{
 				Logger:    debug,
 				Metrics:   mx,
