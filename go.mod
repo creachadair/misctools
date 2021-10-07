@@ -9,21 +9,21 @@ require (
 	crawshaw.io/sqlite v0.3.3-0.20210317204950-23d646f8ac00 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cockroachdb/errors v1.8.6 // indirect
-	github.com/cockroachdb/pebble v0.0.0-20211006163438-ecc685b29d19 // indirect
+	github.com/cockroachdb/pebble v0.0.0-20211007173756-3bdca93ab29f // indirect
 	github.com/creachadair/badgerstore v0.0.8
-	github.com/creachadair/boltstore v0.0.0-20211007061202-5ccce7461ad6
+	github.com/creachadair/boltstore v0.0.0-20211007212227-17c99c8afef3
 	github.com/creachadair/command v0.0.0-20211002170045-5bd7d4de7419
 	github.com/creachadair/ctrl v0.1.1
 	github.com/creachadair/ffs v0.0.0-20211007211757-4e33e3b4fddd
-	github.com/creachadair/gcsstore v0.0.0-20211007061342-d6dd3778c997
+	github.com/creachadair/gcsstore v0.0.0-20211007213232-cb15788d015f
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.27.0
 	github.com/creachadair/keyfile v0.7.1
-	github.com/creachadair/leveldbstore v0.0.0-20211007061421-a4c3cfe8388a
-	github.com/creachadair/pebblestore v0.0.0-20211007061622-fed823560673
-	github.com/creachadair/pogrebstore v0.0.0-20211007061728-f93d452e39af
+	github.com/creachadair/leveldbstore v0.0.0-20211007213253-fa7523a7b340
+	github.com/creachadair/pebblestore v0.0.0-20211007213434-73aab5b72c91
+	github.com/creachadair/pogrebstore v0.0.0-20211007213453-c14969d58692
 	github.com/creachadair/rpcstore v0.0.0-20211007211950-97004e1d9073
-	github.com/creachadair/sqlitestore v0.0.0-20211007061833-54ead6a635ad
+	github.com/creachadair/sqlitestore v0.0.0-20211007213514-694c11f0cd8e
 	github.com/creachadair/vql v0.0.19
 	github.com/dgraph-io/badger/v2 v2.2007.4 // indirect
 	github.com/dgraph-io/ristretto v0.1.0 // indirect
@@ -32,10 +32,10 @@ require (
 	github.com/tdewolff/minify/v2 v2.9.22
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	golang.org/x/exp v0.0.0-20210916165020-5cb4fee858ee // indirect
-	golang.org/x/net v0.0.0-20211006190231-62292e806868 // indirect
+	golang.org/x/net v0.0.0-20211007125505-59d4e928ea9d // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/api v0.58.0 // indirect
-	google.golang.org/genproto v0.0.0-20211005153810-c76a74d43a8e // indirect
+	google.golang.org/genproto v0.0.0-20211007155348-82e027067bd4 // indirect
 )
 
 require (
@@ -64,7 +64,7 @@ require (
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20211005180243-6b3c2da341f1 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20211006225509-1a26e0398eed // indirect
+	golang.org/x/sys v0.0.0-20211007075335-d3039528d8ac // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/grpc v1.41.0 // indirect
