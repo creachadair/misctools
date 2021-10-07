@@ -192,7 +192,7 @@ func casKeyCmd(env *command.Env, args []string) error {
 	if err != nil {
 		return err
 	}
-	key, err := cas.Key(getContext(env), data)
+	key, err := cas.CASKey(getContext(env), data)
 	if err != nil {
 		return err
 	}
