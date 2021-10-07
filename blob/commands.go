@@ -175,7 +175,7 @@ func casPutCmd(env *command.Env, args []string) (err error) {
 	if err != nil {
 		return err
 	}
-	key, err := cas.PutCAS(getContext(env), data)
+	key, err := cas.CASPut(getContext(env), data)
 	if err != nil {
 		return err
 	}
