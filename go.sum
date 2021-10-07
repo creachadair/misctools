@@ -157,6 +157,8 @@ github.com/creachadair/ffs v0.0.0-20201015022807-e2e481d341ed/go.mod h1:eXGKRFZn
 github.com/creachadair/ffs v0.0.0-20211007060905-e6982f06e6da/go.mod h1:QLANrxXQwwfEudshP5h6PvvKI78zxYjx4oEydbajbJE=
 github.com/creachadair/ffs v0.0.0-20211007152204-fbf5d56817fb h1:KA9KWsjl4j1weVzVfnxGaMcStFifwk51jcOvmbJrpv4=
 github.com/creachadair/ffs v0.0.0-20211007152204-fbf5d56817fb/go.mod h1:QLANrxXQwwfEudshP5h6PvvKI78zxYjx4oEydbajbJE=
+github.com/creachadair/ffs v0.0.0-20211007211757-4e33e3b4fddd h1:eiOPB1104ZR3ibYaldIVtH1ywVeZtQpb5bCeQI/sLM4=
+github.com/creachadair/ffs v0.0.0-20211007211757-4e33e3b4fddd/go.mod h1:QLANrxXQwwfEudshP5h6PvvKI78zxYjx4oEydbajbJE=
 github.com/creachadair/gcsstore v0.0.0-20211007061342-d6dd3778c997 h1:fsAKGUklF9+Yn9B9fKEzoI43z30wswXkszg+zBxBSZE=
 github.com/creachadair/gcsstore v0.0.0-20211007061342-d6dd3778c997/go.mod h1:OVLbQ22nHjui+7ALB12IhiHwgNhruP/AHsKtb/VncCM=
 github.com/creachadair/getpass v0.1.1 h1:NBy01Vx3sEG75JbSgjsObwe06ISDJL9WS88pFNnVSpg=
@@ -173,6 +175,8 @@ github.com/creachadair/pogrebstore v0.0.0-20211007061728-f93d452e39af h1:qcViZ4h
 github.com/creachadair/pogrebstore v0.0.0-20211007061728-f93d452e39af/go.mod h1:fradK3eyunoUL5Jvb/OFttdYB4GHUsnmaIzGligUIRQ=
 github.com/creachadair/rpcstore v0.0.0-20211007163040-3b14ab0a4be8 h1:iMap4eJwokRfboUeKquwM8iasEomvQEVsqjwKSEYP5M=
 github.com/creachadair/rpcstore v0.0.0-20211007163040-3b14ab0a4be8/go.mod h1:lcYjhWDfA/qyHzHV/cFjnP6jJyTjAXnBmyS/B40QQMI=
+github.com/creachadair/rpcstore v0.0.0-20211007211950-97004e1d9073 h1:QLTFs3EGzNb/2OWvo85kaZPSpMcNZhUFsxc9YZBgaGE=
+github.com/creachadair/rpcstore v0.0.0-20211007211950-97004e1d9073/go.mod h1:GU341mgX2g0xql3xBt1Qx7hjeNHQsNhPpbef5hB5yCw=
 github.com/creachadair/sqlitestore v0.0.0-20211007061833-54ead6a635ad h1:+as39CL1N3bNgh5F/d9SThpJaCT6qBRhAydKwSFDnS8=
 github.com/creachadair/sqlitestore v0.0.0-20211007061833-54ead6a635ad/go.mod h1:vKgSwBv97C4NqDSXGery8uQoq7wsnZyNt1LK3LBVZxM=
 github.com/creachadair/staticfile v0.1.3/go.mod h1:a3qySzCIXEprDGxk6tSxSI+dBBdLzqeBOMhZ+o2d3pM=
