@@ -60,7 +60,7 @@ func startNetServer(ctx context.Context, opts startConfig) (closer, <-chan error
 	}, errc
 }
 
-func mustOpenStore(ctx context.Context) (blob.Store, func() hash.Hash) {
+func mustOpenStore(ctx context.Context) blob.CAS {
 	bs, err := stores.Open(ctx, *storeAddr)
 	if err != nil {
 		ctrl.Fatalf("Opening store: %v", err)
@@ -72,7 +72,7 @@ func mustOpenStore(ctx context.Context) (blob.Store, func() hash.Hash) {
 		bs = cachestore.New(bs, *cacheSize<<20)
 	}
 	if *keyFile == "" {
-		return bs, sha3.New256
+		return blob.NewCAS(bs, sha3.New256)
 	}
 
 	key, err := keyfile.LoadKey(*keyFile, func() (string, error) {
@@ -90,7 +90,8 @@ func mustOpenStore(ctx context.Context) (blob.Store, func() hash.Hash) {
 	if err != nil {
 		ctrl.Fatalf("Creating GCM instance: %v", err)
 	}
-	return encoded.New(bs, encrypted.New(gcm, nil)), func() hash.Hash {
+	bs = encoded.New(bs, encrypted.New(gcm, nil))
+	return blob.NewCAS(bs, func() hash.Hash {
 		return hmac.New(sha3.New256, key)
-	}
+	})
 }

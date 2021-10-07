@@ -92,7 +92,7 @@ func main() {
 		}
 
 		ctx := context.Background()
-		bs, hash := mustOpenStore(ctx)
+		bs := mustOpenStore(ctx)
 		defer func() {
 			if err := blob.CloseStore(ctx, bs); err != nil {
 				log.Printf("Warning: closing store: %v", err)
@@ -128,7 +128,7 @@ func main() {
 		}
 		closer, errc := startNetServer(ctx, startConfig{
 			Address: *listenAddr,
-			Methods: rpcstore.NewService(bs, &rpcstore.ServiceOpts{Hash: hash}).Methods(),
+			Methods: rpcstore.NewService(bs, nil).Methods(),
 
 			ServerOptions: &jrpc2.ServerOptions{
 				Logger:    debug,
