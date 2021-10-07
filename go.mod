@@ -14,7 +14,7 @@ require (
 	github.com/creachadair/boltstore v0.0.0-20211007061202-5ccce7461ad6
 	github.com/creachadair/command v0.0.0-20211002170045-5bd7d4de7419
 	github.com/creachadair/ctrl v0.1.1
-	github.com/creachadair/ffs v0.0.0-20211007060905-e6982f06e6da
+	github.com/creachadair/ffs v0.0.0-20211007152204-fbf5d56817fb
 	github.com/creachadair/gcsstore v0.0.0-20211007061342-d6dd3778c997
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.27.0
@@ -22,7 +22,7 @@ require (
 	github.com/creachadair/leveldbstore v0.0.0-20211007061421-a4c3cfe8388a
 	github.com/creachadair/pebblestore v0.0.0-20211007061622-fed823560673
 	github.com/creachadair/pogrebstore v0.0.0-20211007061728-f93d452e39af
-	github.com/creachadair/rpcstore v0.0.0-20211003052846-c1cca98c179c
+	github.com/creachadair/rpcstore v0.0.0-20211007153012-5550ca962a1d
 	github.com/creachadair/sqlitestore v0.0.0-20211007061833-54ead6a635ad
 	github.com/creachadair/vql v0.0.19
 	github.com/dgraph-io/badger/v2 v2.2007.4 // indirect
