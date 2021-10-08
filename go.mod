@@ -9,12 +9,12 @@ require (
 	crawshaw.io/sqlite v0.3.3-0.20210317204950-23d646f8ac00 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cockroachdb/errors v1.8.6 // indirect
-	github.com/cockroachdb/pebble v0.0.0-20211007173756-3bdca93ab29f // indirect
+	github.com/cockroachdb/pebble v0.0.0-20211008151148-d24dd34292c4 // indirect
 	github.com/creachadair/badgerstore v0.0.8
 	github.com/creachadair/boltstore v0.0.0-20211007212227-17c99c8afef3
 	github.com/creachadair/command v0.0.0-20211002170045-5bd7d4de7419
 	github.com/creachadair/ctrl v0.1.1
-	github.com/creachadair/ffs v0.0.0-20211008150651-c9d3e84644b4
+	github.com/creachadair/ffs v0.0.0-20211008162058-468d86e85b06
 	github.com/creachadair/gcsstore v0.0.0-20211007213232-cb15788d015f
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.27.0
@@ -22,7 +22,7 @@ require (
 	github.com/creachadair/leveldbstore v0.0.0-20211007213253-fa7523a7b340
 	github.com/creachadair/pebblestore v0.0.0-20211007213434-73aab5b72c91
 	github.com/creachadair/pogrebstore v0.0.0-20211007213453-c14969d58692
-	github.com/creachadair/rpcstore v0.0.0-20211007211950-97004e1d9073
+	github.com/creachadair/rpcstore v0.0.0-20211008161128-46765fd4177c
 	github.com/creachadair/sqlitestore v0.0.0-20211007213514-694c11f0cd8e
 	github.com/creachadair/vql v0.0.19
 	github.com/dgraph-io/badger/v2 v2.2007.4 // indirect
