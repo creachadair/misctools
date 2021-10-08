@@ -3,6 +3,7 @@ package cmdroot
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/creachadair/command"
 	"github.com/creachadair/ffs/blob"
@@ -45,6 +46,26 @@ var Command = &command.C{
 					}
 					fmt.Println(config.ToJSON(rp.Root))
 					return nil
+				})
+			},
+		},
+		{
+			Name: "list",
+			Help: "List the root keys known in the store",
+
+			Run: func(env *command.Env, args []string) error {
+				if len(args) != 0 {
+					return errors.New("extra arguments after command")
+				}
+				cfg := env.Config.(*config.Settings)
+				return cfg.WithStore(cfg.Context, func(s blob.CAS) error {
+					return s.List(cfg.Context, "root:", func(key string) error {
+						if !strings.HasPrefix(key, "root:") {
+							return blob.ErrStopListing
+						}
+						fmt.Println(key)
+						return nil
+					})
 				})
 			},
 		},
