@@ -22,52 +22,56 @@ var Command = &command.C{
 			Usage: "<root-key>",
 			Help:  "Print the representation of a filesystem root",
 
-			Run: func(env *command.Env, args []string) error {
-				keys, err := config.RootKeys(args)
-				if err != nil {
-					return err
-				} else if len(keys) == 0 {
-					return errors.New("missing required <root-key>")
-				}
-
-				cfg := env.Config.(*config.Settings)
-				return cfg.WithStore(cfg.Context, func(s blob.CAS) error {
-					bits, err := s.Get(cfg.Context, keys[0])
-					if err != nil {
-						return err
-					}
-					var obj wiretype.Object
-					if err := proto.Unmarshal(bits, &obj); err != nil {
-						return err
-					}
-					rp, ok := obj.Value.(*wiretype.Object_Root)
-					if !ok {
-						return fmt.Errorf("wrong object type %T", obj.Value)
-					}
-					fmt.Println(config.ToJSON(rp.Root))
-					return nil
-				})
-			},
+			Run: runView,
 		},
 		{
 			Name: "list",
 			Help: "List the root keys known in the store",
 
-			Run: func(env *command.Env, args []string) error {
-				if len(args) != 0 {
-					return errors.New("extra arguments after command")
-				}
-				cfg := env.Config.(*config.Settings)
-				return cfg.WithStore(cfg.Context, func(s blob.CAS) error {
-					return s.List(cfg.Context, "root:", func(key string) error {
-						if !strings.HasPrefix(key, "root:") {
-							return blob.ErrStopListing
-						}
-						fmt.Println(key)
-						return nil
-					})
-				})
-			},
+			Run: runList,
 		},
 	},
+}
+
+func runView(env *command.Env, args []string) error {
+	keys, err := config.RootKeys(args)
+	if err != nil {
+		return err
+	} else if len(keys) == 0 {
+		return errors.New("missing required <root-key>")
+	}
+
+	cfg := env.Config.(*config.Settings)
+	return cfg.WithStore(cfg.Context, func(s blob.CAS) error {
+		bits, err := s.Get(cfg.Context, keys[0])
+		if err != nil {
+			return err
+		}
+		var obj wiretype.Object
+		if err := proto.Unmarshal(bits, &obj); err != nil {
+			return err
+		}
+		rp, ok := obj.Value.(*wiretype.Object_Root)
+		if !ok {
+			return fmt.Errorf("wrong object type %T", obj.Value)
+		}
+		fmt.Println(config.ToJSON(rp.Root))
+		return nil
+	})
+}
+
+func runList(env *command.Env, args []string) error {
+	if len(args) != 0 {
+		return errors.New("extra arguments after command")
+	}
+	cfg := env.Config.(*config.Settings)
+	return cfg.WithStore(cfg.Context, func(s blob.CAS) error {
+		return s.List(cfg.Context, "root:", func(key string) error {
+			if !strings.HasPrefix(key, "root:") {
+				return blob.ErrStopListing
+			}
+			fmt.Println(key)
+			return nil
+		})
+	})
 }
