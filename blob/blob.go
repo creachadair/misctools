@@ -139,6 +139,15 @@ otherwise -store must be set.
 			},
 		},
 		{
+			Name: "copy",
+			Help: "Copy the contents of one blob to another key",
+			SetFlags: func(env *command.Env, fs *flag.FlagSet) {
+				cfg := env.Config.(*settings)
+				fs.BoolVar(&cfg.Replace, "replace", false, "Replace an existing key")
+			},
+			Run: copyCmd,
+		},
+		{
 			Name: "status",
 			Help: "Print blob server status",
 			Run:  statCmd,

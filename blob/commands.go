@@ -200,6 +200,36 @@ func casKeyCmd(env *command.Env, args []string) error {
 	return nil
 }
 
+func copyCmd(env *command.Env, args []string) error {
+	if len(args) != 2 {
+		return errors.New("usage is: copy <src> <dst>")
+	}
+	bs, err := storeFromEnv(env)
+	if err != nil {
+		return err
+	}
+	ctx := getContext(env)
+	defer blob.CloseStore(ctx, bs)
+
+	srcKey, err := parseKey(args[0])
+	if err != nil {
+		return err
+	}
+	dstKey, err := parseKey(args[1])
+	if err != nil {
+		return err
+	}
+	src, err := bs.Get(ctx, srcKey)
+	if err != nil {
+		return err
+	}
+	return bs.Put(ctx, blob.PutOptions{
+		Key:     dstKey,
+		Data:    src,
+		Replace: env.Config.(*settings).Replace,
+	})
+}
+
 func statCmd(env *command.Env, args []string) error {
 	s, err := storeFromEnv(env)
 	if err != nil {
