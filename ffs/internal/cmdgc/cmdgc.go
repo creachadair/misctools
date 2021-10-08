@@ -35,6 +35,8 @@ var Command = &command.C{
 			n, err := s.Len(ctx)
 			if err != nil {
 				return err
+			} else if n == 0 {
+				return errors.New("the store is empty")
 			}
 			idx := index.New(int(n), nil)
 
