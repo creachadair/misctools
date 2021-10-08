@@ -14,7 +14,7 @@ require (
 	github.com/creachadair/boltstore v0.0.0-20211007212227-17c99c8afef3
 	github.com/creachadair/command v0.0.0-20211002170045-5bd7d4de7419
 	github.com/creachadair/ctrl v0.1.1
-	github.com/creachadair/ffs v0.0.0-20211007211757-4e33e3b4fddd
+	github.com/creachadair/ffs v0.0.0-20211008150651-c9d3e84644b4
 	github.com/creachadair/gcsstore v0.0.0-20211007213232-cb15788d015f
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.27.0
@@ -35,7 +35,7 @@ require (
 	golang.org/x/net v0.0.0-20211007125505-59d4e928ea9d // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/api v0.58.0 // indirect
-	google.golang.org/genproto v0.0.0-20211007155348-82e027067bd4 // indirect
+	google.golang.org/genproto v0.0.0-20211008145708-270636b82663 // indirect
 )
 
 require (
