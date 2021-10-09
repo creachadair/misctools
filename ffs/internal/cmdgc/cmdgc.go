@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"runtime"
+	"strings"
+	"sync/atomic"
 	"time"
 
 	"github.com/creachadair/command"
@@ -38,7 +40,7 @@ var Command = &command.C{
 			} else if n == 0 {
 				return errors.New("the store is empty")
 			}
-			idx := index.New(int(n), nil)
+			idx := index.New(int(n), &index.Options{FalsePositiveRate: 0.005})
 
 			// Mark phase: Scan all roots.
 			for _, key := range keys {
@@ -69,28 +71,32 @@ var Command = &command.C{
 			}
 
 			// Sweep phase: Remove blobs not indexed.
-			g, run := taskgroup.New(taskgroup.Trigger(cancel)).Limit(2*runtime.NumCPU())
+			g, run := taskgroup.New(taskgroup.Trigger(cancel)).Limit(2 * runtime.NumCPU())
 
 			log.Printf("Begin sweep over %d blobs...", n)
 			start := time.Now()
-			var numKeep, numDrop int
-			if err := s.List(cfg.Context, "", func(key string) error {
-				if idx.Has(key) {
-					numKeep++
-					return nil
-				}
-				numDrop++
-				run(func() error { return s.Delete(ctx, key) })
-				return nil
-			}); err != nil {
-				return err
+			var numKeep, numDrop uint32
+			for i := 0; i < 256; i++ {
+				pfx := string([]byte{byte(i)})
+				run(func() error {
+					return s.List(cfg.Context, pfx, func(key string) error {
+						if !strings.HasPrefix(key, pfx) {
+							return blob.ErrStopListing
+						} else if idx.Has(key) {
+							atomic.AddUint32(&numKeep, 1)
+							return nil
+						}
+						atomic.AddUint32(&numDrop, 1)
+						return s.Delete(ctx, key)
+					})
+				})
 			}
-			log.Printf("Finished sweep: keep %d, drop %d [%v elapsed]; waiting for cleanup",
-				numKeep, numDrop, time.Since(start).Truncate(10*time.Millisecond))
+			log.Print("All key ranges listed, waiting for cleanup...")
 			if err := g.Wait(); err != nil {
-				return fmt.Errorf("deleting unreachable blobs: %w", err)
+				return fmt.Errorf("sweeping failed: %w", err)
 			}
-			log.Printf("GC complete [%v elapsed]", time.Since(start).Truncate(10*time.Millisecond))
+			log.Printf("GC complete: keep %d, drop %d [%v elapsed]",
+				numKeep, numDrop, time.Since(start).Truncate(10*time.Millisecond))
 			return nil
 		})
 	},
