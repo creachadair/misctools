@@ -56,7 +56,7 @@ var Command = &command.C{
 				}
 				idx.Add(rp.FileKey)
 
-				log.Printf("Scanning data reachable from %x...", rp.FileKey)
+				log.Printf("Scanning data reachable from %q (%x)...", key, rp.FileKey)
 				start := time.Now()
 				var numKeys int
 				if err := rf.Scan(cfg.Context, func(key string, isFile bool) bool {
