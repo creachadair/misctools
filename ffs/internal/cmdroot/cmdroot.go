@@ -1,6 +1,7 @@
 package cmdroot
 
 import (
+	"context"
 	"errors"
 	"flag"
 	"fmt"
@@ -42,6 +43,27 @@ var Command = &command.C{
 				fs.BoolVar(&createFlags.Replace, "replace", false, "Replace an existing root name")
 			},
 			Run: runCreate,
+		},
+		{
+			Name: "edit",
+			Help: "Edit the contents of an existing root pointer",
+
+			Commands: []*command.C{
+				{
+					Name:  "desc",
+					Usage: "<name> <description>...",
+					Help:  "Edit the description of the given root",
+
+					Run: runEditDesc,
+				},
+				{
+					Name:  "file",
+					Usage: "<name> <file-key>",
+					Help:  "Edit the file key of the given root",
+
+					Run: runEditFile,
+				},
+			},
 		},
 	},
 }
@@ -105,4 +127,65 @@ func runCreate(env *command.Env, args []string) error {
 			FileKey:     fk,
 		}).Save(cfg.Context, key, createFlags.Replace)
 	})
+}
+
+func runEditDesc(env *command.Env, args []string) error {
+	na, err := getNameArgs(env, args)
+	if err != nil {
+		return err
+	}
+	defer na.Close()
+	na.Root.Description = strings.Join(na.Args, " ")
+	return na.Root.Save(na.Context, na.Key, true)
+}
+
+func runEditFile(env *command.Env, args []string) error {
+	na, err := getNameArgs(env, args)
+	if err != nil {
+		return err
+	}
+	defer na.Close()
+
+	key, err := config.ParseKey(na.Args[0])
+	if err != nil {
+		return err
+	} else if _, err := file.Open(na.Context, na.Store, key); err != nil {
+		return err
+	}
+	na.Root.FileKey = key
+	return na.Root.Save(na.Context, na.Key, true)
+}
+
+type rootArgs struct {
+	Context context.Context
+	Key     string
+	Args    []string
+	Root    *root.Root
+	Store   blob.CAS
+	Close   func()
+}
+
+func getNameArgs(env *command.Env, args []string) (*rootArgs, error) {
+	if len(args) < 2 {
+		return nil, errors.New("usage is: <name> <args>...") //lint:ignore ST1005 User message.
+	}
+	key := config.RootKey(args[0])
+	cfg := env.Config.(*config.Settings)
+	bs, err := cfg.OpenStore(cfg.Context)
+	if err != nil {
+		return nil, err
+	}
+	rp, err := root.Open(cfg.Context, bs, key)
+	if err != nil {
+		blob.CloseStore(cfg.Context, bs)
+		return nil, err
+	}
+	return &rootArgs{
+		Context: cfg.Context,
+		Key:     key,
+		Args:    args[1:],
+		Root:    rp,
+		Store:   bs,
+		Close:   func() { blob.CloseStore(cfg.Context, bs) },
+	}, nil
 }
