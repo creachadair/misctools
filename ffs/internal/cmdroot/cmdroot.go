@@ -45,6 +45,13 @@ var Command = &command.C{
 			Run: runCreate,
 		},
 		{
+			Name:  "copy",
+			Usage: "<source-name> <target-name>",
+			Help:  "Duplicate a root pointer under a new name",
+
+			Run: runCopy,
+		},
+		{
 			Name: "edit",
 			Help: "Edit the contents of an existing root pointer",
 
@@ -129,6 +136,16 @@ func runCreate(env *command.Env, args []string) error {
 	})
 }
 
+func runCopy(env *command.Env, args []string) error {
+	na, err := getNameArgs(env, args)
+	if err != nil {
+		return err
+	}
+	defer na.Close()
+	key := config.RootKey(na.Args[0])
+	return na.Root.Save(na.Context, key, false)
+}
+
 func runEditDesc(env *command.Env, args []string) error {
 	na, err := getNameArgs(env, args)
 	if err != nil {
@@ -167,7 +184,7 @@ type rootArgs struct {
 
 func getNameArgs(env *command.Env, args []string) (*rootArgs, error) {
 	if len(args) < 2 {
-		return nil, errors.New("usage is: <name> <args>...") //lint:ignore ST1005 User message.
+		return nil, errors.New("usage: " + env.Command.Name + " " + env.Command.Usage)
 	}
 	key := config.RootKey(args[0])
 	cfg := env.Config.(*config.Settings)
