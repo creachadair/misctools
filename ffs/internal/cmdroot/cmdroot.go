@@ -2,14 +2,17 @@ package cmdroot
 
 import (
 	"errors"
+	"flag"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/creachadair/command"
 	"github.com/creachadair/ffs/blob"
+	"github.com/creachadair/ffs/file"
+	"github.com/creachadair/ffs/file/root"
 	"github.com/creachadair/ffs/file/wiretype"
 	"github.com/creachadair/misctools/ffs/config"
-	"google.golang.org/protobuf/proto"
 )
 
 var Command = &command.C{
@@ -30,6 +33,16 @@ var Command = &command.C{
 
 			Run: runList,
 		},
+		{
+			Name:  "create",
+			Usage: "<name> <description>...",
+			Help:  "Create a new empty root pointer",
+
+			SetFlags: func(_ *command.Env, fs *flag.FlagSet) {
+				fs.BoolVar(&createFlags.Replace, "replace", false, "Replace an existing root name")
+			},
+			Run: runCreate,
+		},
 	},
 }
 
@@ -43,19 +56,12 @@ func runView(env *command.Env, args []string) error {
 
 	cfg := env.Config.(*config.Settings)
 	return cfg.WithStore(cfg.Context, func(s blob.CAS) error {
-		bits, err := s.Get(cfg.Context, keys[0])
+		rp, err := root.Open(cfg.Context, s, keys[0])
 		if err != nil {
 			return err
 		}
-		var obj wiretype.Object
-		if err := proto.Unmarshal(bits, &obj); err != nil {
-			return err
-		}
-		rp, ok := obj.Value.(*wiretype.Object_Root)
-		if !ok {
-			return fmt.Errorf("wrong object type %T", obj.Value)
-		}
-		fmt.Println(config.ToJSON(rp.Root))
+		msg := root.Encode(rp).Value.(*wiretype.Object_Root).Root
+		fmt.Println(config.ToJSON(msg))
 		return nil
 	})
 }
@@ -73,5 +79,30 @@ func runList(env *command.Env, args []string) error {
 			fmt.Println(key)
 			return nil
 		})
+	})
+}
+
+var createFlags struct {
+	Replace bool
+}
+
+func runCreate(env *command.Env, args []string) error {
+	if len(args) < 2 {
+		return errors.New("usage is: <name> <description>...") //lint:ignore ST1005 User message.
+	}
+	key := config.RootKey(args[0])
+	desc := strings.Join(args[1:], " ")
+	cfg := env.Config.(*config.Settings)
+	return cfg.WithStore(cfg.Context, func(s blob.CAS) error {
+		fk, err := file.New(s, &file.NewOptions{
+			Stat: &file.Stat{Mode: os.ModeDir | 0755},
+		}).Flush(cfg.Context)
+		if err != nil {
+			return fmt.Errorf("creating new file: %w", err)
+		}
+		return root.New(s, &root.Options{
+			Description: desc,
+			FileKey:     fk,
+		}).Save(cfg.Context, key, createFlags.Replace)
 	})
 }

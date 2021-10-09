@@ -14,7 +14,7 @@ require (
 	github.com/creachadair/boltstore v0.0.0-20211007212227-17c99c8afef3
 	github.com/creachadair/command v0.0.0-20211002170045-5bd7d4de7419
 	github.com/creachadair/ctrl v0.1.1
-	github.com/creachadair/ffs v0.0.0-20211008162058-468d86e85b06
+	github.com/creachadair/ffs v0.0.0-20211009004802-2a91b0a64c47
 	github.com/creachadair/gcsstore v0.0.0-20211007213232-cb15788d015f
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.27.0
@@ -39,10 +39,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
 
-require (
-	github.com/creachadair/taskgroup v0.3.1
-	google.golang.org/protobuf v1.27.1
-)
+require github.com/creachadair/taskgroup v0.3.1
 
 require (
 	github.com/DataDog/zstd v1.4.8 // indirect
@@ -74,4 +71,5 @@ require (
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/grpc v1.41.0 // indirect
+	google.golang.org/protobuf v1.27.1 // indirect
 )

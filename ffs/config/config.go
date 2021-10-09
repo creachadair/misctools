@@ -85,13 +85,18 @@ func RootKeys(args []string) ([]string, error) {
 	for i, arg := range args {
 		if arg == "" {
 			return nil, errors.New("empty root key")
-		} else if strings.HasPrefix(arg, "root:") {
-			keys[i] = arg
-		} else {
-			keys[i] = "root:" + arg
 		}
+		keys[i] = RootKey(arg)
 	}
 	return keys, nil
+}
+
+// RootKey converts s into a root key.
+func RootKey(s string) string {
+	if strings.HasPrefix(s, "root:") {
+		return s
+	}
+	return "root:" + s
 }
 
 // ExpandString calls os.ExpandEnv to expand environment variables in *s.
