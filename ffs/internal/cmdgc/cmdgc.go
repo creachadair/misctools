@@ -69,7 +69,7 @@ var Command = &command.C{
 			}
 
 			// Sweep phase: Remove blobs not indexed.
-			g, run := taskgroup.New(taskgroup.Trigger(cancel)).Limit(runtime.NumCPU())
+			g, run := taskgroup.New(taskgroup.Trigger(cancel)).Limit(2*runtime.NumCPU())
 
 			log.Printf("Begin sweep over %d blobs...", n)
 			start := time.Now()
