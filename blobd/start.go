@@ -21,6 +21,7 @@ import (
 	"github.com/creachadair/jrpc2/channel"
 	"github.com/creachadair/jrpc2/server"
 	"github.com/creachadair/keyfile"
+	"github.com/creachadair/wbstore"
 	"golang.org/x/crypto/sha3"
 )
 
@@ -60,10 +61,24 @@ func startNetServer(ctx context.Context, opts startConfig) (closer, <-chan error
 	}, errc
 }
 
-func mustOpenStore(ctx context.Context) blob.CAS {
+func mustOpenStore(ctx context.Context) (cas blob.CAS) {
+	var buf blob.Store
+	defer func() {
+		if buf != nil {
+			cas = wbstore.New(ctx, cas, buf)
+		}
+	}()
+
 	bs, err := stores.Open(ctx, *storeAddr)
 	if err != nil {
 		ctrl.Fatalf("Opening store: %v", err)
+	}
+
+	if *bufferDB != "" {
+		buf, err = stores.Open(ctx, *bufferDB)
+		if err != nil {
+			ctrl.Fatalf("Opening buffer store: %v", err)
+		}
 	}
 	if *zlibLevel > 0 {
 		bs = encoded.New(bs, zlib.NewCodec(zlib.Level(*zlibLevel)))
