@@ -14,7 +14,7 @@ require (
 	github.com/creachadair/boltstore v0.0.0-20211007212227-17c99c8afef3
 	github.com/creachadair/command v0.0.0-20211002170045-5bd7d4de7419
 	github.com/creachadair/ctrl v0.1.1
-	github.com/creachadair/ffs v0.0.0-20211009004802-2a91b0a64c47
+	github.com/creachadair/ffs v0.0.0-20211009192508-adc9c621ac28
 	github.com/creachadair/gcsstore v0.0.0-20211007213232-cb15788d015f
 	github.com/creachadair/getpass v0.1.1
 	github.com/creachadair/jrpc2 v0.27.0
@@ -39,10 +39,15 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
 
-require github.com/creachadair/taskgroup v0.3.1
+require (
+	github.com/creachadair/bitcaskstore v0.0.0-20211010182218-3e664eb56068
+	github.com/creachadair/taskgroup v0.3.1
+)
 
 require (
+	git.mills.io/prologic/bitcask v1.0.0 // indirect
 	github.com/DataDog/zstd v1.4.8 // indirect
+	github.com/abcum/lcp v0.0.0-20201209214815-7a3f3840be81 // indirect
 	github.com/akrylysov/pogreb v0.10.1 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cockroachdb/logtags v0.0.0-20190617123548-eb05cc24525f // indirect
@@ -51,6 +56,7 @@ require (
 	github.com/creachadair/atomicfile v0.2.2 // indirect
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
+	github.com/gofrs/flock v0.8.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -60,7 +66,9 @@ require (
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/plar/go-adaptive-radix-tree v1.0.4 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
+	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/tdewolff/parse/v2 v2.5.22 // indirect
 	go.etcd.io/bbolt v1.3.6 // indirect

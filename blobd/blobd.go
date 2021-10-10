@@ -23,6 +23,7 @@ import (
 
 	// Storage implementations (see the stores registry below).
 	"github.com/creachadair/badgerstore"
+	"github.com/creachadair/bitcaskstore"
 	"github.com/creachadair/boltstore"
 	"github.com/creachadair/ffs/blob/filestore"
 	"github.com/creachadair/ffs/blob/memstore"
@@ -43,6 +44,7 @@ var (
 
 	stores = store.Registry{
 		"badger":  badgerstore.Opener,
+		"bitcask": bitcaskstore.Opener,
 		"bolt":    boltstore.Opener,
 		"file":    filestore.Opener,
 		"gcs":     gcsstore.Opener,
