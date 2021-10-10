@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"runtime"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -71,14 +70,14 @@ var Command = &command.C{
 			}
 
 			// Sweep phase: Remove blobs not indexed.
-			g, run := taskgroup.New(taskgroup.Trigger(cancel)).Limit(2 * runtime.NumCPU())
+			g := taskgroup.New(taskgroup.Trigger(cancel))
 
 			log.Printf("Begin sweep over %d blobs...", n)
 			start := time.Now()
 			var numKeep, numDrop uint32
 			for i := 0; i < 256; i++ {
 				pfx := string([]byte{byte(i)})
-				run(func() error {
+				g.Go(func() error {
 					return s.List(cfg.Context, pfx, func(key string) error {
 						if !strings.HasPrefix(key, pfx) {
 							return blob.ErrStopListing
