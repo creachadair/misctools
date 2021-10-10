@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/base64"
 	"encoding/hex"
@@ -243,7 +244,9 @@ func statCmd(env *command.Env, args []string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(string(msg))
+	var buf bytes.Buffer
+	json.Indent(&buf, msg, "", "  ")
+	fmt.Println(buf.String())
 	return nil
 }
 
