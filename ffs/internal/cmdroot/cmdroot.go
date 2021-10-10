@@ -22,7 +22,7 @@ var Command = &command.C{
 
 	Commands: []*command.C{
 		{
-			Name:  "view",
+			Name:  "show",
 			Usage: "<root-key>",
 			Help:  "Print the representation of a filesystem root",
 
