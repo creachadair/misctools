@@ -78,6 +78,7 @@ var Command = &command.C{
 			for i := 0; i < 256; i++ {
 				pfx := string([]byte{byte(i)})
 				g.Go(func() error {
+					defer fmt.Fprint(env, ".")
 					return s.List(cfg.Context, pfx, func(key string) error {
 						if !strings.HasPrefix(key, pfx) {
 							return blob.ErrStopListing
@@ -94,6 +95,7 @@ var Command = &command.C{
 			if err := g.Wait(); err != nil {
 				return fmt.Errorf("sweeping failed: %w", err)
 			}
+			fmt.Fprintln(env, "*")
 			log.Printf("GC complete: keep %d, drop %d [%v elapsed]",
 				numKeep, numDrop, time.Since(start).Truncate(10*time.Millisecond))
 			return nil
