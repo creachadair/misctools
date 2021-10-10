@@ -125,7 +125,7 @@ func main() {
 		mx.SetLabel("blobd.compressed", *zlibLevel > 0)
 		mx.SetLabel("blobd.cacheSize", *cacheSize)
 		if *bufferDB != "" {
-			mx.SetLabel("blobd.writeBehind.db", *bufferDB)
+			mx.SetLabel("blobd.buffer.db", *bufferDB)
 		}
 
 		var debug *log.Logger
