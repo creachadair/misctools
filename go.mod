@@ -42,7 +42,7 @@ require (
 require (
 	github.com/creachadair/bitcaskstore v0.0.0-20211010184755-67421b3f0e46
 	github.com/creachadair/taskgroup v0.3.1
-	github.com/creachadair/wbstore v0.0.0-20211010202050-d22e082e119f
+	github.com/creachadair/wbstore v0.0.0-20211010221350-1f936edfbe8b
 )
 
 require (
