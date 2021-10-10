@@ -52,25 +52,18 @@ var Command = &command.C{
 			Run: runCopy,
 		},
 		{
-			Name: "edit",
-			Help: "Edit the contents of an existing root pointer",
+			Name:  "set-description",
+			Usage: "<name> <description>...",
+			Help:  "Edit the description of the given root",
 
-			Commands: []*command.C{
-				{
-					Name:  "desc",
-					Usage: "<name> <description>...",
-					Help:  "Edit the description of the given root",
+			Run: runEditDesc,
+		},
+		{
+			Name:  "set-file",
+			Usage: "<name> <file-key>",
+			Help:  "Edit the file key of the given root",
 
-					Run: runEditDesc,
-				},
-				{
-					Name:  "file",
-					Usage: "<name> <file-key>",
-					Help:  "Edit the file key of the given root",
-
-					Run: runEditFile,
-				},
-			},
+			Run: runEditFile,
 		},
 	},
 }
