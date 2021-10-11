@@ -23,7 +23,7 @@ var Command = &command.C{
 			Name: "show",
 			Usage: `@<root-key> [path]
 <file-key> [path]`,
-			Help: "Print the representation of a filesystem root",
+			Help: "Print the representation of a file object",
 
 			Run: runShow,
 		},
