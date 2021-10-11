@@ -24,9 +24,10 @@ var (
 
 func main() {
 	root := &command.C{
-		Name:  filepath.Base(os.Args[0]),
-		Usage: `<command> [arguments]`,
-		Help:  `A command-line tool to manage FFS file trees.`,
+		Name: filepath.Base(os.Args[0]),
+		Usage: `<command> [arguments]
+help [<command>]`,
+		Help: `A command-line tool to manage FFS file trees.`,
 
 		SetFlags: func(env *command.Env, fs *flag.FlagSet) {
 			if cf, ok := os.LookupEnv("FFS_CONFIG"); ok && cf != "" {
