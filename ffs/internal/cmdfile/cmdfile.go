@@ -1,6 +1,7 @@
 package cmdfile
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strings"
@@ -16,19 +17,22 @@ import (
 
 var Command = &command.C{
 	Name: "file",
-	Help: "Manipulate file and directory objects",
+	Help: `Manipulate file and directory objects
+
+File objects are addressed by storage keys. The storage key for
+a file may be specified in the following formats:
+
+  root:<root-name>              : the file key from a root pointer
+  74686973206973206d79206b6579  : hexadecimal encoded
+  dGhpcyBpcyBteSBrZXk=          : base64 encoded
+`,
 
 	Commands: []*command.C{
 		{
 			Name: "show",
 			Usage: `root:<root-key> [path]
 <file-key> [path]`,
-			Help: `Print the representation of a file object
-
-File key encoding:
-  - Hexadecimal:     74686973206973206d79206b6579
-  - Base64           dGhpcyBpcyBteSBrZXk=
-`,
+			Help: `Print the representation of a file object`,
 
 			Run: runShow,
 		},
@@ -41,31 +45,11 @@ func runShow(env *command.Env, args []string) error {
 	}
 	cfg := env.Config.(*config.Settings)
 	return cfg.WithStore(cfg.Context, func(s blob.CAS) error {
-		var fileKey string
-		if strings.HasPrefix(args[0], "root:") {
-			rp, err := root.Open(cfg.Context, s, args[0])
-			if err != nil {
-				return err
-			}
-			fileKey = rp.FileKey
-		} else if fk, err := config.ParseKey(args[0]); err != nil {
-			return err
-		} else {
-			fileKey = fk
-		}
-
-		fp, err := file.Open(cfg.Context, s, fileKey)
+		fp, fileKey, err := openFile(cfg.Context, s, args[0], args[1:]...)
 		if err != nil {
 			return err
 		}
-		if len(args) > 1 {
-			tp, err := fpath.Open(cfg.Context, fp, args[1])
-			if err != nil {
-				return err
-			}
-			fileKey, _ = tp.Flush(cfg.Context)
-			fp = tp
-		}
+
 		msg := file.Encode(fp).Value.(*wiretype.Object_Node).Node
 		fmt.Println(config.ToJSON(map[string]interface{}{
 			"fileKey": []byte(fileKey),
@@ -73,4 +57,33 @@ func runShow(env *command.Env, args []string) error {
 		}))
 		return nil
 	})
+}
+
+func openFile(ctx context.Context, s blob.CAS, spec string, path ...string) (*file.File, string, error) {
+	var fileKey string
+	if strings.HasPrefix(spec, "root:") {
+		rp, err := root.Open(ctx, s, spec)
+		if err != nil {
+			return nil, "", err
+		}
+		fileKey = rp.FileKey
+	} else if fk, err := config.ParseKey(spec); err != nil {
+		return nil, "", err
+	} else {
+		fileKey = fk
+	}
+
+	fp, err := file.Open(ctx, s, fileKey)
+	if err != nil {
+		return nil, fileKey, err
+	} else if len(path) == 0 {
+		return fp, fileKey, nil
+	}
+
+	tp, err := fpath.Open(ctx, fp, path[0])
+	if err != nil {
+		return nil, "", err
+	}
+	fileKey, _ = tp.Flush(ctx)
+	return tp, fileKey, nil
 }
