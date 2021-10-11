@@ -21,9 +21,14 @@ var Command = &command.C{
 	Commands: []*command.C{
 		{
 			Name: "show",
-			Usage: `@<root-key> [path]
+			Usage: `root:<root-key> [path]
 <file-key> [path]`,
-			Help: "Print the representation of a file object",
+			Help: `Print the representation of a file object
+
+File key encoding:
+  - Hexadecimal:     74686973206973206d79206b6579
+  - Base64           dGhpcyBpcyBteSBrZXk=
+`,
 
 			Run: runShow,
 		},
@@ -37,8 +42,8 @@ func runShow(env *command.Env, args []string) error {
 	cfg := env.Config.(*config.Settings)
 	return cfg.WithStore(cfg.Context, func(s blob.CAS) error {
 		var fileKey string
-		if strings.HasPrefix(args[0], "@") {
-			rp, err := root.Open(cfg.Context, s, config.RootKey(args[0][1:]))
+		if strings.HasPrefix(args[0], "root:") {
+			rp, err := root.Open(cfg.Context, s, args[0])
 			if err != nil {
 				return err
 			}
