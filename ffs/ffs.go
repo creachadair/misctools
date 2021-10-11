@@ -12,6 +12,7 @@ import (
 	"github.com/creachadair/misctools/ffs/config"
 
 	// Subcommands.
+	"github.com/creachadair/misctools/ffs/internal/cmdfile"
 	"github.com/creachadair/misctools/ffs/internal/cmdgc"
 	"github.com/creachadair/misctools/ffs/internal/cmdroot"
 )
@@ -51,6 +52,7 @@ func main() {
 
 		Commands: []*command.C{
 			cmdroot.Command,
+			cmdfile.Command,
 			cmdgc.Command,
 			command.HelpCommand(nil),
 		},
