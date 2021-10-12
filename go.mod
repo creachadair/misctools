@@ -17,7 +17,7 @@ require (
 	github.com/creachadair/ffs v0.0.0-20211011024649-fc171dded16f
 	github.com/creachadair/gcsstore v0.0.0-20211010185243-cbeb330cb0eb
 	github.com/creachadair/getpass v0.1.1
-	github.com/creachadair/jrpc2 v0.27.0
+	github.com/creachadair/jrpc2 v0.27.1
 	github.com/creachadair/keyfile v0.7.1
 	github.com/creachadair/leveldbstore v0.0.0-20211010185302-d0ef8bec9f81
 	github.com/creachadair/pebblestore v0.0.0-20211010185750-e0beb0653912
@@ -42,7 +42,7 @@ require (
 require (
 	github.com/creachadair/bitcaskstore v0.0.0-20211010184755-67421b3f0e46
 	github.com/creachadair/taskgroup v0.3.1
-	github.com/creachadair/wbstore v0.0.0-20211010221350-1f936edfbe8b
+	github.com/creachadair/wbstore v0.0.0-20211012051716-651d8fbd66e8
 )
 
 require (

@@ -174,8 +174,9 @@ github.com/creachadair/gcsstore v0.0.0-20211010185243-cbeb330cb0eb h1:vGmlWqL+rG
 github.com/creachadair/gcsstore v0.0.0-20211010185243-cbeb330cb0eb/go.mod h1:SUkcbS/UjfKnWOO58vvnMCWuFppBv0xOrOm/IRg9sE8=
 github.com/creachadair/getpass v0.1.1 h1:NBy01Vx3sEG75JbSgjsObwe06ISDJL9WS88pFNnVSpg=
 github.com/creachadair/getpass v0.1.1/go.mod h1:amWqqvJdxnT/Tk6PPgpFWX5Ik2RH4dnvfXequlcSXSc=
-github.com/creachadair/jrpc2 v0.27.0 h1:QzDp+Zrq+JKM21qQblLudnxevzQZ0FrcPDIVQzcgErs=
 github.com/creachadair/jrpc2 v0.27.0/go.mod h1:w+GXZGc+NwsH0xsUOgeLBIIRM0jBOSTXhv28KaWGRZU=
+github.com/creachadair/jrpc2 v0.27.1 h1:75vZfabCQuhNq9OiEXCkvj9z/s6ALse+aVs4O9FTRpE=
+github.com/creachadair/jrpc2 v0.27.1/go.mod h1:w+GXZGc+NwsH0xsUOgeLBIIRM0jBOSTXhv28KaWGRZU=
 github.com/creachadair/keyfile v0.7.1 h1:XN5VztUPSIbUv4xKCZ2lULM+UsYHAkqz1EvgmXCu3YA=
 github.com/creachadair/keyfile v0.7.1/go.mod h1:kzXUh2yqee7jLtZuJPBute2307T9ryGBKuX+hiuwF8I=
 github.com/creachadair/leveldbstore v0.0.0-20211010185302-d0ef8bec9f81 h1:6nf8fcyVv6qiOQdfIbn/hm07WXGGvtaMKFUmo7LUxn4=
@@ -193,8 +194,8 @@ github.com/creachadair/taskgroup v0.3.1 h1:Mpi0sc005YWdsDEJsh8vGPOygp9b0rLR0OW6V
 github.com/creachadair/taskgroup v0.3.1/go.mod h1:q490pQxvbLXtIe4w8xlf5tcO6RR1AhRfWHXO0MotmHs=
 github.com/creachadair/vql v0.0.19 h1:8yUL9DrLZuALGzUf9dcPT2cmYTfvJ2SwHpoacusaS/0=
 github.com/creachadair/vql v0.0.19/go.mod h1:KNmBr/lJOumdnm9de6kuwiInP7M1IqobgOw5dPHN60s=
-github.com/creachadair/wbstore v0.0.0-20211010221350-1f936edfbe8b h1:Kds+kEnWQGcvsELPxWuLaCXv36v3m1TxxTLRnnCJ+9w=
-github.com/creachadair/wbstore v0.0.0-20211010221350-1f936edfbe8b/go.mod h1:4iYAitCt/o+x+6fKyLojScJP9cRO7qH57ODs6EMTzAE=
+github.com/creachadair/wbstore v0.0.0-20211012051716-651d8fbd66e8 h1:fn21P89ZHnnWRhAfBcwLsUHVtcvX6Yy6OIdOwIcj6OA=
+github.com/creachadair/wbstore v0.0.0-20211012051716-651d8fbd66e8/go.mod h1:4iYAitCt/o+x+6fKyLojScJP9cRO7qH57ODs6EMTzAE=
 github.com/creack/pty v1.1.7/go.mod h1:lj5s0c3V2DBrqTV7llrYr5NG6My20zk30Fl46Y7DoTY=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

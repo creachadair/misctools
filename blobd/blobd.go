@@ -20,6 +20,7 @@ import (
 	"github.com/creachadair/jrpc2"
 	"github.com/creachadair/jrpc2/metrics"
 	"github.com/creachadair/rpcstore"
+	"github.com/creachadair/wbstore"
 
 	// Storage implementations (see the stores registry below).
 	"github.com/creachadair/badgerstore"
@@ -126,6 +127,14 @@ func main() {
 		mx.SetLabel("blobd.cacheSize", *cacheSize)
 		if *bufferDB != "" {
 			mx.SetLabel("blobd.buffer.db", *bufferDB)
+			buf := bs.(*wbstore.Store).Buffer()
+			mx.SetLabel("blobd.buffer.len", func() interface{} {
+				n, err := buf.Len(ctx)
+				if err != nil {
+					return "unknown"
+				}
+				return n
+			})
 		}
 
 		var debug *log.Logger
