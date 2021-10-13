@@ -36,6 +36,13 @@ func main() {
 		log.Fatalf("Chdir: %v", err)
 	}
 
+	// Save the name of the current branch so we can go back.
+	save, err := currentBranch()
+	if err != nil {
+		log.Fatalf("Current branch: %v", err)
+	}
+	defer git("checkout", save)
+
 	// Find the name of the default branch.
 	dbranch, err := defaultBranch(*useRemote)
 	if err != nil {
@@ -70,6 +77,8 @@ func main() {
 		}
 	}
 }
+
+func currentBranch() (string, error) { return git("branch", "--show-current") }
 
 func branchesWithRemotes(matching, dbranch, useRemote string) ([]string, error) {
 	localOut, err := git("branch", "--list", matching)
