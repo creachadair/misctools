@@ -21,11 +21,8 @@ var (
 
 func main() {
 	flag.Parse()
-	switch {
-	case *useRemote == "":
+	if *useRemote == "" {
 		log.Fatal("You must specify a -remote name to use")
-	case *branchPrefix == "":
-		log.Fatal("You must specify a branch -prefix")
 	}
 
 	// Set working directory to the repository root.
@@ -41,13 +38,22 @@ func main() {
 	if err != nil {
 		log.Fatalf("Current branch: %v", err)
 	}
-	defer git("checkout", save)
 
 	// Find the name of the default branch.
 	dbranch, err := defaultBranch(*useRemote)
 	if err != nil {
 		log.Fatalf("Default branch: %v", err)
 	}
+	if save != dbranch {
+		defer func() {
+			_, err := git("checkout", save)
+			if err != nil {
+				log.Fatalf("Switching to %q: %v", save, err)
+			}
+			log.Printf("Switched back to %q", save)
+		}()
+	}
+
 	log.Printf("Pulling default branch %q", dbranch)
 	if err := pullBranch(dbranch); err != nil {
 		log.Fatalf("Pull %q: %v", dbranch, err)
@@ -71,17 +77,26 @@ func main() {
 		if !*doForcePush {
 			continue
 		}
-		log.Printf("Force pushing %q to %s", br, *useRemote)
-		if _, err := git("push", "-f", *useRemote, br); err != nil {
-			log.Fatalf("Force updating %q: %v", br, err)
+		if ok, err := forcePush(*useRemote, br); err != nil {
+			log.Fatalf("Updating %q: %v", br, err)
+		} else if ok {
+			log.Printf("- Forced update of %q to %s", br, *useRemote)
 		}
 	}
 }
 
 func currentBranch() (string, error) { return git("branch", "--show-current") }
 
+func forcePush(remote, branch string) (bool, error) {
+	out, err := git("push", "-f", remote, branch)
+	if err != nil {
+		return false, err
+	}
+	return strings.ToLower(strings.TrimSpace(out)) == "everything up-to-date", nil
+}
+
 func branchesWithRemotes(matching, dbranch, useRemote string) ([]string, error) {
-	localOut, err := git("branch", "--list", matching)
+	localOut, err := git("branch", "--list", "--contains", dbranch, matching)
 	if err != nil {
 		return nil, err
 	}
