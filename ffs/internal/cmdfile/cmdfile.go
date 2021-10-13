@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
+	"os"
 	"strings"
 
 	"github.com/creachadair/command"
@@ -14,6 +16,9 @@ import (
 	"github.com/creachadair/ffs/fpath"
 	"github.com/creachadair/misctools/ffs/config"
 )
+
+const fileCmdUsage = `root:<root-key> [path]
+<file-key> [path]`
 
 var Command = &command.C{
 	Name: "file",
@@ -29,12 +34,18 @@ a file may be specified in the following formats:
 
 	Commands: []*command.C{
 		{
-			Name: "show",
-			Usage: `root:<root-key> [path]
-<file-key> [path]`,
-			Help: `Print the representation of a file object`,
+			Name:  "show",
+			Usage: fileCmdUsage,
+			Help:  `Print the representation of a file object`,
 
 			Run: runShow,
+		},
+		{
+			Name:  "read",
+			Usage: fileCmdUsage,
+			Help:  "Read the binary contents of a file object",
+
+			Run: runRead,
 		},
 	},
 }
@@ -56,6 +67,21 @@ func runShow(env *command.Env, args []string) error {
 			"node":    msg,
 		}))
 		return nil
+	})
+}
+
+func runRead(env *command.Env, args []string) error {
+	if len(args) == 0 {
+		return errors.New("missing required storage key")
+	}
+	cfg := env.Config.(*config.Settings)
+	return cfg.WithStore(cfg.Context, func(s blob.CAS) error {
+		fp, _, err := openFile(cfg.Context, s, args[0], args[1:]...)
+		if err != nil {
+			return err
+		}
+		_, err = io.Copy(os.Stdout, fp.Cursor(cfg.Context))
+		return err
 	})
 }
 
