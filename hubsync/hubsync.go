@@ -14,13 +14,19 @@ import (
 )
 
 var (
-	useRemote     = flag.String("remote", "origin", "Use this remote name")
-	branchPattern = flag.String("match", "", "Filter branches on this pattern")
-	doForcePush   = flag.Bool("push", false, "Force push updated branches to remote")
+	useRemote    = flag.String("remote", "origin", "Use this remote name")
+	branchPrefix = flag.String("prefix", "", "Select branches matching this prefix")
+	doForcePush  = flag.Bool("push", false, "Force push updated branches to remote")
 )
 
 func main() {
 	flag.Parse()
+	switch {
+	case *useRemote == "":
+		log.Fatal("You must specify a -remote name to use")
+	case *branchPrefix == "":
+		log.Fatal("You must specify a branch -prefix")
+	}
 
 	// Set working directory to the repository root.
 	root, err := repoRoot()
@@ -41,7 +47,7 @@ func main() {
 	}
 
 	// List local branches that track corresponding remote branches.
-	rem, err := branchesWithRemotes(*branchPattern, *useRemote)
+	rem, err := branchesWithRemotes(*branchPrefix+"*", dbranch, *useRemote)
 	if err != nil {
 		log.Fatalf("Listing branches: %v", err)
 	}
@@ -51,21 +57,21 @@ func main() {
 
 	// Rebase the local branches onto the default, and
 	for _, br := range rem {
+		log.Printf("Rebasing %q onto %q", br, dbranch)
 		if _, err := git("rebase", dbranch, br); err != nil {
-			log.Fatalf("Rebasing %q onto %q: %v", br, dbranch, err)
+			log.Fatalf("Rebase failed: %v", err)
 		}
-		log.Printf("Rebased %q to %q", br, dbranch)
 		if !*doForcePush {
 			continue
 		}
+		log.Printf("Force pushing %q to %s", br, *useRemote)
 		if _, err := git("push", "-f", *useRemote, br); err != nil {
 			log.Fatalf("Force updating %q: %v", br, err)
 		}
-		log.Printf("Force pushed to %s %s", *useRemote, br)
 	}
 }
 
-func branchesWithRemotes(matching, useRemote string) ([]string, error) {
+func branchesWithRemotes(matching, dbranch, useRemote string) ([]string, error) {
 	localOut, err := git("branch", "--list", matching)
 	if err != nil {
 		return nil, err
@@ -86,6 +92,9 @@ func branchesWithRemotes(matching, useRemote string) ([]string, error) {
 
 	var out []string
 	for _, lb := range local {
+		if lb == dbranch {
+			continue // don't consider the default branch regardless
+		}
 		for _, rb := range remote {
 			if rb == lb {
 				out = append(out, lb)
