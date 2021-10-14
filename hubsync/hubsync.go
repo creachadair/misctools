@@ -96,7 +96,7 @@ func forcePush(remote, branch string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return strings.ToLower(strings.TrimSpace(out)) == "everything up-to-date", nil
+	return strings.ToLower(strings.TrimSpace(out)) != "everything up-to-date", nil
 }
 
 func branchesWithRemotes(matching, dbranch, useRemote string) ([]string, error) {
