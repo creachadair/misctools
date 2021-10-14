@@ -54,11 +54,6 @@ func main() {
 		}()
 	}
 
-	log.Printf("Pulling default branch %q", dbranch)
-	if err := pullBranch(dbranch); err != nil {
-		log.Fatalf("Pull %q: %v", dbranch, err)
-	}
-
 	// List local branches that track corresponding remote branches.
 	rem, err := branchesWithRemotes(*branchPrefix+"*", dbranch, *useRemote)
 	if err != nil {
@@ -66,9 +61,18 @@ func main() {
 	}
 	if len(rem) == 0 {
 		log.Print("No branches require update")
+		return
 	}
 
-	// Rebase the local branches onto the default, and
+	// Pull the latest content. Note we need to do this after checking branches,
+	// since it changes which branches follow the default.
+	log.Printf("Pulling default branch %q", dbranch)
+	if err := pullBranch(dbranch); err != nil {
+		log.Fatalf("Pull %q: %v", dbranch, err)
+	}
+
+	// Rebase the local branches onto the default, and if requested and
+	// necessary, push the results back up to the remote.
 	for _, br := range rem {
 		log.Printf("Rebasing %q onto %q", br, dbranch)
 		if _, err := git("rebase", dbranch, br); err != nil {
