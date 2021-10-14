@@ -44,15 +44,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("Default branch: %v", err)
 	}
-	if save != dbranch {
-		defer func() {
-			_, err := git("checkout", save)
-			if err != nil {
-				log.Fatalf("Switching to %q: %v", save, err)
-			}
-			log.Printf("Switched back to %q", save)
-		}()
-	}
+	defer func() {
+		_, err := git("checkout", save)
+		if err != nil {
+			log.Fatalf("Switching to %q: %v", save, err)
+		}
+		log.Printf("Switched back to %q", save)
+	}()
 
 	// List local branches that track corresponding remote branches.
 	rem, err := branchesWithRemotes(*branchPrefix+"*", dbranch, *useRemote)
