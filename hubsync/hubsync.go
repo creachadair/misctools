@@ -90,11 +90,13 @@ func main() {
 func currentBranch() (string, error) { return git("branch", "--show-current") }
 
 func forcePush(remote, branch string) (bool, error) {
-	out, err := git("push", "-f", remote, branch)
+	bits, err := exec.Command("git", "push", "-f", remote, branch).CombinedOutput()
+	msg := string(bits)
 	if err != nil {
-		return false, err
+		return false, errors.New(strings.SplitN(msg, "\n", 2)[0])
 	}
-	return strings.TrimSpace(out) != "", nil
+	ok := strings.ToLower(strings.TrimSpace(msg)) != "everything up-to-date"
+	return ok, nil
 }
 
 func branchesWithRemotes(matching, dbranch, useRemote string) ([]string, error) {
