@@ -62,6 +62,14 @@ The repository name is derived from the first remote.`,
 
 				Run: runLinkFile,
 			},
+			{
+				Name:  "grep",
+				Usage: "[git-grep-flags] <pattern> [<path>...]",
+				Help:  "Generate a link to a git grep match.",
+
+				CustomFlags: true,
+				Run:         runGrepFile,
+			},
 			command.HelpCommand(nil),
 		},
 	}).NewEnv(nil)
@@ -70,6 +78,30 @@ The repository name is derived from the first remote.`,
 	} else if err != nil {
 		log.Fatalf("Error: %v", err)
 	}
+}
+
+func addFlag(flag string, args []string) []string {
+	for _, arg := range args {
+		if arg == flag {
+			return args
+		}
+	}
+	return append([]string{flag}, args...)
+}
+
+func runGrepFile(env *command.Env, args []string) error {
+	out, err := git("grep", addFlag("-n", args)...)
+	if err != nil {
+		return fmt.Errorf("no matches: %w", err)
+	}
+	hits := strings.Split(strings.TrimSpace(out), "\n")
+	if len(hits) != 1 {
+		fmt.Println(out)
+		return fmt.Errorf("found %d matches", len(hits))
+	}
+	parts := strings.SplitN(hits[0], ":", 3)
+	target := strings.Join(parts[:2], ":")
+	return runLinkFile(env, []string{target})
 }
 
 func runLinkFile(env *command.Env, args []string) error {
