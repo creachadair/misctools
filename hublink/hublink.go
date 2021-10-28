@@ -6,7 +6,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -249,7 +248,7 @@ func parseFile(s string) (path string, lo, hi int, err error) {
 }
 
 func grepFile(path string, re *regexp.Regexp) (_ string, lo, hi int, err error) {
-	data, err := ioutil.ReadFile(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return path, 0, 0, err
 	}

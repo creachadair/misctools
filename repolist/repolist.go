@@ -8,7 +8,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -107,7 +107,7 @@ func (h hostInfo) fetch(user string) ([]string, error) {
 		defer rsp.Body.Close()
 		debug("Response err=%v status=%v", err, rsp.StatusCode)
 
-		data, err := ioutil.ReadAll(rsp.Body)
+		data, err := io.ReadAll(rsp.Body)
 		if err != nil {
 			return nil, fmt.Errorf("http body: %v", err)
 		}
