@@ -3,6 +3,7 @@ module github.com/creachadair/misctools
 go 1.17
 
 require (
+	bitbucket.org/creachadair/shell v0.0.6
 	bitbucket.org/creachadair/stringset v0.0.9
 	github.com/creachadair/command v0.0.0-20211002170045-5bd7d4de7419
 	github.com/creachadair/vql v0.0.19

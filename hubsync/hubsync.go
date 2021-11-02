@@ -11,12 +11,15 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"bitbucket.org/creachadair/shell"
 )
 
 var (
 	useRemote    = flag.String("remote", "origin", "Use this remote name")
 	branchPrefix = flag.String("prefix", "", "Select branches matching this prefix")
 	doForcePush  = flag.Bool("push", false, "Force push updated branches to remote")
+	doVerbose    = flag.Bool("v", false, "Verbose logging")
 )
 
 func main() {
@@ -159,6 +162,9 @@ func defaultBranch(useRemote string) (string, error) {
 }
 
 func git(cmd string, args ...string) (string, error) {
+	if *doVerbose {
+		log.Println("[git]", cmd, shell.Join(args))
+	}
 	out, err := exec.Command("git", append([]string{cmd}, args...)...).Output()
 	if err != nil {
 		var ex *exec.ExitError
