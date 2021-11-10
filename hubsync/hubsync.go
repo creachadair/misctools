@@ -16,6 +16,7 @@ import (
 )
 
 var (
+	defBranch    = flag.String("default", "", `Default branch name (if "", use default from remote)`)
 	useRemote    = flag.String("remote", "origin", "Use this remote name")
 	branchPrefix = flag.String("prefix", "", "Select branches matching this prefix")
 	doForcePush  = flag.Bool("push", false, "Force push updated branches to remote")
@@ -43,7 +44,7 @@ func main() {
 	}
 
 	// Find the name of the default branch.
-	dbranch, err := defaultBranch(*useRemote)
+	dbranch, err := defaultBranch(*defBranch, *useRemote)
 	if err != nil {
 		log.Fatalf("Default branch: %v", err)
 	}
@@ -146,7 +147,10 @@ func pullBranch(branch string) error {
 
 func repoRoot() (string, error) { return git("rev-parse", "--show-toplevel") }
 
-func defaultBranch(useRemote string) (string, error) {
+func defaultBranch(defBranch, useRemote string) (string, error) {
+	if defBranch != "" {
+		return defBranch, nil
+	}
 	rem, err := git("remote", "show", useRemote)
 	if err != nil {
 		return "", err
