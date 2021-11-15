@@ -61,16 +61,19 @@ func main() {
 	if err != nil {
 		log.Fatalf("Listing branches: %v", err)
 	}
-	if len(rem) == 0 {
-		log.Print("No branches require update")
-		return
-	}
 
 	// Pull the latest content. Note we need to do this after checking branches,
 	// since it changes which branches follow the default.
 	log.Printf("Pulling default branch %q", dbranch)
 	if err := pullBranch(dbranch); err != nil {
 		log.Fatalf("Pull %q: %v", dbranch, err)
+	}
+
+	// Bail out if no branches need updating. But note we do this after pulling,
+	// so that we will pull the changes even if no updates are required.
+	if len(rem) == 0 {
+		log.Print("No branches require update")
+		return
 	}
 
 	// Rebase the local branches onto the default, and if requested and
