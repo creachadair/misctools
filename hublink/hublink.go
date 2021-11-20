@@ -6,7 +6,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -72,11 +71,7 @@ The repository name is derived from the first remote.`,
 			command.HelpCommand(nil),
 		},
 	}).NewEnv(nil)
-	if err := command.Execute(env, os.Args[1:]); err == command.ErrUsage {
-		os.Exit(2)
-	} else if err != nil {
-		log.Fatalf("Error: %v", err)
-	}
+	command.RunOrFail(env, os.Args[1:])
 }
 
 func addFlag(flag string, args []string) []string {
