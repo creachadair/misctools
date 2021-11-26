@@ -4,8 +4,8 @@ bitbucket.org/creachadair/stringset v0.0.10 h1:DZjkR57sJGMycZNVVbl+26bK7vW1kwLQE
 bitbucket.org/creachadair/stringset v0.0.10/go.mod h1:6G0fsnHFxynEdWpihfZf44lnBPpTW6nkrcxITVTBHus=
 github.com/BurntSushi/toml v0.4.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
 github.com/cheekybits/is v0.0.0-20150225183255-68e9c0620927/go.mod h1:h/aW8ynjgkuj+NQRlZcDbAbM1ORAbXjXX77sX7T289U=
-github.com/creachadair/command v0.0.0-20211028212402-8b5d811f2262 h1:EtkKocrDy7ojYJSWPOkoh+zlKbgTLMk/z/bcpxa929U=
-github.com/creachadair/command v0.0.0-20211028212402-8b5d811f2262/go.mod h1:bAM+qFQb/KwWyCc9MLC4U1jvn3XyakqP5QRkds5T6cY=
+github.com/creachadair/command v0.0.0-20211126171518-aeb2c1414eea h1:WjqNxZyQx21HbI6rNUbPiPZge+hOueektwKlmahu96g=
+github.com/creachadair/command v0.0.0-20211126171518-aeb2c1414eea/go.mod h1:bAM+qFQb/KwWyCc9MLC4U1jvn3XyakqP5QRkds5T6cY=
 github.com/creachadair/vql v0.0.19 h1:8yUL9DrLZuALGzUf9dcPT2cmYTfvJ2SwHpoacusaS/0=
 github.com/creachadair/vql v0.0.19/go.mod h1:KNmBr/lJOumdnm9de6kuwiInP7M1IqobgOw5dPHN60s=
 github.com/djherbis/atime v1.1.0/go.mod h1:28OF6Y8s3NQWwacXc5eZTsEsiMzp7LF8MbXE+XJPdBE=
