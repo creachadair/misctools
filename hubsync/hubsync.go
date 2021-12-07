@@ -57,7 +57,7 @@ func main() {
 	}()
 
 	// List local branches that track corresponding remote branches.
-	rem, err := branchesWithRemotes(*branchPrefix+"*", dbranch, *useRemote)
+	rem, err := listBranchInfo(*branchPrefix+"*", dbranch, *useRemote)
 	if err != nil {
 		log.Fatalf("Listing branches: %v", err)
 	}
@@ -80,16 +80,16 @@ func main() {
 	// necessary, push the results back up to the remote.
 	for _, br := range rem {
 		log.Printf("Rebasing %q onto %q", br, dbranch)
-		if _, err := git("rebase", dbranch, br); err != nil {
+		if _, err := git("rebase", dbranch, br.Name); err != nil {
 			log.Fatalf("Rebase failed: %v", err)
 		}
-		if !*doForcePush {
+		if !*doForcePush || !br.Remote {
 			continue
 		}
-		if ok, err := forcePush(*useRemote, br); err != nil {
+		if ok, err := forcePush(*useRemote, br.Name); err != nil {
 			log.Fatalf("Updating %q: %v", br, err)
 		} else if ok {
-			log.Printf("- Forced update of %q to %s", br, *useRemote)
+			log.Printf("- Forced update of %q to %s", br.Name, *useRemote)
 		}
 	}
 }
@@ -106,14 +106,21 @@ func forcePush(remote, branch string) (bool, error) {
 	return ok, nil
 }
 
-func branchesWithRemotes(matching, dbranch, useRemote string) ([]string, error) {
+type branchInfo struct {
+	Name   string
+	Remote bool
+}
+
+func listBranchInfo(matching, dbranch, useRemote string) ([]*branchInfo, error) {
+	var out []*branchInfo
+
 	localOut, err := git("branch", "--list", "--contains", dbranch, matching)
 	if err != nil {
 		return nil, err
 	}
 	local := strings.Split(strings.TrimSpace(localOut), "\n")
-	for i, s := range local {
-		local[i] = strings.TrimPrefix(strings.TrimSpace(s), "* ")
+	for _, s := range local {
+		out = append(out, &branchInfo{Name: strings.TrimPrefix(strings.TrimSpace(s), "* ")})
 	}
 
 	remoteOut, err := git("branch", "--list", "-r", useRemote+"/"+matching)
@@ -125,14 +132,13 @@ func branchesWithRemotes(matching, dbranch, useRemote string) ([]string, error) 
 		remote[i] = strings.TrimPrefix(strings.TrimSpace(s), useRemote+"/")
 	}
 
-	var out []string
-	for _, lb := range local {
-		if lb == dbranch {
+	for _, lb := range out {
+		if lb.Name == dbranch {
 			continue // don't consider the default branch regardless
 		}
 		for _, rb := range remote {
-			if rb == lb {
-				out = append(out, lb)
+			if rb == lb.Name {
+				lb.Remote = true
 				break
 			}
 		}
