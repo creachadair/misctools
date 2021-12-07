@@ -79,7 +79,7 @@ func main() {
 	// Rebase the local branches onto the default, and if requested and
 	// necessary, push the results back up to the remote.
 	for _, br := range rem {
-		log.Printf("Rebasing %q onto %q", br, dbranch)
+		log.Printf("Rebasing %q onto %q", br.Name, dbranch)
 		if _, err := git("rebase", dbranch, br.Name); err != nil {
 			log.Fatalf("Rebase failed: %v", err)
 		}
@@ -87,7 +87,7 @@ func main() {
 			continue
 		}
 		if ok, err := forcePush(*useRemote, br.Name); err != nil {
-			log.Fatalf("Updating %q: %v", br, err)
+			log.Fatalf("Updating %q: %v", br.Name, err)
 		} else if ok {
 			log.Printf("- Forced update of %q to %s", br.Name, *useRemote)
 		}
@@ -120,7 +120,11 @@ func listBranchInfo(matching, dbranch, useRemote string) ([]*branchInfo, error) 
 	}
 	local := strings.Split(strings.TrimSpace(localOut), "\n")
 	for _, s := range local {
-		out = append(out, &branchInfo{Name: strings.TrimPrefix(strings.TrimSpace(s), "* ")})
+		clean := strings.TrimPrefix(strings.TrimSpace(s), "* ")
+		if clean == dbranch {
+			continue
+		}
+		out = append(out, &branchInfo{Name: clean})
 	}
 
 	remoteOut, err := git("branch", "--list", "-r", useRemote+"/"+matching)
