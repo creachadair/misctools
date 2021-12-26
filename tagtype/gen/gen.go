@@ -89,7 +89,10 @@ func EmitFileHeader(w io.Writer, packageName string) {
 
 package %[2]s
 
-import "fmt"
+import (
+  "encoding/json"
+  "fmt"
+)
 
 type %[3]s struct {
    T string          `+"`"+`json:"type"`+"`"+`
