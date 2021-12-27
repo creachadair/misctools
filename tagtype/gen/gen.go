@@ -33,7 +33,7 @@ const (
 )
 
 // Parse parses the Go source files in the specified directory, and returns the
-// resulting non-test package. It ie
+// resulting non-test package.
 func Parse(dir string) (*ast.Package, error) {
 	fset := token.NewFileSet()
 	pkgs, err := parser.ParseDir(fset, dir, nil, parser.SkipObjectResolution)
