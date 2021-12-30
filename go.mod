@@ -7,7 +7,7 @@ require (
 	bitbucket.org/creachadair/stringset v0.0.10
 	github.com/creachadair/command v0.0.0-20211126171518-aeb2c1414eea
 	github.com/creachadair/vql v0.0.19
-	github.com/tdewolff/minify/v2 v2.9.25
+	github.com/tdewolff/minify/v2 v2.9.26
 )
 
 require (
