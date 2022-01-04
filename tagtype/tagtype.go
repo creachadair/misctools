@@ -12,6 +12,9 @@
 //    func (T) jsonWrapperTag() string { return "type/tag/for.T" }
 //
 // Types without this method are ignored.
+//
+// By default, both Marshal and Unmarshal methods are generated.
+// Use the -m and -u flags to emit only one or the other.
 package main
 
 import (
@@ -25,8 +28,10 @@ import (
 )
 
 var (
-	outputPath = flag.String("output", "", "Output file path (required)")
-	inputDir   = flag.String("input", ".", "Input directory")
+	outputPath   = flag.String("output", "", "Output file path (required)")
+	inputDir     = flag.String("input", ".", "Input directory")
+	genMarshal   = flag.Bool("m", false, "Generate marshal methods")
+	genUnmarshal = flag.Bool("u", false, "Generate unmarshal methods")
 )
 
 func main() {
@@ -34,6 +39,7 @@ func main() {
 	if *outputPath == "" {
 		log.Fatal("You must provide a non-empty -output file path")
 	}
+	emitAll := !*genMarshal && !*genUnmarshal
 
 	pkg, err := gen.Parse(*inputDir)
 	if err != nil {
@@ -49,8 +55,12 @@ func main() {
 	var buf bytes.Buffer
 	gen.EmitFileHeader(&buf, pkg.Name)
 	for _, name := range names {
-		gen.EmitMarshal(&buf, name)
-		gen.EmitUnmarshal(&buf, name)
+		if emitAll || *genMarshal {
+			gen.EmitMarshal(&buf, name)
+		}
+		if emitAll || *genUnmarshal {
+			gen.EmitUnmarshal(&buf, name)
+		}
 	}
 
 	f, err := os.Create(*outputPath)
