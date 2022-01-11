@@ -94,6 +94,8 @@ import (
   "fmt"
 )
 
+var _ fmt.Stringer // suppress unused error
+
 type %[3]s struct {
    T string          `+"`"+`json:"type"`+"`"+`
    V json.RawMessage `+"`"+`json:"value"`+"`"+`
