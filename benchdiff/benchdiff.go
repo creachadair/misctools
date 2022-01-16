@@ -18,6 +18,7 @@ import (
 	"math"
 	"os"
 	"os/exec"
+	"sort"
 	"strconv"
 	"strings"
 	"text/tabwriter"
@@ -115,12 +116,12 @@ type result struct {
 	Name        string
 	Count       int64
 	TimePerOp   time.Duration
-	BytesPerOp  int64 // may not be present
-	AllocsPerOp int64 // may not be present
+	BytesPerOp  int64 // may be not present
+	AllocsPerOp int64 // may be not present
 }
 
 func runBenchmark(ctx context.Context, test string) ([]result, error) {
-	out, err := exec.CommandContext(ctx, "go", "test", "-bench="+*benchPattern, "-run=^NONE", test).Output()
+	out, err := exec.CommandContext(ctx, "go", "test", "-bench="+*benchPattern, "-run=^NONE", "-benchmem", test).Output()
 	if err != nil {
 		if *ignoreErr {
 			log.Printf("Ignored error from test runner: %v", err)
@@ -138,7 +139,7 @@ func runBenchmark(ctx context.Context, test string) ([]result, error) {
 		for i := 2; i+1 < len(fields); i += 2 {
 			switch fields[i+1] {
 			case "ns/op":
-				r.TimePerOp = time.Duration(parseInt(fields[i])) / time.Nanosecond
+				r.TimePerOp = time.Duration(parseFloat(fields[i])) / time.Nanosecond
 			case "B/op":
 				r.BytesPerOp = parseInt(fields[i])
 			case "allocs/op":
@@ -161,6 +162,11 @@ func hasMemStats(rs []result) bool {
 
 func parseInt(s string) int64 {
 	v, _ := strconv.ParseInt(s, 10, 64)
+	return v
+}
+
+func parseFloat(s string) float64 {
+	v, _ := strconv.ParseFloat(s, 64)
 	return v
 }
 
@@ -196,33 +202,39 @@ func (b joined) format(w io.Writer, mem bool) {
 }
 
 func joinResults(old, new []result) []joined {
-	var res []joined
-	m := make(map[string]int)
+	m := make(map[string]*joined)
 	for _, b := range old {
-		m[b.Name] = len(res)
-		res = append(res, joined{
+		m[b.Name] = &joined{
 			Name:      b.Name,
 			OldCount:  b.Count,
 			OldTime:   b.TimePerOp,
 			OldBytes:  b.BytesPerOp,
 			OldAllocs: b.AllocsPerOp,
-		})
+		}
 	}
 	for _, b := range new {
-		if p, ok := m[b.Name]; ok {
-			res[p].NewCount = b.Count
-			res[p].NewTime = b.TimePerOp
-			res[p].NewBytes = b.BytesPerOp
-			res[p].NewAllocs = b.AllocsPerOp
+		ex, ok := m[b.Name]
+		if ok {
+			ex.NewCount = b.Count
+			ex.NewTime = b.TimePerOp
+			ex.NewBytes = b.BytesPerOp
+			ex.NewAllocs = b.AllocsPerOp
 		} else {
-			res = append(res, joined{
+			m[b.Name] = &joined{
 				Name:      b.Name,
 				NewCount:  b.Count,
 				NewTime:   b.TimePerOp,
 				NewBytes:  b.BytesPerOp,
 				NewAllocs: b.AllocsPerOp,
-			})
+			}
 		}
 	}
+	var res []joined
+	for _, v := range m {
+		res = append(res, *v)
+	}
+	sort.Slice(res, func(i, j int) bool {
+		return res[i].Name < res[j].Name
+	})
 	return res
 }
