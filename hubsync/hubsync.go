@@ -16,10 +16,12 @@ import (
 )
 
 var (
-	defBranch    = flag.String("default", "", `Default branch name (if "", use default from remote)`)
+	defBranch    = flag.String("base", "", `Base branch name (if "", use default from remote)`)
 	useRemote    = flag.String("remote", "origin", "Use this remote name")
 	branchPrefix = flag.String("prefix", "", "Select branches matching this prefix")
+	workFile     = flag.String("worklist", "hubsync.json", "Work list save file")
 	doForcePush  = flag.Bool("push", false, "Force push updated branches to remote")
+	doResume     = flag.Bool("resume", false, "Resume from an existing work list")
 	doVerbose    = flag.Bool("v", false, "Verbose logging")
 )
 
@@ -37,59 +39,56 @@ func main() {
 		log.Fatalf("Chdir: %v", err)
 	}
 
-	// Save the name of the current branch so we can go back.
-	save, err := currentBranch()
+	work, err := openWorkList(*workFile)
 	if err != nil {
-		log.Fatalf("Current branch: %v", err)
+		log.Fatalf("Loading worklist: %v", err)
+	} else if work.Loaded && !*doResume {
+		log.Fatalf(`Found non-empty worklist. Remove %q and re-run or pass -resume to continue`,
+			*workFile)
 	}
-
-	// Find the name of the default branch.
-	dbranch, err := defaultBranch(*defBranch, *useRemote)
-	if err != nil {
-		log.Fatalf("Default branch: %v", err)
-	}
-	defer func() {
-		_, err := git("checkout", save)
-		if err != nil {
-			log.Fatalf("Switching to %q: %v", save, err)
-		}
-		log.Printf("Switched back to %q", save)
-	}()
-
-	// List local branches that track corresponding remote branches.
-	rem, err := listBranchInfo(*branchPrefix+"*", dbranch, *useRemote)
-	if err != nil {
-		log.Fatalf("Listing branches: %v", err)
-	}
+	defer work.resetDir()
 
 	// Pull the latest content. Note we need to do this after checking branches,
 	// since it changes which branches follow the default.
-	log.Printf("Pulling default branch %q", dbranch)
-	if err := pullBranch(dbranch); err != nil {
-		log.Fatalf("Pull %q: %v", dbranch, err)
+	log.Printf("Pulling default branch %q", work.Base)
+	if err := pullBranch(work.Base); err != nil {
+		log.Fatalf("Pull %q: %v", work.Base, err)
 	}
 
 	// Bail out if no branches need updating. But note we do this after pulling,
 	// so that we will pull the changes even if no updates are required.
-	if len(rem) == 0 {
+	if work.numUnfinished() == 0 {
 		log.Print("No branches require update")
 		return
 	}
 
 	// Rebase the local branches onto the default, and if requested and
 	// necessary, push the results back up to the remote.
-	for _, br := range rem {
-		log.Printf("Rebasing %q onto %q", br.Name, dbranch)
-		if _, err := git("rebase", dbranch, br.Name); err != nil {
+	for _, br := range work.Branches {
+		if br.Done {
+			continue
+		}
+		log.Printf("Rebasing %q onto %q", br.Name, work.Base)
+		if _, err := git("rebase", work.Base, br.Name); err != nil {
 			log.Fatalf("Rebase failed: %v", err)
 		}
 		if !*doForcePush || !br.Remote {
-			continue
-		}
-		if ok, err := forcePush(*useRemote, br.Name); err != nil {
+			// nothing to do
+		} else if ok, err := forcePush(*useRemote, br.Name); err != nil {
 			log.Fatalf("Updating %q: %v", br.Name, err)
 		} else if ok {
 			log.Printf("- Forced update of %q to %s", br.Name, *useRemote)
+		}
+		br.Done = true
+		if err := work.saveTo(*workFile); err != nil {
+			log.Fatalf("Saving worklist: %v", err)
+		}
+	}
+
+	// If we successfully get here, the worklist is clean.
+	if work.Loaded {
+		if err := os.Remove(*workFile); err != nil {
+			log.Printf("Warning: removing worklist: %v", err)
 		}
 	}
 }
@@ -107,8 +106,9 @@ func forcePush(remote, branch string) (bool, error) {
 }
 
 type branchInfo struct {
-	Name   string
-	Remote bool
+	Name   string `json:"name"`
+	Remote bool   `json:"remote"`
+	Done   bool   `json:"done"`
 }
 
 func listBranchInfo(matching, dbranch, useRemote string) ([]*branchInfo, error) {
