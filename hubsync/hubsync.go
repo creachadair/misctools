@@ -108,7 +108,7 @@ func forcePush(remote, branch string) (bool, error) {
 
 type branchInfo struct {
 	Name   string `json:"name"`
-	Remote bool   `json:"remote"`
+	Remote bool   `json:"hasRemote"`
 	Done   bool   `json:"done"`
 }
 
