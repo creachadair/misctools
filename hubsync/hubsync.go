@@ -23,6 +23,7 @@ var (
 	doForcePush  = flag.Bool("push", false, "Force push updated branches to remote")
 	doResume     = flag.Bool("resume", false, "Resume from an existing work list")
 	doVerbose    = flag.Bool("v", false, "Verbose logging")
+	doDebug      = flag.Bool("debug", false, "Enable debug mode")
 )
 
 func main() {
@@ -48,18 +49,18 @@ func main() {
 	}
 	defer work.resetDir()
 
-	// Pull the latest content. Note we need to do this after checking branches,
-	// since it changes which branches follow the default.
-	log.Printf("Pulling default branch %q", work.Base)
-	if err := pullBranch(work.Base); err != nil {
-		log.Fatalf("Pull %q: %v", work.Base, err)
-	}
-
 	// Bail out if no branches need updating. But note we do this after pulling,
 	// so that we will pull the changes even if no updates are required.
 	if work.numUnfinished() == 0 {
 		log.Print("No branches require update")
 		return
+	}
+
+	// Pull the latest content. Note we need to do this after checking branches,
+	// since it changes which branches follow the default.
+	log.Printf("Pulling default branch %q", work.Base)
+	if err := pullBranch(work.Base); err != nil {
+		log.Fatalf("Pull %q: %v", work.Base, err)
 	}
 
 	// Rebase the local branches onto the default, and if requested and
@@ -86,7 +87,7 @@ func main() {
 	}
 
 	// If we successfully get here, the worklist is clean.
-	if work.Loaded {
+	if work.Loaded && !*doDebug {
 		if err := os.Remove(*workFile); err != nil {
 			log.Printf("Warning: removing worklist: %v", err)
 		}
