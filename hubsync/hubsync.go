@@ -46,6 +46,8 @@ func main() {
 	} else if work.Loaded && !*doResume {
 		log.Fatalf(`Found non-empty worklist. Remove %q and re-run or pass -resume to continue`,
 			*workFile)
+	} else if !work.Loaded && *doResume {
+		log.Fatalf("There is no worklist file to -resume from")
 	}
 	defer work.resetDir()
 
