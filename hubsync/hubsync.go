@@ -49,8 +49,7 @@ func main() {
 	}
 	defer work.resetDir()
 
-	// Bail out if no branches need updating. But note we do this after pulling,
-	// so that we will pull the changes even if no updates are required.
+	// Bail out if no branches need updating.
 	if work.numUnfinished() == 0 {
 		log.Print("No branches require update")
 		return
@@ -58,9 +57,13 @@ func main() {
 
 	// Pull the latest content. Note we need to do this after checking branches,
 	// since it changes which branches follow the default.
-	log.Printf("Pulling default branch %q", work.Base)
-	if err := pullBranch(work.Base); err != nil {
-		log.Fatalf("Pull %q: %v", work.Base, err)
+	if work.Loaded {
+		log.Printf("Resuming update of branch %q", work.Base)
+	} else {
+		log.Printf("Pulling default branch %q", work.Base)
+		if err := pullBranch(work.Base); err != nil {
+			log.Fatalf("Pull %q: %v", work.Base, err)
+		}
 	}
 
 	// Rebase the local branches onto the default, and if requested and
