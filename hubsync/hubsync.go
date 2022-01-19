@@ -127,7 +127,7 @@ func listBranchInfo(matching, dbranch, useRemote string) ([]*branchInfo, error) 
 	local := strings.Split(strings.TrimSpace(localOut), "\n")
 	for _, s := range local {
 		clean := strings.TrimPrefix(strings.TrimSpace(s), "* ")
-		if clean == dbranch {
+		if clean == "" || clean == dbranch {
 			continue
 		}
 		out = append(out, &branchInfo{Name: clean})
