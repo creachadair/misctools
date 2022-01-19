@@ -49,12 +49,6 @@ func main() {
 	}
 	defer work.resetDir()
 
-	// Bail out if no branches need updating.
-	if work.numUnfinished() == 0 {
-		log.Print("No branches require update")
-		return
-	}
-
 	// Pull the latest content. Note we need to do this after checking branches,
 	// since it changes which branches follow the default.
 	if work.Loaded {
@@ -64,6 +58,12 @@ func main() {
 		if err := pullBranch(work.Base); err != nil {
 			log.Fatalf("Pull %q: %v", work.Base, err)
 		}
+	}
+
+	// Bail out if no branches need updating.
+	if work.numUnfinished() == 0 {
+		log.Print("No branches require update")
+		return
 	}
 
 	// Rebase the local branches onto the default, and if requested and
