@@ -17,8 +17,9 @@ import (
 
 var (
 	defBranch    = flag.String("base", "", `Base branch name (if "", use default from remote)`)
-	useRemote    = flag.String("remote", "origin", "Use this remote name")
 	branchPrefix = flag.String("prefix", "", "Select branches matching this prefix")
+	useRemote    = flag.String("remote", "origin", "Use this remote name")
+	skipBranches = flag.String("skip", "", "Branches to skip during update (comma-separated)")
 	workFile     = flag.String("worklist", "hubsync.json", "Work list save file")
 	doForcePush  = flag.Bool("push", false, "Force push updated branches to remote")
 	doResume     = flag.Bool("resume", false, "Resume from an existing work list")
@@ -31,6 +32,7 @@ func main() {
 	if *useRemote == "" {
 		log.Fatal("You must specify a -remote name to use")
 	}
+	skip := parseSkips(*skipBranches)
 
 	// Set working directory to the repository root.
 	root, err := repoRoot()
@@ -54,7 +56,7 @@ func main() {
 	// Pull the latest content. Note we need to do this after checking branches,
 	// since it changes which branches follow the default.
 	if work.Loaded {
-		log.Printf("Resuming update of branch %q", work.Base)
+		log.Printf("Resuming update onto branch %q", work.Base)
 	} else {
 		log.Printf("Pulling default branch %q", work.Base)
 		if err := pullBranch(work.Base); err != nil {
@@ -72,8 +74,13 @@ func main() {
 	// necessary, push the results back up to the remote.
 	for _, br := range work.Branches {
 		if br.Done {
+			log.Printf("Skipping branch %q (already updated)", br.Name)
+			continue
+		} else if skip[br.Name] {
+			log.Printf("Skipping branch %q (per -skip)", br.Name)
 			continue
 		}
+
 		log.Printf("Rebasing %q onto %q", br.Name, work.Base)
 		if _, err := git("rebase", work.Base, br.Name); err != nil {
 			log.Fatalf("Rebase failed: %v", err)
@@ -197,4 +204,15 @@ func git(cmd string, args ...string) (string, error) {
 		return "", err
 	}
 	return strings.TrimSpace(string(out)), nil
+}
+
+func parseSkips(skip string) map[string]bool {
+	if skip == "" {
+		return nil
+	}
+	m := make(map[string]bool)
+	for _, name := range strings.Split(skip, ",") {
+		m[name] = true
+	}
+	return m
 }
