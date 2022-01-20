@@ -8,7 +8,7 @@ require (
 	github.com/creachadair/atomicfile v0.2.2
 	github.com/creachadair/command v0.0.0-20211126171518-aeb2c1414eea
 	github.com/creachadair/vql v0.0.19
-	github.com/tdewolff/minify/v2 v2.9.28
+	github.com/tdewolff/minify/v2 v2.9.29
 )
 
 require (
