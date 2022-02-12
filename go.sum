@@ -4,8 +4,8 @@ bitbucket.org/creachadair/stringset v0.0.10 h1:DZjkR57sJGMycZNVVbl+26bK7vW1kwLQE
 bitbucket.org/creachadair/stringset v0.0.10/go.mod h1:6G0fsnHFxynEdWpihfZf44lnBPpTW6nkrcxITVTBHus=
 github.com/BurntSushi/toml v0.4.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
 github.com/cheekybits/is v0.0.0-20150225183255-68e9c0620927/go.mod h1:h/aW8ynjgkuj+NQRlZcDbAbM1ORAbXjXX77sX7T289U=
-github.com/creachadair/atomicfile v0.2.2 h1:/qnts+ZoRBH9CSxWO7VWrWlUw4J7c4/cAvAU8/h/eo0=
-github.com/creachadair/atomicfile v0.2.2/go.mod h1:BRq8Une6ckFneYXZQ+kO7p1ZZP3I2fzVzf28JxrIkBc=
+github.com/creachadair/atomicfile v0.2.4 h1:GRjpQLmz/78I4+nBQpGMFrRa9yrL157AUTrA6hnF0YU=
+github.com/creachadair/atomicfile v0.2.4/go.mod h1:BRq8Une6ckFneYXZQ+kO7p1ZZP3I2fzVzf28JxrIkBc=
 github.com/creachadair/command v0.0.0-20220120005405-e6811e045833 h1:urF4aznFPc9P8+e4NRe60bO8jWJmWZYw6rl1LIluKqc=
 github.com/creachadair/command v0.0.0-20220120005405-e6811e045833/go.mod h1:bAM+qFQb/KwWyCc9MLC4U1jvn3XyakqP5QRkds5T6cY=
 github.com/creachadair/vql v0.0.19 h1:8yUL9DrLZuALGzUf9dcPT2cmYTfvJ2SwHpoacusaS/0=
