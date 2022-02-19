@@ -58,7 +58,7 @@ func main() {
 	if work.Loaded {
 		log.Printf("Resuming update onto branch %q", work.Base)
 	} else {
-		log.Printf("Pulling default branch %q", work.Base)
+		log.Printf("Pulling base branch %q", work.Base)
 		if err := pullBranch(work.Base); err != nil {
 			log.Fatalf("Pull %q: %v", work.Base, err)
 		}
@@ -151,7 +151,7 @@ func listBranchInfo(matching, dbranch, useRemote string) ([]*branchInfo, error) 
 
 	for _, lb := range out {
 		if lb.Name == dbranch {
-			continue // don't consider the default branch regardless
+			continue // don't consider the base branch regardless
 		}
 		for _, rb := range remote {
 			if rb == lb.Name {
