@@ -72,6 +72,9 @@ func main() {
 
 	// Rebase the local branches onto the default, and if requested and
 	// necessary, push the results back up to the remote.
+	if err := work.saveTo(*workFile); err != nil {
+		log.Fatalf("Saving initial worklist: %v", err)
+	}
 	for _, br := range work.Branches {
 		if br.Done {
 			log.Printf("Skipping branch %q (already updated)", br.Name)
