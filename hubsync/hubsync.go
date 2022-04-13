@@ -21,7 +21,7 @@ var (
 	useRemote    = flag.String("remote", "origin", "Use this remote name")
 	skipBranches = flag.String("skip", "", "Branches to skip during update (comma-separated)")
 	workFile     = flag.String("worklist", "hubsync.json", "Work list save file")
-	doForcePush  = flag.Bool("push", false, "Force push updated branches to remote")
+	noForcePush  = flag.Bool("nopush", false, "Skip force-pushing updated branches to remote")
 	doResume     = flag.Bool("resume", false, "Resume from an existing work list")
 	doVerbose    = flag.Bool("v", false, "Verbose logging")
 	doDebug      = flag.Bool("debug", false, "Enable debug mode")
@@ -90,7 +90,7 @@ func main() {
 		if _, err := git("rebase", work.Base, br.Name); err != nil {
 			log.Fatalf("Rebase failed: %v", err)
 		}
-		if !*doForcePush || !br.Remote {
+		if *noForcePush || !br.Remote {
 			// nothing to do
 		} else if ok, err := forcePush(*useRemote, br.Name); err != nil {
 			log.Fatalf("Updating %q: %v", br.Name, err)
