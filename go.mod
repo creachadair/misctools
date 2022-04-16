@@ -5,8 +5,8 @@ go 1.17
 require (
 	bitbucket.org/creachadair/shell v0.0.7
 	bitbucket.org/creachadair/stringset v0.0.10
-	github.com/creachadair/atomicfile v0.2.4
-	github.com/creachadair/command v0.0.0-20220330011755-dd63e44ff6a7
+	github.com/creachadair/atomicfile v0.2.5
+	github.com/creachadair/command v0.0.0-20220416190544-40bc5760515e
 	github.com/creachadair/vql v0.0.19
 	github.com/tdewolff/minify/v2 v2.11.1
 )
