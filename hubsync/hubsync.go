@@ -55,9 +55,7 @@ func main() {
 
 	// Pull the latest content. Note we need to do this after checking branches,
 	// since it changes which branches follow the default.
-	if work.Loaded {
-		log.Printf("Resuming update onto branch %q", work.Base)
-	} else {
+	if !work.Loaded {
 		log.Printf("Pulling base branch %q", work.Base)
 		if err := pullBranch(work.Base); err != nil {
 			log.Fatalf("Pull %q: %v", work.Base, err)
@@ -65,9 +63,11 @@ func main() {
 	}
 
 	// Bail out if no branches need updating.
-	if work.numUnfinished() == 0 {
+	if nu := work.numUnfinished(); nu == 0 {
 		log.Print("No branches require update")
 		return
+	} else if work.Loaded {
+		log.Printf("Resuming update onto branch %q (%d branches remaining to update)", work.Base, nu)
 	}
 
 	// Rebase the local branches onto the default, and if requested and
@@ -76,6 +76,7 @@ func main() {
 		if err := work.saveTo(*workFile); err != nil {
 			log.Fatalf("Saving initial worklist: %v", err)
 		}
+		log.Printf("Saved worklist with %d branches to %q", len(work.Branches), *workFile)
 	}
 	for _, br := range work.Branches {
 		if br.Done {
