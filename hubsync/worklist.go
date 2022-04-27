@@ -27,7 +27,6 @@ func (w *workList) saveTo(path string) error {
 	if err := enc.Encode(w); err != nil {
 		return err
 	}
-	w.Loaded = true
 	return f.Close()
 }
 

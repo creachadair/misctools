@@ -56,6 +56,13 @@ func main() {
 	// Pull the latest content. Note we need to do this after checking branches,
 	// since it changes which branches follow the default.
 	if !work.Loaded {
+		// Save the worklist before pulling the base branch, since a successful
+		// pull will break the ancestry relationship. It's preserved in the list.
+		if err := work.saveTo(*workFile); err != nil {
+			log.Fatalf("Saving initial worklist: %v", err)
+		}
+		log.Printf("Saved worklist with %d branches to %q", len(work.Branches), *workFile)
+
 		log.Printf("Pulling base branch %q", work.Base)
 		if err := pullBranch(work.Base); err != nil {
 			log.Fatalf("Pull %q: %v", work.Base, err)
@@ -65,6 +72,7 @@ func main() {
 	// Bail out if no branches need updating.
 	if nu := work.numUnfinished(); nu == 0 {
 		log.Print("No branches require update")
+		cleanupWorklist(work)
 		return
 	} else if work.Loaded {
 		log.Printf("Resuming update onto branch %q (%d branches remaining to update)", work.Base, nu)
@@ -72,12 +80,6 @@ func main() {
 
 	// Rebase the local branches onto the default, and if requested and
 	// necessary, push the results back up to the remote.
-	if !work.Loaded {
-		if err := work.saveTo(*workFile); err != nil {
-			log.Fatalf("Saving initial worklist: %v", err)
-		}
-		log.Printf("Saved worklist with %d branches to %q", len(work.Branches), *workFile)
-	}
 	for _, br := range work.Branches {
 		if br.Done {
 			log.Printf("Skipping branch %q (already updated)", br.Name)
@@ -103,13 +105,7 @@ func main() {
 			log.Fatalf("Saving worklist: %v", err)
 		}
 	}
-
-	// If we successfully get here, the worklist is clean.
-	if work.Loaded && !*doDebug {
-		if err := os.Remove(*workFile); err != nil {
-			log.Printf("Warning: removing worklist: %v", err)
-		}
-	}
+	cleanupWorklist(work)
 }
 
 func currentBranch() (string, error) { return git("branch", "--show-current") }
@@ -210,6 +206,16 @@ func git(cmd string, args ...string) (string, error) {
 		return "", err
 	}
 	return strings.TrimSpace(string(out)), nil
+}
+
+func cleanupWorklist(work *workList) {
+	if *doDebug {
+		log.Printf("Worklist left intact at %q (per -debug)", *workFile)
+	} else if err := os.Remove(*workFile); os.IsNotExist(err) {
+		// OK
+	} else if err != nil {
+		log.Printf("Warning: removing worklist: %v", err)
+	}
 }
 
 func parseSkips(skip string) map[string]bool {
