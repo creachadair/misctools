@@ -121,8 +121,8 @@ func forcePush(remote, branch string) (bool, error) {
 }
 
 type branchInfo struct {
-	Name   string `json:"name"`
-	Remote string `json:"remoteName,omitempty"`
+	Name   string `json:"local"`
+	Remote string `json:"remote,omitempty"`
 	Done   bool   `json:"done"`
 }
 
