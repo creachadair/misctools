@@ -93,7 +93,7 @@ func main() {
 		if _, err := git("rebase", work.Base, br.Name); err != nil {
 			log.Fatalf("Rebase failed: %v", err)
 		}
-		if *noForcePush || !br.Remote {
+		if *noForcePush || br.Remote == "" {
 			// nothing to do
 		} else if ok, err := forcePush(*useRemote, br.Name); err != nil {
 			log.Fatalf("Updating %q: %v", br.Name, err)
@@ -122,45 +122,33 @@ func forcePush(remote, branch string) (bool, error) {
 
 type branchInfo struct {
 	Name   string `json:"name"`
-	Remote bool   `json:"hasRemote"`
+	Remote string `json:"remoteName,omitempty"`
 	Done   bool   `json:"done"`
 }
 
 func listBranchInfo(matching, dbranch, useRemote string) ([]*branchInfo, error) {
 	var out []*branchInfo
 
-	localOut, err := git("branch", "--list", "--contains", dbranch, matching)
+	listOut, err := git("branch", "--list",
+		"--contains", dbranch,
+		"--format", "%(refname:short)\t%(upstream:short)",
+		matching,
+	)
 	if err != nil {
 		return nil, err
 	}
-	local := strings.Split(strings.TrimSpace(localOut), "\n")
-	for _, s := range local {
-		clean := strings.TrimPrefix(strings.TrimSpace(s), "* ")
-		if clean == "" || clean == dbranch {
-			continue
+	list := strings.Split(strings.TrimSpace(listOut), "\n")
+	for _, s := range list {
+		parts := strings.SplitN(s, "\t", 2)
+		if parts[0] == dbranch {
+			continue // skip the default
+		} else if len(parts) == 1 {
+			parts = append(parts, "")
 		}
-		out = append(out, &branchInfo{Name: clean})
-	}
-
-	remoteOut, err := git("branch", "--list", "-r", useRemote+"/"+matching)
-	if err != nil {
-		return nil, err
-	}
-	remote := strings.Split(strings.TrimSpace(remoteOut), "\n")
-	for i, s := range remote {
-		remote[i] = strings.TrimPrefix(strings.TrimSpace(s), useRemote+"/")
-	}
-
-	for _, lb := range out {
-		if lb.Name == dbranch {
-			continue // don't consider the base branch regardless
-		}
-		for _, rb := range remote {
-			if rb == lb.Name {
-				lb.Remote = true
-				break
-			}
-		}
+		out = append(out, &branchInfo{
+			Name:   parts[0],
+			Remote: parts[1],
+		})
 	}
 	return out, nil
 }
