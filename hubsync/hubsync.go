@@ -98,7 +98,7 @@ func main() {
 		} else if ok, err := forcePush(*useRemote, br.Name); err != nil {
 			log.Fatalf("Updating %q: %v", br.Name, err)
 		} else if ok {
-			log.Printf("- Forced update of %q to %s", br.Name, *useRemote)
+			log.Printf("- Forced update of %q to %s", br.Name, br.Remote)
 		}
 		br.Done = true
 		if err := work.saveTo(*workFile); err != nil {
