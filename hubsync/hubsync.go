@@ -17,7 +17,6 @@ import (
 
 var (
 	defBranch    = flag.String("base", "", `Base branch name (if "", use default from remote)`)
-	branchPrefix = flag.String("prefix", "", "Select branches matching this prefix")
 	useRemote    = flag.String("remote", "origin", "Use this remote name")
 	skipBranches = flag.String("skip", "", "Branches to skip during update (comma-separated)")
 	workFile     = flag.String("worklist", "hubsync.json", "Work list save file")

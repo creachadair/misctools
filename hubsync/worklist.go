@@ -81,7 +81,7 @@ func openWorkList(path string) (*workList, error) {
 	}
 
 	// List local branches that track corresponding remote branches.
-	rem, err := listBranchInfo(*branchPrefix+"*", dbranch, *useRemote)
+	rem, err := listBranchInfo("*", dbranch, *useRemote)
 	if err != nil {
 		log.Fatalf("Listing branches: %v", err)
 	}
