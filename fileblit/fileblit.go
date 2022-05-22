@@ -67,6 +67,7 @@ func main() {
 	}
 
 	buf := make([]byte, *blockSize)
+	fs := files{in, out}
 
 	end := ifs.Size()
 	for end > 0 {
@@ -75,21 +76,21 @@ func main() {
 			pos = 0
 		}
 		if _, err := in.Seek(pos, io.SeekStart); err != nil {
-			log.Fatalf("Seek input %d failed: %v", pos, err)
+			fs.Fatalf("Seek input %d failed: %v", pos, err)
 		}
 		if _, err := out.Seek(pos, io.SeekStart); err != nil {
-			log.Fatalf("Seek output %d failed: %v", pos, err)
+			fs.Fatalf("Seek output %d failed: %v", pos, err)
 		}
 
 		block := buf[:end-pos]
 		if _, err := io.ReadFull(in, block); err != nil {
-			log.Fatalf("Read %d bytes at %d: %v", len(buf), pos, err)
+			fs.Fatalf("Read %d bytes at %d: %v", len(buf), pos, err)
 		}
 		if _, err := out.Write(block); err != nil {
-			log.Fatalf("Write %d bytes at %d: %v", len(buf), pos, err)
+			fs.Fatalf("Write %d bytes at %d: %v", len(buf), pos, err)
 		}
 		if err := in.Truncate(pos); err != nil {
-			log.Fatalf("Truncate input at %d: %v", pos, err)
+			fs.Fatalf("Truncate input at %d: %v", pos, err)
 		}
 
 		fmt.Printf("%d %d OK\n", end, len(block))
@@ -100,15 +101,28 @@ func main() {
 		log.Printf("Warning: sync output: %v", err)
 	}
 
-	ierr := in.Close()
-	oerr := out.Close()
-	if ierr != nil {
-		log.Printf("Close input: %v", err)
-	}
-	if oerr != nil {
-		log.Printf("Close output: %v", err)
-	}
-	if ierr != nil || oerr != nil {
+	if fs.cleanup() != nil {
 		os.Exit(1)
 	}
+}
+
+type files []*os.File
+
+func (fs files) cleanup() error {
+	var last error
+	for _, f := range fs {
+		if err := f.Close(); err != nil {
+			last = err
+			log.Printf("Close %q: %v", f.Name(), err)
+		} else if err := f.Sync(); err != nil {
+			last = err
+			log.Printf("Sync %q: %v", f.Name(), err)
+		}
+	}
+	return last
+}
+
+func (fs files) Fatalf(msg string, args ...interface{}) {
+	fs.cleanup()
+	log.Fatalf(msg, args...)
 }
