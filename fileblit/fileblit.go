@@ -1,9 +1,4 @@
 // Program fileblit destructively moves a file from one path to another.
-//
-// The file is copied in blocks from the end toward the beginning. As each
-// block is copied, the input file is truncated to the length not yet copied.
-// The contents of the output file past the end offset of the input are not
-// modified, so it is safe to resume copying after an error.
 package main
 
 import (
@@ -12,6 +7,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 var (
@@ -19,6 +15,30 @@ var (
 	outPath   = flag.String("out", "", "Output file path")
 	blockSize = flag.Int64("block", 1<<20, "Transfer block size")
 )
+
+func init() {
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, `Usage: %[1]s -in src -out dst
+
+Destructively move a file from -in to -out. Unlike the "mv" command, this
+command does not copy the entire file and then unlink the source, but moves
+the file contents block-by-block to the output and deletes them from the input.
+
+This approach is useful is if you need to move a large file to another volume
+on the same storage but do not have enough space for multiple copies.
+
+The move works from the end toward the beginning, copying the last block and
+then truncating the input to remove that block. The copy does not touch parts
+of the output file past the end of the input, so it is safe to resume a copy
+that was interrupted (as long as the output was not modified separately).
+
+After a complete move, the input file will be empty.
+
+Options:
+`, filepath.Base(os.Args[0]))
+		flag.PrintDefaults()
+	}
+}
 
 func main() {
 	flag.Parse()
