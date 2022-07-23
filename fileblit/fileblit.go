@@ -13,7 +13,7 @@ import (
 var (
 	inPath    = flag.String("in", "", "Input file path")
 	outPath   = flag.String("out", "", "Output file path")
-	blockSize = flag.Int64("block", 1<<20, "Transfer block size")
+	blockSize = flag.Int64("block", 1, "Transfer block size in MiB")
 )
 
 func init() {
@@ -66,7 +66,7 @@ func main() {
 		log.Fatalf("Output file: %v", err)
 	}
 
-	buf := make([]byte, *blockSize)
+	buf := make([]byte, *blockSize<<20)
 	fs := files{in, out}
 
 	end := ifs.Size()
