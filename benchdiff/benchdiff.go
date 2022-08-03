@@ -2,8 +2,9 @@
 // provide a comparison report.
 //
 // Usage:
-//   cd path/to/git/repo
-//   benchdiff -before b1 -after b2
+//
+//	cd path/to/git/repo
+//	benchdiff -before b1 -after b2
 //
 // The names b1 and b2 must be branches or something else that can be the
 // target of "git checkout".

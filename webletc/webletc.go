@@ -3,7 +3,8 @@
 // javascript: scheme.
 //
 // Usage:
-//    webletc input.js
+//
+//	webletc input.js
 //
 // Output is written to stdout. If no input file is named, the tool reads
 // source from stdin.

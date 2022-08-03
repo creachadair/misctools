@@ -213,9 +213,9 @@ func fixPath(dir, path string) (string, error) {
 // parseFile parses a file path with an optional coda specifying a location
 // within the file. The coda may have the following forms
 //
-//   :dd
-//   :dd-dd
-//   :@re
+//	:dd
+//	:dd-dd
+//	:@re
 //
 // where "dd" represents decimal digits and "re" represents an RE2 regular
 // expression. The first two forms indicate a single line or range of lines,

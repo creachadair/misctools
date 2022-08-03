@@ -46,11 +46,11 @@ func LookupID(gid int) (*Group, error) {
 	return unpack(grp)
 }
 
-//go:nocheckptr
-//
 // TODO: Figure out why the conversion back to **C.char below is not valid.
 // I'm guessing it's an alignment issue, but I couldn't figure out how to make
 // it better apart from just disabling the check for now.
+//
+//go:nocheckptr
 func unpack(grp *C.struct_group) (*Group, error) {
 	// The lookup functions do not report an error for a missing group, they
 	// just return a NULL.
