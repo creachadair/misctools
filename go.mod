@@ -8,10 +8,10 @@ require (
 	github.com/creachadair/atomicfile v0.2.7
 	github.com/creachadair/command v0.0.0-20220916173946-56a74cdd66b6
 	github.com/creachadair/vql v0.0.19
-	github.com/tdewolff/minify/v2 v2.12.1
+	github.com/tdewolff/minify/v2 v2.12.4
 )
 
 require (
-	github.com/tdewolff/parse/v2 v2.6.3 // indirect
+	github.com/tdewolff/parse/v2 v2.6.4 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 )
