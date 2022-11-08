@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"bitbucket.org/creachadair/shell"
@@ -25,6 +26,43 @@ var (
 	doVerbose    = flag.Bool("v", false, "Verbose logging")
 	doDebug      = flag.Bool("debug", false, "Enable debug mode")
 )
+
+func init() {
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, `Usage: %[1]s [flags]
+
+Rebase those branches in a local copy of a GitHub repository that are based off
+the default (main) branch in the remote. To do this, the tool:
+
+- Identifies the base branch. If -base is set, that name is used; otherwise
+  the tool looks up the default branch from the remote.
+
+- Makes a work list of local branches descended from the base branch.
+
+- Switches to the base branch and executes "git pull" to update from remote.
+
+- Switches to each branch in the work list and rebases it onto the updated
+  base branch. After doing this, if the local branch tracks a remote branch,
+  it executes a "git push -f" to update the remote copy.
+
+  Add the -nopush flag to skip executing git push.
+  Use -skip to give a comma-separated list of branch names to skip updating.
+
+- Switches back to the original branch from which the tool was run.
+
+In case of an error during rebase, the work list is saved at the root of the
+repository in a file named "hubsync.json" (use -worklist to change this),
+and the update stops. After fixing any problems (such as merge conflicts),
+use %[1]s -resume to pick up from where the update left off. To start over,
+move or delete the worklist file.
+
+This tool only works inside a Git repository.
+
+Options:
+`, filepath.Base(os.Args[0]))
+		flag.PrintDefaults()
+	}
+}
 
 func main() {
 	flag.Parse()
