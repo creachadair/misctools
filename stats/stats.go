@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math"
 	"math/big"
 	"os"
 	"regexp"
@@ -20,6 +21,8 @@ var (
 	doMin  = flag.Bool("min", false, "Print minimum entry")
 	doMax  = flag.Bool("max", false, "Print maximum entry")
 	doMean = flag.Bool("mean", false, "Print arithmetic mean")
+	doVar  = flag.Bool("var", false, "Print sample variance")
+	doDev  = flag.Bool("stdev", false, "Print sample standard deviation")
 	doTrim = flag.Bool("trim", false, "Trim leading and trailing whitespace")
 
 	splitter  = flag.String("split", "", `Split input lines on this regexp ("" means don't split)`)
@@ -42,6 +45,7 @@ Options:`)
 
 type stats struct {
 	sum      big.Rat
+	sda, sdq big.Rat
 	min, max *big.Rat
 	count    int64
 }
@@ -65,6 +69,11 @@ func (s *stats) Mean() *big.Rat {
 	return c.Mul(c, &s.sum)
 }
 
+// Var returns the sample variacne of the statistics gathered so far.
+func (s *stats) Var() *big.Rat {
+	return new(big.Rat).Mul(&s.sdq, big.NewRat(1, s.count-1))
+}
+
 // Count returns the number of elements seen so far.
 func (s *stats) Count() int64 { return s.count }
 
@@ -78,6 +87,15 @@ func (s *stats) Add(v *big.Rat) {
 	if s.max == nil || v.Cmp(s.max) == 1 {
 		s.max = v
 	}
+	sdaNext := new(big.Rat)
+	tmp := new(big.Rat)
+	sdaNext.Add(&s.sda, tmp.Sub(v, &s.sda).Mul(tmp, big.NewRat(1, s.count)))
+
+	sdqNext := new(big.Rat)
+	tmp2 := new(big.Rat)
+	sdqNext.Add(&s.sdq, tmp.Sub(v, &s.sda).Mul(tmp, tmp2.Sub(v, sdaNext)))
+	s.sda.Set(sdaNext)
+	s.sdq.Set(sdqNext)
 }
 
 func newPicker(re string, n int) *picker {
@@ -194,6 +212,13 @@ func main() {
 	}
 	if *doMean {
 		out = append(out, fmt.Sprintf("avg=%v", ratString(s.Mean())))
+	}
+	if *doVar {
+		out = append(out, fmt.Sprintf("var=%v", ratString(s.Var())))
+	}
+	if *doDev {
+		d, _ := s.Var().Float64()
+		out = append(out, fmt.Sprintf("sdv=%.2f", math.Sqrt(d)))
 	}
 	if *doCat {
 		fmt.Fprintln(os.Stderr, strings.Join(out, ", "))
