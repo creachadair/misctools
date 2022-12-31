@@ -14,6 +14,8 @@
 #                   Default: go get -u ./...
 #    presubmit   -- run tests prior to pushing an update
 #                   Default: go mod check
+#    cleanup     -- run after update completes
+#                   Default: (empty)
 #
 # -- Environment:
 #
@@ -32,6 +34,7 @@ cd "$wd" >/dev/null
 
 update_mod() { go get -u ./... ; }
 presubmit() { git go check ; }
+cleanup() { : ; }
 
 find . -depth 2 -type f -path "*${MATCH}/$cf" -mtime +"$MODTIME" -print | \
     cut -d/ -f2 |  while read -r pkg ; do
@@ -53,13 +56,8 @@ find . -depth 2 -type f -path "*${MATCH}/$cf" -mtime +"$MODTIME" -print | \
             presubmit
             git commit -m "Update module dependencies." .
             git push --no-verify
+            cleanup
             touch "$cf"
         fi
     )
 done
-
-# Clean up test and example binaries that get installed by Go upgrades, that
-# aren't really meant to be installed for general use.
-( cd "$GOBIN" && rm -vf -- \
-   adder client copytree examples http mkenum mktree mktype server wshttp
-)
