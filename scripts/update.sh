@@ -10,16 +10,22 @@
 #
 # -- Overridable definitions:
 #
+# Define shell functions in the .go-update file to replace the default behavior
+# for the following steps.
+#
 #    update_mod  -- update Go module dependencies
 #                   Default: go get -u ./...
 #    presubmit   -- run tests prior to pushing an update
 #                   Default: go mod check
+#    push        -- push to the remote repository
+#                   Default: git push --no-verify
 #    cleanup     -- run after update completes
 #                   Default: (empty)
 #
 # -- Environment:
 #
 #  MODTIME   -- how long between updates (default: 1 day)
+#  MATCH     -- update matching directories (default: all)
 #
 set -euo pipefail
 
@@ -33,11 +39,12 @@ readonly cf=".go-update"
 cd "$wd" >/dev/null
 
 update_mod() { go get -u ./... ; }
-presubmit() { git go check ; }
-cleanup() { : ; }
+presubmit()  { git go check ; }
+cleanup()    { : ; }
+push()       { git push --no-verify ; }
 
 find . -depth 2 -type f -path "*${MATCH}/$cf" -mtime +"$MODTIME" -print | \
-    cut -d/ -f2 |  while read -r pkg ; do
+    cut -d/ -f2 | while read -r pkg ; do
     (
         cd "$pkg"
         printf "<> \033[1;93m%s\033[0m\n" "$pkg"
@@ -55,7 +62,7 @@ find . -depth 2 -type f -path "*${MATCH}/$cf" -mtime +"$MODTIME" -print | \
         if ! git diff --quiet ; then
             presubmit
             git commit -m "Update module dependencies." .
-            git push --no-verify
+            push
             cleanup
             touch "$cf"
         fi
