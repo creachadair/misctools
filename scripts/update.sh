@@ -2,17 +2,16 @@
 
 set -euo pipefail
 
+: ${MODTIME:=30m}
+
 readonly wd="$(dirname $0)"
 readonly cf=".go-update"
 cd "$wd" >/dev/null
 
-update() {
-    for pkg in "$@" ; do
-	~/software/shell/go-get-u.sh "$pkg"
-    done
-}
+presubmit() { git go check ; }
 
-find . -depth 2 -type f -name "$cf" -print | cut -d/ -f2 | while read -r pkg ; do
+find . -depth 2 -type f -name "$cf" -mtime +"$MODTIME" -print | \
+    cut -d/ -f2 |  while read -r pkg ; do
     (
         cd "$pkg"
         . "$cf"
@@ -27,9 +26,10 @@ find . -depth 2 -type f -name "$cf" -print | cut -d/ -f2 | while read -r pkg ; d
         done
 
         if ! git diff --quiet ; then
-            git go check
-            git commit -m "Update module dependencies."
+            presubmit
+            git commit -m "Update module dependencies." .
             git push --no-verify
+            touch "$cf"
         fi
     )
 done
