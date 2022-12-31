@@ -10,6 +10,8 @@
 #
 # -- Overridable definitions:
 #
+#    update_mod  -- update Go module dependencies
+#                   Default: go get -u ./...
 #    presubmit   -- run tests prior to pushing an update
 #                   Default: go mod check
 #
@@ -20,6 +22,7 @@
 set -euo pipefail
 
 : ${MODTIME:=1d}
+: ${MATCH:=}
 
 unset CDPATH
 
@@ -27,9 +30,10 @@ readonly wd="$(dirname $0)"
 readonly cf=".go-update"
 cd "$wd" >/dev/null
 
+update_mod() { go get -u ./... ; }
 presubmit() { git go check ; }
 
-find . -depth 2 -type f -name "$cf" -mtime +"$MODTIME" -print | \
+find . -depth 2 -type f -path "*${MATCH}/$cf" -mtime +"$MODTIME" -print | \
     cut -d/ -f2 |  while read -r pkg ; do
     (
         cd "$pkg"
@@ -40,7 +44,7 @@ find . -depth 2 -type f -name "$cf" -mtime +"$MODTIME" -print | \
             echo "-- $mod" 1>&2
             (
                 cd "$(dirname $mod)"
-                go get -u ./...
+                update_mod
                 go mod tidy
             )
         done
