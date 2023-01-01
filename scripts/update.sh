@@ -44,7 +44,8 @@ cleanup()    { : ; }
 push()       { git push --no-verify ; }
 
 find_matching() {
-    find . -depth 2 -type f -path "*${MATCH}/$cf" -mtime +"$MODTIME" -print | cut -d/ -f2
+    find -s . -depth 2 -type f -path "*${MATCH}/$cf" -mtime +"$MODTIME" \
+         -exec stat -f '%m %N' {} ';' | sort -n | cut -d/ -f2
 }
 
 find_matching | while read -r pkg ; do
