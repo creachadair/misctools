@@ -53,6 +53,14 @@ find_matching | while read -r pkg ; do
         cd "$pkg"
         printf "<> \033[1;93m%s\033[0m\n" "$pkg"
         . "$cf"
+
+        # Before doing anything destructive, make sure the working directory is clean.
+        if ! git diff --quiet ; then
+            printf " !! \033[1;91mThere are uncommitted changes in %s\033[0m\n" "$pkg"
+            printf "    Please stash or commit them before upgrading.\n"
+            exit 1
+        fi
+
         git pull
         find . -type f -name go.mod -print | while read -r mod ; do
             echo "-- $mod" 1>&2
