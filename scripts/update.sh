@@ -43,8 +43,11 @@ presubmit()  { git go check ; }
 cleanup()    { : ; }
 push()       { git push --no-verify ; }
 
-find . -depth 2 -type f -path "*${MATCH}/$cf" -mtime +"$MODTIME" -print | \
-    cut -d/ -f2 | while read -r pkg ; do
+find_matching() {
+    find . -depth 2 -type f -path "*${MATCH}/$cf" -mtime +"$MODTIME" -print | cut -d/ -f2
+}
+
+find_matching | while read -r pkg ; do
     (
         cd "$pkg"
         printf "<> \033[1;93m%s\033[0m\n" "$pkg"
