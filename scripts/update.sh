@@ -48,7 +48,7 @@ find_matching() {
          -exec stat -f '%m %N' {} ';' | sort -n | cut -d/ -f2
 }
 
-case "$1" in
+case "${1:-}" in
     ('')
         ;;
     (--list|-list)
