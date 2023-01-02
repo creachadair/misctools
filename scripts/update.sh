@@ -48,6 +48,19 @@ find_matching() {
          -exec stat -f '%m %N' {} ';' | sort -n | cut -d/ -f2
 }
 
+case "$1" in
+    ('')
+        ;;
+    (--list|-list)
+        find_matching
+        exit 0
+        ;;
+    (*)
+        echo "Usage: update.sh [--list]" 1>&2
+        exit 2
+        ;;
+esac
+
 find_matching | while read -r pkg ; do
     (
         cd "$pkg"
