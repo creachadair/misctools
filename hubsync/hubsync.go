@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"bitbucket.org/creachadair/shell"
+	"github.com/creachadair/mds/mapset"
 )
 
 var (
@@ -121,7 +122,7 @@ func main() {
 		if br.Done {
 			log.Printf("Skipping branch %q (already updated)", br.Name)
 			continue
-		} else if skip[br.Name] {
+		} else if skip.Has(br.Name) {
 			log.Printf("Skipping branch %q (per -skip)", br.Name)
 			continue
 		}
@@ -243,13 +244,9 @@ func cleanupWorklist(work *workList) {
 	}
 }
 
-func parseSkips(skip string) map[string]bool {
+func parseSkips(skip string) mapset.Set[string] {
 	if skip == "" {
 		return nil
 	}
-	m := make(map[string]bool)
-	for _, name := range strings.Split(skip, ",") {
-		m[name] = true
-	}
-	return m
+	return mapset.New(strings.Split(skip, ",")...)
 }

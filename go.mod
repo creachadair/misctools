@@ -6,6 +6,7 @@ require (
 	bitbucket.org/creachadair/shell v0.0.7
 	github.com/creachadair/atomicfile v0.2.7
 	github.com/creachadair/command v0.0.0-20230107203805-cdc04e5fa940
+	github.com/creachadair/mds v0.0.0-20230110063319-6815373cfa49
 	github.com/tdewolff/minify/v2 v2.12.4
 )
 
