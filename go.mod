@@ -5,8 +5,8 @@ go 1.18
 require (
 	bitbucket.org/creachadair/shell v0.0.7
 	github.com/creachadair/atomicfile v0.2.7
-	github.com/creachadair/command v0.0.0-20230107203805-cdc04e5fa940
-	github.com/creachadair/mds v0.0.0-20230112232013-549c3f4fe455
+	github.com/creachadair/command v0.0.0-20230116214947-f5a018644005
+	github.com/creachadair/mds v0.0.0-20230115232940-050e69c560e9
 	github.com/tdewolff/minify/v2 v2.12.4
 )
 
