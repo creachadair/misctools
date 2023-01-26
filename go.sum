@@ -5,8 +5,8 @@ github.com/creachadair/atomicfile v0.2.7 h1:LiL/QmAUO7ZDsjSJ6xj3PlsXaYXYKMS8g/Po
 github.com/creachadair/atomicfile v0.2.7/go.mod h1:BRq8Une6ckFneYXZQ+kO7p1ZZP3I2fzVzf28JxrIkBc=
 github.com/creachadair/command v0.0.0-20230116214947-f5a018644005 h1:sk4taI6bUpvKO9PUqHr6zg1nMs5LhvyvizMR4I/OOCk=
 github.com/creachadair/command v0.0.0-20230116214947-f5a018644005/go.mod h1:jN7ZJM5YSVtD3SHmkAdN/cOC1dXiqg2Y9K5Sr5a8Nxw=
-github.com/creachadair/mds v0.0.0-20230115232940-050e69c560e9 h1:XLIAwplR1wDCSqyygIVKPaJmRAjPf1ntHwoIJus/bck=
-github.com/creachadair/mds v0.0.0-20230115232940-050e69c560e9/go.mod h1:caBACU+n1Q/rZ252FTzfnG0/H+ZUi+UnIQtEOraMv/g=
+github.com/creachadair/mds v0.0.0-20230121043849-c7d6542927f1 h1:h7jEOsXCvbU//K4zcnDcrgB2nFqlIsZ2q4x2Y7CWmNw=
+github.com/creachadair/mds v0.0.0-20230121043849-c7d6542927f1/go.mod h1:caBACU+n1Q/rZ252FTzfnG0/H+ZUi+UnIQtEOraMv/g=
 github.com/djherbis/atime v1.1.0/go.mod h1:28OF6Y8s3NQWwacXc5eZTsEsiMzp7LF8MbXE+XJPdBE=
 github.com/dustin/go-humanize v1.0.0/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
 github.com/fsnotify/fsnotify v1.5.4/go.mod h1:OVB6XrOHzAwXMpEM7uPOzcehqUV2UqJxmVXmkdnm1bU=
