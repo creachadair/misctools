@@ -16,7 +16,7 @@
 #    update_mod  -- update Go module dependencies
 #                   Default: go get -u -t ./...
 #    presubmit   -- run tests prior to pushing an update
-#                   Default: go mod check
+#                   Default: git go check
 #    push        -- push to the remote repository
 #                   Default: git push --no-verify
 #    cleanup     -- run after update completes
