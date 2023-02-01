@@ -48,9 +48,9 @@ fi
 # To build a version of Go, we need a bootstrap compiler.
 # This should not need to change unless the bootstrap requirements change.
 if [[ "$(uname -s)" = Darwin ]] ; then
-    # Apple Silicon appears not to bootstrap with versions < 1.16.
+    # Apple Silicon appears not to bootstrap with versions < 1.17.
     if [[ "$(uname -p)" = arm ]] ; then
-	readonly bootstrap_version=1.16
+	readonly bootstrap_version=1.17
     else
 	# Versions of macOS > 11 require a newer bootstrap due to changes in the
 	# handling of dynamic libraries.
