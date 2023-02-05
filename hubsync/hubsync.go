@@ -103,7 +103,7 @@ func main() {
 
 		log.Printf("Pulling base branch %q", work.Base)
 		if err := pullBranch(work.Base); err != nil {
-			log.Fatalf("Pull %q: %v", work.Base, err)
+			log.Fatalf("Pull %q failed: %v", work.Base, err)
 		}
 	}
 
