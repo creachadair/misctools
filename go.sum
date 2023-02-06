@@ -3,8 +3,8 @@ bitbucket.org/creachadair/shell v0.0.7/go.mod h1:oqtXSSvSYr4624lnnabXHaBsYW6RD80
 github.com/cheekybits/is v0.0.0-20150225183255-68e9c0620927/go.mod h1:h/aW8ynjgkuj+NQRlZcDbAbM1ORAbXjXX77sX7T289U=
 github.com/creachadair/atomicfile v0.2.8 h1:koFZzO/Byf4wRJIf1cvLmlXI7QPnR+pLushHhtTdXB8=
 github.com/creachadair/atomicfile v0.2.8/go.mod h1:Tb31RroXn8ESlNsY/FzDFoKSL1mzdHemTDNL9V1Ml4M=
-github.com/creachadair/command v0.0.0-20230116214947-f5a018644005 h1:sk4taI6bUpvKO9PUqHr6zg1nMs5LhvyvizMR4I/OOCk=
-github.com/creachadair/command v0.0.0-20230116214947-f5a018644005/go.mod h1:jN7ZJM5YSVtD3SHmkAdN/cOC1dXiqg2Y9K5Sr5a8Nxw=
+github.com/creachadair/command v0.0.0-20230205181012-a3a7f6690378 h1:ayB9FiN5ggLC8cRJ1DpBz7zTyWIqmlwiLsZGQlHn2OI=
+github.com/creachadair/command v0.0.0-20230205181012-a3a7f6690378/go.mod h1:E4rDY2agq/HFjdmeTqf3kP8ubiq7DZHC4dTjQA2LcB8=
 github.com/creachadair/mds v0.0.0-20230121043849-c7d6542927f1 h1:h7jEOsXCvbU//K4zcnDcrgB2nFqlIsZ2q4x2Y7CWmNw=
 github.com/creachadair/mds v0.0.0-20230121043849-c7d6542927f1/go.mod h1:caBACU+n1Q/rZ252FTzfnG0/H+ZUi+UnIQtEOraMv/g=
 github.com/djherbis/atime v1.1.0/go.mod h1:28OF6Y8s3NQWwacXc5eZTsEsiMzp7LF8MbXE+XJPdBE=
