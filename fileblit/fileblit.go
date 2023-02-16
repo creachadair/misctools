@@ -66,12 +66,13 @@ func main() {
 		log.Fatalf("Output file: %v", err)
 	}
 
-	buf := make([]byte, *blockSize<<20)
+	bufSize := *blockSize<<20
+	buf := make([]byte, bufSize)
 	fs := files{in, out}
 
 	end := ifs.Size()
 	for end > 0 {
-		pos := end - *blockSize
+		pos := end - bufSize
 		if pos < 0 {
 			pos = 0
 		}
