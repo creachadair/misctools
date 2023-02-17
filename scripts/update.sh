@@ -44,7 +44,7 @@ cleanup()    { : ; }
 push()       { git push --no-verify ; }
 
 find_matching() {
-    find -s . -depth 2 -type f -path "*${MATCH}/$cf" -mtime +"$MODTIME" \
+    find . -depth 2 -type f -path "*${MATCH}/$cf" -mtime +"$MODTIME" \
          -exec stat -f '%m %N' {} ';' | sort -n | cut -d/ -f2
 }
 
