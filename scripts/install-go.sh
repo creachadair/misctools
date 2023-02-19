@@ -15,8 +15,7 @@
 ##
 ## You may also override GOOS and GOARCH.
 ##
-set -e
-set -o pipefail
+set -euo pipefail
 
 GO_VERSION="${1:?Missing Go version}"
 : ${GOOS:="$(uname -s|tr A-Z a-z)"}
