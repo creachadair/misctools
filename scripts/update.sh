@@ -29,7 +29,7 @@
 #
 set -euo pipefail
 
-: ${MODTIME:=5d}
+: ${MODTIME:=6d}
 : ${MATCH:=}
 
 unset CDPATH
