@@ -5,7 +5,7 @@ go 1.19
 require (
 	bitbucket.org/creachadair/shell v0.0.7
 	github.com/creachadair/atomicfile v0.3.0
-	github.com/creachadair/command v0.0.0-20230321183317-e4e984c4ab3c
+	github.com/creachadair/command v0.0.1
 	github.com/creachadair/mds v0.0.1
 	github.com/tdewolff/minify/v2 v2.12.5
 )

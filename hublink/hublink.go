@@ -83,8 +83,8 @@ func addFlag(flag string, args []string) []string {
 	return append([]string{flag}, args...)
 }
 
-func runGrepFile(env *command.Env, args []string) error {
-	out, err := git("grep", addFlag("-n", args)...)
+func runGrepFile(env *command.Env) error {
+	out, err := git("grep", addFlag("-n", env.Args)...)
 	if err != nil {
 		return fmt.Errorf("no matches: %w", err)
 	}
@@ -95,11 +95,12 @@ func runGrepFile(env *command.Env, args []string) error {
 	}
 	parts := strings.SplitN(hits[0], ":", 3)
 	target := strings.Join(parts[:2], ":")
-	return runLinkFile(env, []string{target})
+	env.Args = append(env.Args, target)
+	return runLinkFile(env)
 }
 
-func runLinkFile(env *command.Env, args []string) error {
-	if len(args) == 0 {
+func runLinkFile(env *command.Env) error {
+	if len(env.Args) == 0 {
 		return errors.New("no paths specified")
 	}
 	repo, dir, err := repoNameRoot()
@@ -111,7 +112,7 @@ func runLinkFile(env *command.Env, args []string) error {
 		return fmt.Errorf("resolving branch: %v", err)
 	}
 
-	for _, raw := range args {
+	for _, raw := range env.Args {
 		path, lo, hi, err := parseFile(raw)
 		if err != nil {
 			return fmt.Errorf("invalid file spec: %v", err)
