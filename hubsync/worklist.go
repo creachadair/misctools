@@ -13,6 +13,7 @@ type workList struct {
 	Original string        `json:"original"`
 	Remote   string        `json:"remote"`
 	Branches []*branchInfo `json:"branches"`
+	Push     bool          `json:"push"`
 	Loaded   bool          `json:"-"`
 }
 
@@ -91,5 +92,6 @@ func openWorkList(path string) (*workList, error) {
 		Original: save,
 		Remote:   *useRemote,
 		Branches: rem,
+		Push:     *doForcePush,
 	}, nil
 }

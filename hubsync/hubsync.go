@@ -22,7 +22,7 @@ var (
 	useRemote    = flag.String("remote", "origin", "Use this remote name")
 	skipBranches = flag.String("skip", "", "Branches to skip during update (comma-separated)")
 	workFile     = flag.String("worklist", "hubsync.json", "Work list save file")
-	noForcePush  = flag.Bool("nopush", false, "Skip force-pushing updated branches to remote")
+	doForcePush  = flag.Bool("push", false, "Force-push updated branches to remote")
 	doResume     = flag.Bool("resume", false, "Resume from an existing work list")
 	doVerbose    = flag.Bool("v", false, "Verbose logging")
 	doDebug      = flag.Bool("debug", false, "Enable debug mode")
@@ -44,9 +44,8 @@ the default (main) branch in the remote. To do this, the tool:
 
 - Switches to each branch in the work list and rebases it onto the updated
   base branch. After doing this, if the local branch tracks a remote branch,
-  it executes a "git push -f" to update the remote copy.
+  and -push is true, it executes a "git push -f" to update the remote copy.
 
-  Add the -nopush flag to skip executing git push.
   Use -skip to give a comma-separated list of branch names to skip updating.
 
 - Switches back to the original branch from which the tool was run.
@@ -131,7 +130,7 @@ func main() {
 		if _, err := git("rebase", work.Base, br.Name); err != nil {
 			log.Fatalf("Rebase failed: %v", err)
 		}
-		if *noForcePush || br.Remote == "" {
+		if !work.Push || br.Remote == "" {
 			// nothing to do
 		} else if ok, err := forcePush(*useRemote, br.Name); err != nil {
 			log.Fatalf("Updating %q: %v", br.Name, err)
