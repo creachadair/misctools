@@ -47,6 +47,9 @@ fi
 # To build a version of Go, we need a bootstrap compiler.
 # This should not need to change unless the bootstrap requirements change.
 if [[ "$(uname -s)" = Darwin ]] ; then
+    # Bug workaround: https://github.com/golang/go/issues/59026
+    export DSYMUTIL_REPRODUCER_PATH=/dev/null
+
     # Apple Silicon appears not to bootstrap with versions < 1.17.
     if [[ "$(uname -p)" = arm ]] ; then
 	readonly bootstrap_version=1.17
