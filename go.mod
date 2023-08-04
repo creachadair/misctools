@@ -7,7 +7,7 @@ require (
 	github.com/creachadair/atomicfile v0.3.1
 	github.com/creachadair/command v0.0.2
 	github.com/creachadair/mds v0.1.0
-	github.com/tdewolff/minify/v2 v2.12.7
+	github.com/tdewolff/minify/v2 v2.12.8
 )
 
-require github.com/tdewolff/parse/v2 v2.6.6 // indirect
+require github.com/tdewolff/parse/v2 v2.6.7 // indirect
