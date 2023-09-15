@@ -86,7 +86,7 @@ find_matching | while read -r pkg ; do
 
         if ! git diff --quiet ; then
             presubmit
-            git commit -m "Update module dependencies." .
+            git commit -m "go.mod: update module dependencies" .
             push
             cleanup
             touch "$cf"
