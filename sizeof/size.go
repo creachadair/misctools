@@ -5,6 +5,8 @@ package sizeof
 import (
 	"math"
 	"reflect"
+
+	"github.com/creachadair/mds/mapset"
 )
 
 // DeepSize reports the size of v in bytes, as reflect.Size, but also including
@@ -29,16 +31,16 @@ import (
 // zero values from sharing or reslicing, but without explicitly reslicing the
 // reflect package cannot touch them.
 func DeepSize(v interface{}) int64 {
-	return int64(valueSize(reflect.ValueOf(v), make(map[uintptr]bool)))
+	return int64(valueSize(reflect.ValueOf(v), mapset.New[uintptr]()))
 }
 
-func valueSize(v reflect.Value, seen map[uintptr]bool) uintptr {
+func valueSize(v reflect.Value, seen mapset.Set[uintptr]) uintptr {
 	base := v.Type().Size()
 	switch v.Kind() {
 	case reflect.Ptr:
 		p := v.Pointer()
-		if !seen[p] && !v.IsNil() {
-			seen[p] = true
+		if !seen.Has(p) && !v.IsNil() {
+			seen.Add(p)
 			return base + valueSize(v.Elem(), seen)
 		}
 
@@ -85,8 +87,8 @@ func valueSize(v reflect.Value, seen map[uintptr]bool) uintptr {
 			switch f.Kind() {
 			case reflect.Ptr:
 				p := f.Pointer()
-				if !seen[p] && !f.IsNil() {
-					seen[p] = true
+				if !seen.Has(p) && !f.IsNil() {
+					seen.Add(p)
 					base += valueSize(f.Elem(), seen)
 				}
 			case reflect.Slice:
