@@ -1,3 +1,4 @@
+// Program unbox lists and unpacks e-mail messages from a Unix mbox file.
 package main
 
 import (
