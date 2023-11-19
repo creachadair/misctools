@@ -33,7 +33,9 @@ WORKDIR /root
 
 RUN apt-get update && apt-get install -y build-essential file libreadline-dev zlib1g-dev curl
 RUN curl -sL "$dl" | tar xzv
-RUN cd sqlite-autoconf-"$vers" && ./configure --enable-readline && make -j 
+RUN cd sqlite-autoconf-"$vers" && \
+  ./configure CFLAGS="-DSQLITE_ENABLE_DBSTAT_VTAB=1" \
+     --enable-readline && make -j
 EOF
 
 c="$(docker create --platform=$plat $img)"
