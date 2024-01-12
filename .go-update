@@ -1,3 +1,0 @@
-cleanup() {
-    go install github.com/creachadair/misctools/{fileblit,hublink,hubsync,retry,stats,webletc}
-}
