@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ##
 ## Usage: install-go.sh <version>
 ##  e.g.: install-go.sh 1.19.5
@@ -25,6 +25,11 @@ GO_VERSION="${1:?Missing Go version}"
 : ${INSTALL_DIR:=/usr/local/go}
 : ${LABEL:="go${GO_VERSION}"}
 
+# What Linux calls x86_64, Go calls amd64.
+if [[ "$GOARCH" = x86_64 ]] ; then
+    GOARCH=amd64
+fi
+
 # The target directory where the code will be installed.
 readonly target="${INSTALL_DIR}/${GO_VERSION}"
 
@@ -50,16 +55,16 @@ if [[ "$(uname -s)" = Darwin ]] ; then
     # Bug workaround: https://github.com/golang/go/issues/59026
     export DSYMUTIL_REPRODUCER_PATH=/dev/null
 
-    # Apple Silicon appears not to bootstrap with versions < 1.17.
-    if [[ "$(uname -p)" = arm ]] ; then
-	readonly bootstrap_version=1.17
-    else
-	# Versions of macOS > 11 require a newer bootstrap due to changes in the
-	# handling of dynamic libraries.
-	readonly bootstrap_version=1.11
-    fi
-else
+    # Apple silicon wants a fairly recent toolchain to build anything, so just
+    # default to that on Darwin generally.
+    readonly bootstrap_version=1.20
+elif [[ "$GO_VERSION" < 1.17 ]] ; then
     readonly bootstrap_version=1.7
+elif [[ "$GO_VERSION" < 1.22 ]] ; then
+    readonly bootstrap_version=1.17
+else
+    # Versions 1.22 and later require Go 1.20 to bootstrap.
+    readonly bootstrap_version=1.20
 fi
 readonly bootstrap_tar="go${bootstrap_version}.${GOOS}-${GOARCH_BOOTSTRAP}.tar.gz"
 readonly bootstrap_url="https://storage.googleapis.com/golang/${bootstrap_tar}"
