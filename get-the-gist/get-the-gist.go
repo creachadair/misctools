@@ -3,6 +3,7 @@
 package main
 
 import (
+	"cmp"
 	"fmt"
 	"log"
 	"os"
@@ -23,23 +24,16 @@ var flags struct {
 
 func main() {
 	root := &command.C{
-		Name:     command.ProgramName(),
-		Help:     "Fetch and/or update a local copy of your GitHub gists.",
+		Name: command.ProgramName(),
+		Help: `Fetch and/or update a local copy of your GitHub gists.
+
+Either pass a GitHub auth token as --token, or populate the GISTBOT_TOKEN
+environment variable with same. The token must have permission to read gists.
+
+The output directory --dir is created if it does not exist.`,
+
 		SetFlags: command.Flags(flax.MustBind, &flags),
 		Run:      command.Adapt(runMain),
-
-		Init: func(env *command.Env) error {
-			if flags.Token == "" {
-				flags.Token = os.Getenv("GISTBOT_TOKEN")
-				if flags.Token == "" {
-					return env.Usagef("you must provide a --token or set GISTBOT_TOKEN")
-				}
-			}
-			if flags.Dir == "" {
-				return env.Usagef("you must provide an output --dir")
-			}
-			return nil
-		},
 
 		Commands: []*command.C{
 			command.HelpCommand(nil),
@@ -50,9 +44,16 @@ func main() {
 }
 
 func runMain(env *command.Env) error {
-	if err := flags.Dir.Init(); err != nil {
+	token := cmp.Or(flags.Token, os.Getenv("GISTBOT_TOKEN"))
+	if token == "" {
+		return env.Usagef("you must provide a --token or set GISTBOT_TOKEN")
+	}
+	if flags.Dir == "" {
+		return env.Usagef("you must provide an output --dir")
+	} else if err := flags.Dir.Init(); err != nil {
 		return fmt.Errorf("create output directory: %w", err)
 	}
+
 	have, err := flags.Dir.List()
 	if err != nil {
 		return fmt.Errorf("list output: %w", err)
