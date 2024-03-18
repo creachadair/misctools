@@ -72,7 +72,7 @@ func isHex(s string) bool {
 }
 
 func listGists(ctx context.Context, token string) ([]*github.Gist, error) {
-	cli := github.NewClient(nil).WithAuthToken(flags.Token)
+	cli := github.NewClient(nil).WithAuthToken(token)
 	var all []*github.Gist
 	for page := 1; ; page++ {
 		gs, rsp, err := cli.Gists.List(ctx, "" /* auth user */, &github.GistListOptions{

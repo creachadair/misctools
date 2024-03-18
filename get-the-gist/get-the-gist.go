@@ -60,7 +60,7 @@ func runMain(env *command.Env) error {
 	}
 	vlog("Found %d gists in output directory", len(have))
 
-	exist, err := listGists(env.Context(), flags.Token)
+	exist, err := listGists(env.Context(), token)
 	if err != nil {
 		return fmt.Errorf("list remote: %w", err)
 	}
