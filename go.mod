@@ -8,7 +8,7 @@ require (
 	github.com/creachadair/command v0.1.12
 	github.com/creachadair/flax v0.0.0-20240212192608-428acafa3bbe
 	github.com/creachadair/mds v0.13.1
-	github.com/creachadair/taskgroup v0.8.0
+	github.com/creachadair/taskgroup v0.8.1
 	github.com/go-git/go-git/v5 v5.11.0
 	github.com/google/go-github/v60 v60.0.0
 	github.com/tdewolff/minify/v2 v2.20.19
