@@ -111,7 +111,6 @@ func runMain(env *command.Env) error {
 	if err := g.Wait(); err != nil {
 		return err
 	}
-	coll.Wait()
 	log.Printf("Found %d gists, fetched %d, checked %d, updated %d", len(exist), fetches, len(checked), updates)
 
 	have.RemoveAll(checked)
