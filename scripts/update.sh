@@ -64,7 +64,7 @@ esac
 find_matching | while read -r pkg ; do
     (
         cd "$pkg"
-        printf "<> \033[1;93m%s\033[0m\n" "$pkg"
+        printf "-- \033[1;95m%s\033[0m\n" "$pkg"
         . "$cf"
 
         # Before doing anything destructive, make sure the working directory is clean.
