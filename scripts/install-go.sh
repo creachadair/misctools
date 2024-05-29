@@ -50,7 +50,7 @@ if [[ ! -d "$target" ]] ; then
     echo "- fetching Go ${goversion} ..." 1>&2
     dist="https://go.dev/dl/go${goversion}.${GOOS}-${GOARCH}.tar.gz"
     mkdir -p "$target"
-    curl -sL "$dist" | tar -C "$target" -x --strip-components=1
+    curl -sL "$dist" | tar -C "$target" -xz --strip-components=1
 else
     echo "- Go ${goversion} is already installed" 1>&2
 fi
