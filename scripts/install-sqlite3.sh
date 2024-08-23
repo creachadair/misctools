@@ -26,8 +26,8 @@ plat="${PLATFORM:-linux/amd64}"
 out=./sqlite3-"$vers"
 dl="$base/$latest"
 
-cat <<EOF | docker build -t "$img" -
-FROM --platform="$plat" "$buildbase" as builder
+cat <<EOF | docker build --platform="$plat" -t "$img" -
+FROM "$buildbase" AS builder
 
 WORKDIR /root
 
