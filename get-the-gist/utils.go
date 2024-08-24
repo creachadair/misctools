@@ -104,12 +104,16 @@ func cloneGist(ctx context.Context, id, pullURL string, d Dir) error {
 	return nil
 }
 
-func fetchGist(ctx context.Context, id string, d Dir) (bool, error) {
+func pullGist(ctx context.Context, id string, d Dir) (bool, error) {
 	repo, err := git.PlainOpen(d.Path(id))
 	if err != nil {
 		return false, fmt.Errorf("open %q: %w", vid(id), err)
 	}
-	if err := repo.FetchContext(ctx, &git.FetchOptions{}); errors.Is(err, git.NoErrAlreadyUpToDate) {
+	work, err := repo.Worktree()
+	if err != nil {
+		return false, fmt.Errorf("get %q worktree: %w", vid(id), err)
+	}
+	if err := work.PullContext(ctx, &git.PullOptions{}); errors.Is(err, git.NoErrAlreadyUpToDate) {
 		return false, nil
 	} else if err != nil {
 		return false, fmt.Errorf("update %q: %w", vid(id), err)

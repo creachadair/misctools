@@ -85,7 +85,7 @@ func runMain(env *command.Env) error {
 		if have.Has(e.GetID()) {
 			start(coll.Task(func() (update, error) {
 				start := time.Now()
-				ok, err := fetchGist(env.Context(), e.GetID(), flags.Dir)
+				ok, err := pullGist(env.Context(), e.GetID(), flags.Dir)
 				if err != nil {
 					return update{}, err
 				} else if ok {
