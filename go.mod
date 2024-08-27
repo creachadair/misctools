@@ -4,21 +4,21 @@ go 1.22
 
 require (
 	bitbucket.org/creachadair/shell v0.0.8
-	github.com/creachadair/atomicfile v0.3.4
+	github.com/creachadair/atomicfile v0.3.5
 	github.com/creachadair/command v0.1.13
-	github.com/creachadair/flax v0.0.0-20240525192034-44db93b3a8ad
-	github.com/creachadair/mds v0.16.0
-	github.com/creachadair/taskgroup v0.9.0
+	github.com/creachadair/flax v0.0.1
+	github.com/creachadair/mds v0.17.1
+	github.com/creachadair/taskgroup v0.9.1
 	github.com/go-git/go-git/v5 v5.12.0
 	github.com/google/go-github/v60 v60.0.0
 	github.com/tdewolff/minify/v2 v2.20.37
 )
 
 require (
-	dario.cat/mergo v1.0.0 // indirect
+	dario.cat/mergo v1.0.1 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/ProtonMail/go-crypto v1.0.0 // indirect
-	github.com/cloudflare/circl v1.3.9 // indirect
+	github.com/cloudflare/circl v1.4.0 // indirect
 	github.com/cyphar/filepath-securejoin v0.3.1 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
