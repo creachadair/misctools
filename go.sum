@@ -1,5 +1,3 @@
-bitbucket.org/creachadair/shell v0.0.8 h1:3yM6JcAfaGWzjzcCamTblzSIWXm/YSs0PFGIzBm2HTo=
-bitbucket.org/creachadair/shell v0.0.8/go.mod h1:vINzudofoUXZSJ5tREgpy+Etyjsag3ait5WOWImEVZ0=
 dario.cat/mergo v1.0.1 h1:Ra4+bf83h2ztPIQYNP99R6m+Y7KfnARDfID+a+vLl4s=
 dario.cat/mergo v1.0.1/go.mod h1:uNxQE+84aUszobStD9th8a29P2fMDhsBdgRYvZOxGmk=
 github.com/Microsoft/go-winio v0.5.2/go.mod h1:WpS1mjBmmwHBEWmogvA2mj8546UReBk4v8QkMxJ6pZY=

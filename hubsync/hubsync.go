@@ -13,8 +13,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"bitbucket.org/creachadair/shell"
 	"github.com/creachadair/mds/mapset"
+	"github.com/creachadair/mds/shell"
 )
 
 var (
