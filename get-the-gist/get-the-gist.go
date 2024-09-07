@@ -74,7 +74,7 @@ func runMain(env *command.Env) error {
 	}
 	var checked mapset.Set[string]
 	var updates, fetches int
-	coll := taskgroup.NewCollector(func(u update) {
+	coll := taskgroup.Collect(func(u update) {
 		checked.Add(u.id)
 		if u.ok {
 			updates++
@@ -83,7 +83,7 @@ func runMain(env *command.Env) error {
 
 	for _, e := range exist {
 		if have.Has(e.GetID()) {
-			start(coll.Task(func() (update, error) {
+			start(coll.Call(func() (update, error) {
 				start := time.Now()
 				ok, err := pullGist(env.Context(), e.GetID(), flags.Dir)
 				if err != nil {
