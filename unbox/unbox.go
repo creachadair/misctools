@@ -30,5 +30,5 @@ func main() {
 			command.VersionCommand(),
 		},
 	}
-	command.RunOrFail(root.NewEnv(nil).MergeFlags(true), os.Args[1:])
+	command.RunOrFail(root.NewEnv(nil), os.Args[1:])
 }

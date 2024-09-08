@@ -70,7 +70,7 @@ The repository name is derived from the first remote.`,
 			},
 			command.HelpCommand(nil),
 		},
-	}).NewEnv(nil)
+	}).NewEnv(nil).MergeFlags(false)
 	command.RunOrFail(env, os.Args[1:])
 }
 

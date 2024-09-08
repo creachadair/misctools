@@ -40,7 +40,7 @@ The output directory --dir is created if it does not exist.`,
 			command.VersionCommand(),
 		},
 	}
-	command.RunOrFail(root.NewEnv(nil).MergeFlags(true), os.Args[1:])
+	command.RunOrFail(root.NewEnv(nil), os.Args[1:])
 }
 
 func runMain(env *command.Env) error {
