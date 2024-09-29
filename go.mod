@@ -6,9 +6,9 @@ toolchain go1.23.1
 
 require (
 	github.com/creachadair/atomicfile v0.3.5
-	github.com/creachadair/command v0.1.16
+	github.com/creachadair/command v0.1.17
 	github.com/creachadair/flax v0.0.1
-	github.com/creachadair/mds v0.21.0
+	github.com/creachadair/mds v0.21.2
 	github.com/creachadair/taskgroup v0.9.4
 	github.com/go-git/go-git/v5 v5.12.0
 	github.com/google/go-github/v60 v60.0.0
@@ -20,7 +20,7 @@ require (
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/ProtonMail/go-crypto v1.0.0 // indirect
 	github.com/cloudflare/circl v1.4.0 // indirect
-	github.com/cyphar/filepath-securejoin v0.3.1 // indirect
+	github.com/cyphar/filepath-securejoin v0.3.2 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-git/go-billy/v5 v5.5.0 // indirect
