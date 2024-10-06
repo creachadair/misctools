@@ -66,7 +66,7 @@ func runMain(env *command.Env) error {
 	}
 	vlog("Found %d gists on GitHub", len(exist))
 
-	g, start := taskgroup.New(taskgroup.Listen(env.Cancel)).Limit(5)
+	g, start := taskgroup.New(env.Cancel).Limit(5)
 
 	type update struct {
 		id string
@@ -74,7 +74,7 @@ func runMain(env *command.Env) error {
 	}
 	var checked mapset.Set[string]
 	var updates, fetches int
-	coll := taskgroup.Collect(func(u update) {
+	coll := taskgroup.Gather(start, func(u update) {
 		checked.Add(u.id)
 		if u.ok {
 			updates++
@@ -83,7 +83,7 @@ func runMain(env *command.Env) error {
 
 	for _, e := range exist {
 		if have.Has(e.GetID()) {
-			start(coll.Call(func() (update, error) {
+			coll.Call(func() (update, error) {
 				start := time.Now()
 				ok, err := pullGist(env.Context(), e.GetID(), flags.Dir)
 				if err != nil {
@@ -94,7 +94,7 @@ func runMain(env *command.Env) error {
 					vlog("Gist %q is up-to-date", vid(e.GetID()))
 				}
 				return update{e.GetID(), ok}, nil
-			}))
+			})
 		} else {
 			fetches++
 			start(func() error {
