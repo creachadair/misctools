@@ -56,4 +56,3 @@ else
 fi
 echo "- updating current link to ${goversion}" 1>&2
 setlink
-
