@@ -13,8 +13,8 @@ github.com/cloudflare/circl v1.5.0 h1:hxIWksrX6XN5a1L2TI/h53AGPhNHoUBo+TD1ms9+py
 github.com/cloudflare/circl v1.5.0/go.mod h1:uddAzsPgqdMAYatqJ0lsjX1oECcQLIlRpzZh3pJrofs=
 github.com/creachadair/atomicfile v0.3.5 h1:i93bxeaH/rQR6XfJslola3XkOM1nEP3eIexuk9SWcSc=
 github.com/creachadair/atomicfile v0.3.5/go.mod h1:m7kIY2OUMygtETnMYe141rubsG4b+EusFLinlxxdHYM=
-github.com/creachadair/command v0.1.18 h1:EBYydnfFjm7bdE+cILouSiWwBaIecjUzwiWVHSO6IBU=
-github.com/creachadair/command v0.1.18/go.mod h1:Vfl1ld2a0hrW62gjhwcwF0rjCa9xQuC1s0vlW6OFesw=
+github.com/creachadair/command v0.1.19 h1:608PeK7JfGwhuyAJZnb0ijDS0bBz9XJif/6B3DAUrtI=
+github.com/creachadair/command v0.1.19/go.mod h1:Vfl1ld2a0hrW62gjhwcwF0rjCa9xQuC1s0vlW6OFesw=
 github.com/creachadair/flax v0.0.2 h1:E0cc6njSIhSh6wSP9jSp/Rdx9pPDtru4vhaazxbNU5k=
 github.com/creachadair/flax v0.0.2/go.mod h1:K8bFvn8hMdAljQkaKNc7I3os5Wk36JxkyCkfdZ7S8d4=
 github.com/creachadair/mds v0.21.4 h1:osKuLbjkV7YswBnhuTJh1lCDkqZMQnNfFVn0j8wLpz8=
