@@ -4,7 +4,7 @@
 ##  e.g.: install-go.sh 1.22.3
 ##
 ## If a version is omitted, the latest available release is installed.
-#
+##
 ## By default, the script installs a precompiled toolchain for the specified OS
 ## and architecture. Set SOURCE=1 to build from source instead. Source builds
 ## require a bootstrap toolchain, which the script will fetch if needed.
@@ -23,7 +23,7 @@ if [[ "$goversion" = latest ]] ; then
     goversion="$(
       curl -sL https://golang.org/VERSION?m=text |
       head -1 |
-      cut   -c3-
+      cut -c3-
     )"
     echo "Latest Go release is $goversion" 1>&2
 elif [[ -z "$goversion" ]] ; then
