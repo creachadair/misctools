@@ -5,11 +5,11 @@ go 1.23
 toolchain go1.23.1
 
 require (
-	github.com/creachadair/atomicfile v0.3.5
+	github.com/creachadair/atomicfile v0.3.6
 	github.com/creachadair/command v0.1.19
 	github.com/creachadair/flax v0.0.2
-	github.com/creachadair/mds v0.21.4
-	github.com/creachadair/taskgroup v0.13.1
+	github.com/creachadair/mds v0.22.0
+	github.com/creachadair/taskgroup v0.13.2
 	github.com/go-git/go-git/v5 v5.12.0
 	github.com/google/go-github/v66 v66.0.0
 	github.com/tdewolff/minify/v2 v2.21.1
