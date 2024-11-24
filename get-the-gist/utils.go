@@ -5,8 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/creachadair/mds/mapset"
 	"github.com/creachadair/mds/mstr"
@@ -96,10 +98,28 @@ func cloneGist(ctx context.Context, id, pullURL string, d Dir) error {
 	if err != nil {
 		return fmt.Errorf("create workdir: %w", err)
 	}
-	if _, err := git.PlainCloneContext(ctx, path, false /* not bare */, &git.CloneOptions{
+	repo, err := git.PlainCloneContext(ctx, path, false /* not bare */, &git.CloneOptions{
 		URL: pullURL,
-	}); err != nil {
+	})
+	if err != nil {
 		return fmt.Errorf("clone %q: %w", vid(id), err)
+	}
+
+	// Pull the HTTP fetch URL out of the first remote, and rewrite it to SSH
+	// format so a human operator can pull and push from the work tree.
+	url, rem, err := remoteURL(id, repo)
+	if err != nil {
+		return fmt.Errorf("remote URL for %q: %w", vid(id), err)
+	}
+	config := rem.Config()
+	if want := httpToGitURL(url); config.URLs[0] != want {
+		config.URLs = []string{want}
+		if err := repo.DeleteRemote(config.Name); err != nil {
+			return fmt.Errorf("delete remote %q: %w", config.Name, err)
+		}
+		if _, err := repo.CreateRemote(config); err != nil {
+			return fmt.Errorf("update remote %q: %w", config.Name, err)
+		}
 	}
 	return nil
 }
@@ -113,12 +133,54 @@ func pullGist(ctx context.Context, id string, d Dir) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("get %q worktree: %w", vid(id), err)
 	}
-	if err := work.PullContext(ctx, &git.PullOptions{}); errors.Is(err, git.NoErrAlreadyUpToDate) {
+
+	// Fetch using HTTP so that we don't need to tangle with SSH.
+	// Gists are all readable without auth anyway, even if secret.
+	url, _, err := remoteURL(id, repo)
+	if err != nil {
+		return false, fmt.Errorf("remote URL for %q: %w", vid(id), err)
+	}
+	if err := work.PullContext(ctx, &git.PullOptions{
+		RemoteURL: gitURLToHTTP(url),
+	}); errors.Is(err, git.NoErrAlreadyUpToDate) {
 		return false, nil
 	} else if err != nil {
 		return false, fmt.Errorf("update %q: %w", vid(id), err)
 	}
 	return true, nil
+}
+
+func remoteURL(id string, repo *git.Repository) (string, *git.Remote, error) {
+	// Find the remote URL from the first remote. Usually there will only be
+	// one, that is to say the origin from the clone.
+	rems, err := repo.Remotes()
+	if err != nil {
+		return "", nil, fmt.Errorf("list remotes %q: %w", vid(id), err)
+	}
+	if len(rems) == 0 {
+		return "", nil, fmt.Errorf("no remotes for %q", vid(id))
+	}
+	return rems[0].Config().URLs[0], rems[0], nil
+}
+
+func httpToGitURL(httpURL string) string {
+	u, err := url.Parse(httpURL)
+	if err != nil {
+		return httpURL
+	}
+	return fmt.Sprintf("git@%s:%s", u.Host, strings.TrimPrefix(u.Path, "/"))
+}
+
+func gitURLToHTTP(gitURL string) string {
+	tail, ok := strings.CutPrefix(gitURL, "git@")
+	if !ok {
+		return gitURL
+	}
+	host, path, ok := strings.Cut(tail, ":")
+	if !ok {
+		return gitURL
+	}
+	return fmt.Sprintf("https://%s/%s", host, path)
 }
 
 func vlog(msg string, args ...any) {
