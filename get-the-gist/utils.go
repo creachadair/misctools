@@ -11,7 +11,7 @@ import (
 	"github.com/creachadair/mds/mapset"
 	"github.com/creachadair/mds/mstr"
 	git "github.com/go-git/go-git/v5"
-	"github.com/google/go-github/v60/github"
+	"github.com/google/go-github/v66/github"
 )
 
 // Dir manages a directory containing cloned gist repositories.
