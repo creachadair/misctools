@@ -7,7 +7,7 @@ toolchain go1.23.1
 require (
 	github.com/creachadair/atomicfile v0.3.6
 	github.com/creachadair/command v0.1.19
-	github.com/creachadair/flax v0.0.3
+	github.com/creachadair/flax v0.0.4
 	github.com/creachadair/mds v0.22.0
 	github.com/creachadair/taskgroup v0.13.2
 	github.com/go-git/go-git/v5 v5.12.0
@@ -20,7 +20,7 @@ require (
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/ProtonMail/go-crypto v1.1.3 // indirect
 	github.com/cloudflare/circl v1.5.0 // indirect
-	github.com/cyphar/filepath-securejoin v0.3.4 // indirect
+	github.com/cyphar/filepath-securejoin v0.3.6 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-git/go-billy/v5 v5.6.0 // indirect
@@ -33,8 +33,8 @@ require (
 	github.com/skeema/knownhosts v1.3.0 // indirect
 	github.com/tdewolff/parse/v2 v2.7.19 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
-	golang.org/x/crypto v0.29.0 // indirect
-	golang.org/x/net v0.31.0 // indirect
-	golang.org/x/sys v0.27.0 // indirect
+	golang.org/x/crypto v0.31.0 // indirect
+	golang.org/x/net v0.32.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
