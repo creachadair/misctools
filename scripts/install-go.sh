@@ -38,8 +38,11 @@ fi
 : ${INSTALL_DIR:=/usr/local/go}
 
 # What Linux calls x86_64, Go calls amd64.
+# What Linux calls aarch64, Go calls arm64.
 if [[ "$GOARCH" = x86_64 ]] ; then
     GOARCH=amd64
+elif [[ "$GOARCH" = aarch64 ]] ; then
+    GOARCH=arm64
 fi
 
 # If we are doing a source build, use _x as the target.
