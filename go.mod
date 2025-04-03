@@ -7,8 +7,8 @@ toolchain go1.24.0
 require (
 	github.com/creachadair/atomicfile v0.3.8
 	github.com/creachadair/command v0.1.22
-	github.com/creachadair/flax v0.0.4
-	github.com/creachadair/mds v0.24.1
+	github.com/creachadair/flax v0.0.5
+	github.com/creachadair/mds v0.24.2
 	github.com/creachadair/taskgroup v0.13.2
 	github.com/go-git/go-git/v5 v5.14.0
 	github.com/google/go-github/v66 v66.0.0
