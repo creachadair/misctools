@@ -13,7 +13,7 @@ set -euo pipefail
 # way seems to be to grab the embedded product data.
 base='https://www.sqlite.org'
 latest="$(
-  curl -s $base/download.html | \
+  curl -Ls $base/download.html | \
     grep ^PRODUCT | grep sqlite-autoconf- | \
     cut -d, -f3
 )"
