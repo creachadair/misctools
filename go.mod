@@ -10,7 +10,7 @@ require (
 	github.com/creachadair/flax v0.0.5
 	github.com/creachadair/mds v0.24.2
 	github.com/creachadair/taskgroup v0.13.2
-	github.com/go-git/go-git/v5 v5.14.0
+	github.com/go-git/go-git/v5 v5.16.0
 	github.com/google/go-github/v66 v66.0.0
 	github.com/tdewolff/minify/v2 v2.23.1
 )
@@ -18,7 +18,7 @@ require (
 require (
 	dario.cat/mergo v1.0.1 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
-	github.com/ProtonMail/go-crypto v1.1.6 // indirect
+	github.com/ProtonMail/go-crypto v1.2.0 // indirect
 	github.com/cloudflare/circl v1.6.1 // indirect
 	github.com/cyphar/filepath-securejoin v0.4.1 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
