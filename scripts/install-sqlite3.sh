@@ -4,7 +4,7 @@
 #
 # Optional parameters:
 #
-#   BUILDBASE: base image (e.g., ubuntu:22.04)
+#   BUILDBASE: base image (e.g., ubuntu:24.04)
 #   PLATFORM:  os/arch    (e.g., linux/amd64)
 #
 set -euo pipefail
@@ -21,7 +21,7 @@ year="$(echo "$latest" | cut -d/ -f1)"
 vers="$(echo "$latest" | cut -d- -f3 | cut -d. -f1)"
 
 img=sqlite3-builder:latest
-buildbase="${BUILDBASE:-ubuntu:22.04}"
+buildbase="${BUILDBASE:-ubuntu:24.04}"
 plat="${PLATFORM:-linux/amd64}"
 out=./sqlite3-"$vers"
 dl="$base/$latest"
