@@ -24,7 +24,7 @@
 #
 # -- Environment:
 #
-#  MODTIME   -- how long between updates (default: 5 days)
+#  MODTIME   -- how long between updates (default: 16 days)
 #  MATCH     -- update matching directories (default: all); glob OK
 #
 set -euo pipefail
