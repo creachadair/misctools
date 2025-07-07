@@ -13,12 +13,12 @@ github.com/cloudflare/circl v1.6.1 h1:zqIqSPIndyBh1bjLVVDHMPpVKqp8Su/V+6MeDzzQBQ
 github.com/cloudflare/circl v1.6.1/go.mod h1:uddAzsPgqdMAYatqJ0lsjX1oECcQLIlRpzZh3pJrofs=
 github.com/creachadair/atomicfile v0.3.8 h1:PyMIBZHZunTF+2+OSJCUg4XWO9nh6NwIacUBtF6tdg8=
 github.com/creachadair/atomicfile v0.3.8/go.mod h1:oZrfNyYdwMjCD+eKNqsnPmdnQ54z4ujOoYvNTZyuJ2A=
-github.com/creachadair/command v0.1.22 h1:WmdrURwZdmPD1jm13SjKooaMoqo7mW1qI2BPCShs154=
-github.com/creachadair/command v0.1.22/go.mod h1:YFc+OMGucqTpxwQg/iJnNg8BMNmRPDK60rYy8ckgKwE=
+github.com/creachadair/command v0.1.23 h1:t4xh3gg2Q47kYOAztYe8CzQldleZyaodREScG8f0ICY=
+github.com/creachadair/command v0.1.23/go.mod h1:2Vr6pQv7TsC30LdoyshYiCVYhVx6NvySEp631sHcS2o=
 github.com/creachadair/flax v0.0.5 h1:zt+CRuXQASxwQ68e9GHAOnEgAU29nF0zYMHOCrL5wzE=
 github.com/creachadair/flax v0.0.5/go.mod h1:F1PML0JZLXSNDMNiRGK2yjm5f+L9QCHchyHBldFymj8=
-github.com/creachadair/mds v0.24.3 h1:X7cM2ymZSyl4IVWnfyXLxRXMJ6awhbcWvtLPhfnTaqI=
-github.com/creachadair/mds v0.24.3/go.mod h1:0oeHt9QWu8VfnmskOL4zi2CumjEvB29ScmtOmdrhFeU=
+github.com/creachadair/mds v0.25.1 h1:YSjVNf3aFitfoC7pg99HGBMudC8omA1d9WFrcScldzg=
+github.com/creachadair/mds v0.25.1/go.mod h1:+s4CFteFRj4eq2KcGHW8Wei3u9NyzSPzNV32EvjyK/Q=
 github.com/creachadair/taskgroup v0.13.2 h1:3KyqakBuFsm3KkXi/9XIb0QcA8tEzLHLgaoidf0MdVc=
 github.com/creachadair/taskgroup v0.13.2/go.mod h1:i3V1Zx7H8RjwljUEeUWYT30Lmb9poewSb2XI1yTwD0g=
 github.com/cyphar/filepath-securejoin v0.4.1 h1:JyxxyPEaktOD+GAnqIqTf9A8tHyAG22rowi7HkoSU1s=
@@ -40,8 +40,8 @@ github.com/go-git/go-billy/v5 v5.6.2 h1:6Q86EsPXMa7c3YZ3aLAQsMA0VlWmy43r6FHqa/UN
 github.com/go-git/go-billy/v5 v5.6.2/go.mod h1:rcFC2rAsp/erv7CMz9GczHcuD0D32fWzH+MJAU+jaUU=
 github.com/go-git/go-git-fixtures/v4 v4.3.2-0.20231010084843-55a94097c399 h1:eMje31YglSBqCdIqdhKBW8lokaMrL3uTkpGYlE2OOT4=
 github.com/go-git/go-git-fixtures/v4 v4.3.2-0.20231010084843-55a94097c399/go.mod h1:1OCfN199q1Jm3HZlxleg+Dw/mwps2Wbk9frAWm+4FII=
-github.com/go-git/go-git/v5 v5.16.1 h1:TuxMBWNL7R05tXsUGi0kh1vi4tq0WfXNLlIrAkXG1k8=
-github.com/go-git/go-git/v5 v5.16.1/go.mod h1:4Ge4alE/5gPs30F2H1esi2gPd69R0C39lolkucHBOp8=
+github.com/go-git/go-git/v5 v5.16.2 h1:fT6ZIOjE5iEnkzKyxTHK1W4HGAsPhqEqiSAssSO77hM=
+github.com/go-git/go-git/v5 v5.16.2/go.mod h1:4Ge4alE/5gPs30F2H1esi2gPd69R0C39lolkucHBOp8=
 github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 h1:f+oWsMOmNPc8JmEHVZIycC7hBoQxHH9pNKQORJNozsQ=
 github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8/go.mod h1:wcDNUvekVysuuOpQKo3191zZyTpiI6se1N1ULghS0sw=
 github.com/google/go-cmp v0.5.2/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
