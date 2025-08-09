@@ -1,18 +1,18 @@
 module github.com/creachadair/misctools
 
-go 1.23.0
+go 1.24
 
-toolchain go1.24.0
+toolchain go1.24.5
 
 require (
 	github.com/creachadair/atomicfile v0.3.8
-	github.com/creachadair/command v0.1.24
+	github.com/creachadair/command v0.1.25
 	github.com/creachadair/flax v0.0.5
 	github.com/creachadair/mds v0.25.2
-	github.com/creachadair/taskgroup v0.13.2
+	github.com/creachadair/taskgroup v0.14.0
 	github.com/go-git/go-git/v5 v5.16.2
 	github.com/google/go-github/v66 v66.0.0
-	github.com/tdewolff/minify/v2 v2.23.10
+	github.com/tdewolff/minify/v2 v2.23.11
 )
 
 require (
@@ -31,10 +31,10 @@ require (
 	github.com/pjbgf/sha1cd v0.4.0 // indirect
 	github.com/sergi/go-diff v1.4.0 // indirect
 	github.com/skeema/knownhosts v1.3.1 // indirect
-	github.com/tdewolff/parse/v2 v2.8.1 // indirect
+	github.com/tdewolff/parse/v2 v2.8.2-0.20250806174018-50048bb39781 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
-	golang.org/x/crypto v0.40.0 // indirect
-	golang.org/x/net v0.42.0 // indirect
-	golang.org/x/sys v0.34.0 // indirect
+	golang.org/x/crypto v0.41.0 // indirect
+	golang.org/x/net v0.43.0 // indirect
+	golang.org/x/sys v0.35.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
