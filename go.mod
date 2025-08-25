@@ -6,13 +6,13 @@ toolchain go1.24.5
 
 require (
 	github.com/creachadair/atomicfile v0.3.8
-	github.com/creachadair/command v0.1.25
+	github.com/creachadair/command v0.2.0
 	github.com/creachadair/flax v0.0.5
 	github.com/creachadair/mds v0.25.2
 	github.com/creachadair/taskgroup v0.14.0
 	github.com/go-git/go-git/v5 v5.16.2
 	github.com/google/go-github/v66 v66.0.0
-	github.com/tdewolff/minify/v2 v2.23.11
+	github.com/tdewolff/minify/v2 v2.24.0
 )
 
 require (
@@ -27,11 +27,11 @@ require (
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
-	github.com/kevinburke/ssh_config v1.2.0 // indirect
+	github.com/kevinburke/ssh_config v1.4.0 // indirect
 	github.com/pjbgf/sha1cd v0.4.0 // indirect
 	github.com/sergi/go-diff v1.4.0 // indirect
 	github.com/skeema/knownhosts v1.3.1 // indirect
-	github.com/tdewolff/parse/v2 v2.8.2-0.20250806174018-50048bb39781 // indirect
+	github.com/tdewolff/parse/v2 v2.8.3 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	golang.org/x/crypto v0.41.0 // indirect
 	golang.org/x/net v0.43.0 // indirect

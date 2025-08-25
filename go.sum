@@ -13,8 +13,8 @@ github.com/cloudflare/circl v1.6.1 h1:zqIqSPIndyBh1bjLVVDHMPpVKqp8Su/V+6MeDzzQBQ
 github.com/cloudflare/circl v1.6.1/go.mod h1:uddAzsPgqdMAYatqJ0lsjX1oECcQLIlRpzZh3pJrofs=
 github.com/creachadair/atomicfile v0.3.8 h1:PyMIBZHZunTF+2+OSJCUg4XWO9nh6NwIacUBtF6tdg8=
 github.com/creachadair/atomicfile v0.3.8/go.mod h1:oZrfNyYdwMjCD+eKNqsnPmdnQ54z4ujOoYvNTZyuJ2A=
-github.com/creachadair/command v0.1.25 h1:4rN4ZD5jN8w5LUK83s9AcSEy0v/nKXlR7Aq0/rkKAk0=
-github.com/creachadair/command v0.1.25/go.mod h1:+18hYRwZNDE9rMbMgy1P1gfgmU5bGMd7zFRBC0ARk+Y=
+github.com/creachadair/command v0.2.0 h1:qTA9cMMhZePAxFoNdnk6F6nn94s1qPndIg9hJbqI9cA=
+github.com/creachadair/command v0.2.0/go.mod h1:j+Ar+uYnFsHpkMeV9kGj6lJ45y9u2xqtg8FYy6cm+0o=
 github.com/creachadair/flax v0.0.5 h1:zt+CRuXQASxwQ68e9GHAOnEgAU29nF0zYMHOCrL5wzE=
 github.com/creachadair/flax v0.0.5/go.mod h1:F1PML0JZLXSNDMNiRGK2yjm5f+L9QCHchyHBldFymj8=
 github.com/creachadair/mds v0.25.2 h1:xc0S0AfDq5GX9KUR5sLvi5XjA61/P6S5e0xFs1vA18Q=
@@ -53,8 +53,8 @@ github.com/google/go-querystring v1.1.0 h1:AnCroh3fv4ZBgVIf1Iwtovgjaw/GiKJo8M8yD
 github.com/google/go-querystring v1.1.0/go.mod h1:Kcdr2DB4koayq7X8pmAG4sNG59So17icRSOU623lUBU=
 github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 h1:BQSFePA1RWJOlocH6Fxy8MmwDt+yVQYULKfN0RoTN8A=
 github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99/go.mod h1:1lJo3i6rXxKeerYnT8Nvf0QmHCRC1n8sfWVwXF2Frvo=
-github.com/kevinburke/ssh_config v1.2.0 h1:x584FjTGwHzMwvHx18PXxbBVzfnxogHaAReU4gf13a4=
-github.com/kevinburke/ssh_config v1.2.0/go.mod h1:CT57kijsi8u/K/BOFA39wgDQJ9CxiF4nAY/ojJ6r6mM=
+github.com/kevinburke/ssh_config v1.4.0 h1:6xxtP5bZ2E4NF5tuQulISpTO2z8XbtH8cg1PWkxoFkQ=
+github.com/kevinburke/ssh_config v1.4.0/go.mod h1:q2RIzfka+BXARoNexmF9gkxEX7DmvbW9P4hIVx2Kg4M=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
 github.com/kr/pretty v0.3.1/go.mod h1:hoEshYVHaxMs3cyo3Yncou5ZscifuDolrwPKZanG3xk=
@@ -82,10 +82,10 @@ github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXf
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/stretchr/testify v1.10.0 h1:Xv5erBjTwe/5IxqUQTdXv5kgmIvbHo3QQyRwhJsOfJA=
 github.com/stretchr/testify v1.10.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
-github.com/tdewolff/minify/v2 v2.23.11 h1:cZqTVCtuVvPC8/GbCvYgIcdAQGmoxEObZzKeKIUixTE=
-github.com/tdewolff/minify/v2 v2.23.11/go.mod h1:vmkbfGQ5hp/eYB+TswNWKma67S0a+32HBL+mFWxjZ2Q=
-github.com/tdewolff/parse/v2 v2.8.2-0.20250806174018-50048bb39781 h1:2qicgFovKg1XtX7Wf6GwexUdpb7q/jMIE2IgkYsVAvE=
-github.com/tdewolff/parse/v2 v2.8.2-0.20250806174018-50048bb39781/go.mod h1:Hwlni2tiVNKyzR1o6nUs4FOF07URA+JLBLd6dlIXYqo=
+github.com/tdewolff/minify/v2 v2.24.0 h1:m6j8VXvgUtmkavubzHbaNTXi9tw3hjIMZbdc57SRdvI=
+github.com/tdewolff/minify/v2 v2.24.0/go.mod h1:uqtSu3w0+anqk4ofcsuLPZ8tV8yAZL1r/ILWYYl2j3c=
+github.com/tdewolff/parse/v2 v2.8.3 h1:5VbvtJ83cfb289A1HzRA9sf02iT8YyUwN84ezjkdY1I=
+github.com/tdewolff/parse/v2 v2.8.3/go.mod h1:Hwlni2tiVNKyzR1o6nUs4FOF07URA+JLBLd6dlIXYqo=
 github.com/tdewolff/test v1.0.11 h1:FdLbwQVHxqG16SlkGveC0JVyrJN62COWTRyUFzfbtBE=
 github.com/tdewolff/test v1.0.11/go.mod h1:XPuWBzvdUzhCuxWO1ojpXsyzsA5bFoS3tO/Q3kFuTG8=
 github.com/xanzy/ssh-agent v0.3.3 h1:+/15pJfg/RsTxqYcX6fHqOXZwwMP+2VyYWJeWM2qQFM=
