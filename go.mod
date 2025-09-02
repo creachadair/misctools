@@ -12,7 +12,7 @@ require (
 	github.com/creachadair/taskgroup v0.14.0
 	github.com/go-git/go-git/v5 v5.16.2
 	github.com/google/go-github/v66 v66.0.0
-	github.com/tdewolff/minify/v2 v2.24.0
+	github.com/tdewolff/minify/v2 v2.24.2
 )
 
 require (
