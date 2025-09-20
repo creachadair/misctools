@@ -11,6 +11,7 @@ require (
 	github.com/creachadair/mds v0.25.4
 	github.com/creachadair/taskgroup v0.14.0
 	github.com/go-git/go-git/v5 v5.16.2
+	github.com/google/go-cmp v0.7.0
 	github.com/google/go-github/v66 v66.0.0
 	github.com/tdewolff/minify/v2 v2.24.3
 )
