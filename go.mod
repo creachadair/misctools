@@ -8,12 +8,12 @@ require (
 	github.com/creachadair/atomicfile v0.4.0
 	github.com/creachadair/command v0.2.0
 	github.com/creachadair/flax v0.0.5
-	github.com/creachadair/mds v0.25.6
+	github.com/creachadair/mds v0.25.8
 	github.com/creachadair/taskgroup v0.14.1
 	github.com/go-git/go-git/v5 v5.16.3
 	github.com/google/go-cmp v0.7.0
 	github.com/google/go-github/v66 v66.0.0
-	github.com/tdewolff/minify/v2 v2.24.3
+	github.com/tdewolff/minify/v2 v2.24.4
 )
 
 require (
@@ -32,11 +32,11 @@ require (
 	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
 	github.com/pjbgf/sha1cd v0.5.0 // indirect
 	github.com/sergi/go-diff v1.4.0 // indirect
-	github.com/skeema/knownhosts v1.3.1 // indirect
-	github.com/tdewolff/parse/v2 v2.8.3 // indirect
+	github.com/skeema/knownhosts v1.3.2 // indirect
+	github.com/tdewolff/parse/v2 v2.8.4 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
-	golang.org/x/crypto v0.42.0 // indirect
-	golang.org/x/net v0.44.0 // indirect
-	golang.org/x/sys v0.36.0 // indirect
+	golang.org/x/crypto v0.43.0 // indirect
+	golang.org/x/net v0.46.0 // indirect
+	golang.org/x/sys v0.37.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
