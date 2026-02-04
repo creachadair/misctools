@@ -68,18 +68,11 @@ func logPrintf(msg string, args ...interface{}) {
 }
 
 func run(ctx context.Context) int {
-	ctx, cancel := context.WithCancel(ctx)
+	ctx, cancel := signal.NotifyContext(ctx, syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
-
-	// When signalled, cancel the context so that the subprocess also gets
-	// terminated cleanly before shutting down.
-	sig := make(chan os.Signal, 2)
-	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
-		if s, ok := <-sig; ok {
-			logPrintf("Received %v signal; stopping...", s)
-			cancel()
-		}
+		<-ctx.Done()
+		logPrintf("Signal received; stopping...")
 	}()
 
 	cur := *minPoll
