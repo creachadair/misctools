@@ -65,9 +65,10 @@ func New(r io.Reader) *Scanner {
 	return &Scanner{r: br}
 }
 
-// Next advances s to the next token of the input, or reports an error.
-// At the end of the input, Next returns io.EOF.
-func (s *Scanner) Next() error {
+// Next advances s to the next token of the input, and reports whether a token
+// is available. If Next reports false, use [Scanner.Err] to inspect the error.
+// At the end of input, [Scanner.Err] reports nil.
+func (s *Scanner) Next() bool {
 	s.buf.Reset()
 	s.err = nil
 	s.tok = Invalid
@@ -76,9 +77,9 @@ func (s *Scanner) Next() error {
 	for {
 		ch, err := s.rune()
 		if err == io.EOF {
-			return s.setErr(err)
+			return false // no error at EOF
 		} else if err != nil {
-			return s.fail(err)
+			return e2b(s.fail(err))
 		}
 
 		// Discard whitespace.
@@ -93,25 +94,23 @@ func (s *Scanner) Next() error {
 
 		// Handle numbers.
 		if isNumStart(ch) {
-			return s.scanNumber(ch)
+			return e2b(s.scanNumber(ch))
 		}
 
 		// Handle string values.
 		if ch == '"' {
-			return s.scanString(ch)
+			return e2b(s.scanString(ch))
 		}
 
-		if err != nil {
-			return err
-		}
-		return nil // OK, token is already set
+		return e2b(s.failf("invalid token"))
 	}
 }
 
 // Token returns the type of the current token.
 func (s *Scanner) Token() Token { return s.tok }
 
-// Err returns the last error reported by Next.
+// Err returns the last error reported by a call to [Scanner.Next].
+// At the end of input, [Scanner.Next] returns false and Err reports nil.
 func (s *Scanner) Err() error { return s.err }
 
 // Text returns the undecoded text of the current token.  The return value is
@@ -365,3 +364,5 @@ func (s *Scanner) copyOf(text []byte) []byte {
 	s.tbuf[i] = append(s.tbuf[i], text...)
 	return s.tbuf[i][p : p+len(text)]
 }
+
+func e2b(err error) bool { return err == nil }

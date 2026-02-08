@@ -3,7 +3,6 @@
 package scanner_test
 
 import (
-	"io"
 	"strings"
 	"testing"
 
@@ -36,10 +35,10 @@ func TestScanner(t *testing.T) {
 	for _, test := range tests {
 		var got []scanner.Token
 		s := scanner.New(strings.NewReader(test.input))
-		for s.Next() == nil {
+		for s.Next() {
 			got = append(got, s.Token())
 		}
-		if s.Err() != io.EOF {
+		if s.Err() != nil {
 			t.Errorf("Next failed: %v", s.Err())
 		}
 		if diff := cmp.Diff(test.want, got); diff != "" {
@@ -52,7 +51,7 @@ func TestScanner_decodeAs(t *testing.T) {
 	mustScan := func(t *testing.T, input string, want scanner.Token) *scanner.Scanner {
 		t.Helper()
 		s := scanner.New(strings.NewReader(input))
-		if s.Next() != nil {
+		if !s.Next() {
 			t.Fatalf("Next failed: %v", s.Err())
 		} else if s.Token() != want {
 			t.Fatalf("Next token: got %v, want %v", s.Token(), want)
@@ -89,10 +88,10 @@ func TestScannerLoc(t *testing.T) {
 	for _, tc := range tests {
 		var got []tokPos
 		s := scanner.New(strings.NewReader(tc.input))
-		for s.Next() == nil {
+		for s.Next() {
 			got = append(got, tokPos{s.Token(), s.Location().String()})
 		}
-		if s.Err() != io.EOF {
+		if s.Err() != nil {
 			t.Errorf("Next failed: %v", s.Err())
 		}
 		if diff := cmp.Diff(tc.want, got); diff != "" {
