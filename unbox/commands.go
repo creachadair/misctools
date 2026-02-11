@@ -149,7 +149,7 @@ func pickTag(msg *mail.Message) string {
 	tags := msg.Header.Get("X-Gmail-Labels")
 	btag := "misc"
 	var score int
-	for _, tag := range strings.Split(strings.ToLower(tags), ",") {
+	for tag := range strings.SplitSeq(strings.ToLower(tags), ",") {
 		got, sc := tagScore(tag)
 		if sc > score {
 			btag, score = got, sc

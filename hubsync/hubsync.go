@@ -174,8 +174,8 @@ func listBranchInfo(matching, dbranch, useRemote string) ([]*branchInfo, error) 
 	if err != nil {
 		return nil, err
 	}
-	list := strings.Split(strings.TrimSpace(listOut), "\n")
-	for _, s := range list {
+	list := strings.SplitSeq(strings.TrimSpace(listOut), "\n")
+	for s := range list {
 		parts := strings.SplitN(s, "\t", 2)
 		if parts[0] == dbranch {
 			continue // skip the default
@@ -209,10 +209,10 @@ func defaultBranch(defBranch, useRemote string) (string, error) {
 		return "", err
 	}
 	const needle = "HEAD branch:"
-	for _, line := range strings.Split(rem, "\n") {
-		i := strings.Index(line, needle)
-		if i >= 0 {
-			return strings.TrimSpace(line[i+len(needle):]), nil
+	for line := range strings.SplitSeq(rem, "\n") {
+		_, after, ok := strings.Cut(line, needle)
+		if ok {
+			return strings.TrimSpace(after), nil
 		}
 	}
 	return "", errors.New("default branch not found")
