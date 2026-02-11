@@ -37,7 +37,7 @@ func DeepSize(v any) int64 {
 func valueSize(v reflect.Value, seen mapset.Set[uintptr]) uintptr {
 	base := v.Type().Size()
 	switch v.Kind() {
-	case reflect.Ptr:
+	case reflect.Pointer:
 		p := v.Pointer()
 		if !seen.Has(p) && !v.IsNil() {
 			seen.Add(p)
@@ -85,7 +85,7 @@ func valueSize(v reflect.Value, seen mapset.Set[uintptr]) uintptr {
 		for i := 0; i < v.NumField(); i++ {
 			f := v.Field(i)
 			switch f.Kind() {
-			case reflect.Ptr:
+			case reflect.Pointer:
 				p := f.Pointer()
 				if !seen.Has(p) && !f.IsNil() {
 					seen.Add(p)
