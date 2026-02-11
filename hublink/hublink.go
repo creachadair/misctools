@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -75,10 +76,8 @@ The repository name is derived from the first remote.`,
 }
 
 func addFlag(flag string, args []string) []string {
-	for _, arg := range args {
-		if arg == flag {
-			return args
-		}
+	if slices.Contains(args, flag) {
+		return args
 	}
 	return append([]string{flag}, args...)
 }
