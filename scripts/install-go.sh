@@ -33,7 +33,7 @@ fi
 
 : ${GOOS:="$(uname -s|tr A-Z a-z)"}
 : ${GOARCH:="$(uname -m)"}
-: ${BOOTSTRAP:=1.20.14}
+: ${BOOTSTRAP:=1.24.6}
 : ${SOURCE:=0}
 : ${INSTALL_DIR:=/usr/local/go}
 
