@@ -72,10 +72,7 @@ func main() {
 
 	end := ifs.Size()
 	for end > 0 {
-		pos := end - bufSize
-		if pos < 0 {
-			pos = 0
-		}
+		pos := max(end-bufSize, 0)
 		if _, err := in.Seek(pos, io.SeekStart); err != nil {
 			fs.Fatalf("Seek input %d failed: %v", pos, err)
 		}
