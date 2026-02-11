@@ -46,7 +46,7 @@ func valueSize(v reflect.Value, seen mapset.Set[uintptr]) uintptr {
 
 	case reflect.Slice:
 		n := v.Len()
-		for i := 0; i < n; i++ {
+		for i := range n {
 			base += valueSize(v.Index(i), seen)
 		}
 
