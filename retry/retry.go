@@ -61,7 +61,7 @@ func main() {
 	os.Exit(run(context.Background()))
 }
 
-func logPrintf(msg string, args ...interface{}) {
+func logPrintf(msg string, args ...any) {
 	if !*beQuiet {
 		log.Printf(msg, args...)
 	}

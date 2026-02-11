@@ -30,7 +30,7 @@ import (
 // unused slots contain zeroes of their type. It is possible they contain non
 // zero values from sharing or reslicing, but without explicitly reslicing the
 // reflect package cannot touch them.
-func DeepSize(v interface{}) int64 {
+func DeepSize(v any) int64 {
 	return int64(valueSize(reflect.ValueOf(v), mapset.New[uintptr]()))
 }
 

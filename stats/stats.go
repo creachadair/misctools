@@ -227,7 +227,7 @@ func main() {
 	}
 }
 
-func fail(msg string, args ...interface{}) {
+func fail(msg string, args ...any) {
 	log.Printf(msg, args...)
 	os.Exit(1)
 }

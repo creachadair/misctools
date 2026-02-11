@@ -123,7 +123,7 @@ func (fs files) cleanup() error {
 	return last
 }
 
-func (fs files) Fatalf(msg string, args ...interface{}) {
+func (fs files) Fatalf(msg string, args ...any) {
 	fs.cleanup()
 	log.Fatalf(msg, args...)
 }
