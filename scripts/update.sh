@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # Update Go modules in designated subdirectories.
 #
@@ -48,6 +48,10 @@ find_matching() {
          -exec stat -f '%m %N' {} ';' | sort -n | cut -d/ -f2
 }
 
+coinflip() {
+    [[ $RANDOM > 16383 ]]
+}
+
 case "${1:-}" in
     ('')
         ;;
@@ -62,6 +66,12 @@ case "${1:-}" in
 esac
 
 find_matching | while read -r pkg ; do
+    # Once a package becomes eligible for update, flip a coin to determine
+    # whether it actually gets updated. This spreads out updates so they do not
+    # pile up due to sampling.
+    if ! coinflip ; then
+        continue
+    fi
     (
         cd "$pkg"
         printf -- "-- \033[1;95m%s\033[0m\n" "$pkg"
