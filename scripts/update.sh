@@ -39,7 +39,7 @@ readonly cf=".go-update"
 cd "$wd" >/dev/null
 
 update_mod() {
-    go list -m -f '{{if not .Indirect}}{{.Path}}{{end}}' all | xargs go get
+    go list -m -f '{{if not (or .Indirect .Main)}}{{.Path}}{{end}}' all | xargs go get
 }
 presubmit()  { git go check ; }
 cleanup()    { : ; }
