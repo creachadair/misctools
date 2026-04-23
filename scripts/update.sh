@@ -14,7 +14,7 @@
 # for the following steps.
 #
 #    update_mod  -- update Go module dependencies
-#                   Default: go get -u -t ./...
+#                   Default: update direct dependencies of the module
 #    presubmit   -- run tests prior to pushing an update
 #                   Default: git go check
 #    push        -- push to the remote repository
@@ -38,7 +38,9 @@ readonly wd="$(dirname $0)"
 readonly cf=".go-update"
 cd "$wd" >/dev/null
 
-update_mod() { go get -u -t ./... ; }
+update_mod() {
+    go list -m -f '{{if not .Indirect}}{{.Path}}{{end}}' all | xargs go get
+}
 presubmit()  { git go check ; }
 cleanup()    { : ; }
 push()       { git push --no-verify ; }
