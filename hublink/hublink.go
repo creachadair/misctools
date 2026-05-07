@@ -94,7 +94,7 @@ func runGrepFile(env *command.Env) error {
 	}
 	parts := strings.SplitN(hits[0], ":", 3)
 	target := strings.Join(parts[:2], ":")
-	env.Args = append(env.Args, target)
+	env.Args = []string{target}
 	return runLinkFile(env)
 }
 
