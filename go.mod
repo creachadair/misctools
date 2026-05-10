@@ -1,12 +1,13 @@
 module github.com/creachadair/misctools
 
-go 1.25.0
+go 1.26
 
 require (
 	github.com/creachadair/atomicfile v0.4.1
 	github.com/creachadair/command v0.2.2
 	github.com/creachadair/flax v0.0.5
-	github.com/creachadair/mds v0.27.2
+	github.com/creachadair/mboxlib v0.0.0-20260509191501-13e1ad791909
+	github.com/creachadair/mds v0.28.0
 	github.com/creachadair/taskgroup v0.14.3
 	github.com/go-git/go-git/v5 v5.18.0
 	github.com/google/go-cmp v0.7.0

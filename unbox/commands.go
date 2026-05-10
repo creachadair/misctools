@@ -1,25 +1,20 @@
 package main
 
 import (
-	"bufio"
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"mime"
-	"net/mail"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 	"time"
 
 	"github.com/creachadair/atomicfile"
 	"github.com/creachadair/command"
+	"github.com/creachadair/mboxlib"
 )
-
-var fromLineRE = regexp.MustCompile(`(?m)^From .*\n`)
 
 type msgInfo struct {
 	Index       int    `json:"index"`
@@ -38,14 +33,20 @@ func runList(env *command.Env, mailbox string) error {
 	defer f.Close()
 
 	enc := json.NewEncoder(os.Stdout)
-	return splitMailbox(bufio.NewReader(f), func(index, lnum int, data []byte) error {
-		_, mi, err := parseMessage(data)
-		if err != nil {
-			log.Printf("WARNING: index %d: invalid message: %v", index, err)
+	return splitMailbox(f, func(s *mboxlib.Scanner, index int, msg *mboxlib.Message) error {
+		line, _ := s.Lines()
+		info := msgInfo{
+			Index:       index,
+			Line:        line,
+			Size:        int64(len(msg.Data)),
+			ContentType: msg.ParsedHeader.Get("Content-Type"),
 		}
-		mi.Index = index
-		mi.Line = lnum
-		return enc.Encode(mi)
+		if ctype, params, err := mime.ParseMediaType(info.ContentType); err == nil {
+			info.ContentType = ctype
+			info.Charset = params["charset"] // may be empty
+			info.Boundary = params["boundary"]
+		}
+		return enc.Encode(info)
 	})
 }
 
@@ -59,83 +60,48 @@ func runBurst(env *command.Env, mailbox, outDir string) error {
 		return err
 	}
 
-	return splitMailbox(bufio.NewReader(f), func(index, lnum int, data []byte) error {
-		msg, _, err := parseMessage(data)
-		if err != nil {
-			return fmt.Errorf("index %d line %d: %w", index, lnum, err)
-		}
+	return splitMailbox(f, func(s *mboxlib.Scanner, index int, msg *mboxlib.Message) error {
 		mpath := filepath.Join(outDir, messagePath(msg))
 		if err := os.MkdirAll(filepath.Dir(mpath), 0700); err != nil {
 			return err
 		}
-		if err := atomicfile.WriteData(mpath, data, 0600); err != nil {
+		if err := atomicfile.WriteData(mpath, msg.Data, 0600); err != nil {
 			return fmt.Errorf("write %q: %w", mpath, err)
 		}
-		log.Printf("message %d (line %d) wrote %d bytes to %q", index, lnum, len(data), mpath)
+		line, _ := s.Lines()
+		log.Printf("message %d (line %d) wrote %d bytes to %q", index, line, len(msg.Data), mpath)
 		return nil
 	})
 }
 
-func splitMailbox(r io.Reader, f func(index, lnum int, msg []byte) error) error {
-	var buf bytes.Buffer
-
-	var atEOF bool
-	index, lnum := 0, 1
+func splitMailbox(r io.Reader, f func(s *mboxlib.Scanner, index int, msg *mboxlib.Message) error) error {
+	s := mboxlib.NewScanner(r)
+	var index int
 	for {
-		m := fromLineRE.FindIndex(buf.Bytes())
-		if m == nil {
-			if atEOF {
-				break
-			}
-			var tmp [1 << 20]byte
-			n, err := r.Read(tmp[:])
-			buf.Write(tmp[:n])
-			if err == io.EOF {
-				atEOF = true
-			} else if err != nil {
-				return err
-			}
+		next, err := s.Next()
+		if err == io.EOF {
+			return nil
+		} else if err != nil {
+			return err
+		}
+		index++
+		line, _ := s.Lines()
+
+		msg, err := mboxlib.ParseMessage(next)
+		if err != nil {
+			log.Printf("WARNING: line %d: invalid message #%d: %v", line, index, err)
 			continue
 		}
-
-		msg := buf.Next(m[0])
-		if len(msg) != 0 {
-			index++
-			if err := f(index, lnum, msg); err != nil {
-				return err
-			}
-			lnum++ // for the From line itself
-			lnum += bytes.Count(msg, []byte("\n"))
-		}
-		buf.Next(m[1] - m[0]) // drop the separator
-	}
-
-	if buf.Len() != 0 {
-		index++
-		return f(index, lnum, buf.Bytes())
-	}
-	return nil
-}
-
-func parseMessage(data []byte) (*mail.Message, msgInfo, error) {
-	mi := msgInfo{Size: int64(len(data)), ContentType: "invalid"}
-	msg, err := mail.ReadMessage(bytes.NewReader(data))
-	if err == nil {
-		mi.ContentType = msg.Header.Get("Content-Type")
-		ctype, params, err := mime.ParseMediaType(mi.ContentType)
-		if err == nil {
-			mi.ContentType = ctype
-			mi.Charset = params["charset"]
-			mi.Boundary = params["boundary"]
+		if err := f(s, index, msg); err != nil {
+			return err
 		}
 	}
-	return msg, mi, err
 }
 
-func messagePath(msg *mail.Message) string {
+func messagePath(msg *mboxlib.Message) string {
 	const nameStamp = "20060102-150405.999"
 	tag, base := pickTag(msg), "0000/00"
-	date, err := msg.Header.Date()
+	date, err := msg.ParsedHeader.Date()
 	if err != nil {
 		date = time.Now()
 	} else {
@@ -145,8 +111,8 @@ func messagePath(msg *mail.Message) string {
 	return filepath.Join(tag, base, name)
 }
 
-func pickTag(msg *mail.Message) string {
-	tags := msg.Header.Get("X-Gmail-Labels")
+func pickTag(msg *mboxlib.Message) string {
+	tags := msg.ParsedHeader.Get("X-Gmail-Labels")
 	btag := "misc"
 	var score int
 	for tag := range strings.SplitSeq(strings.ToLower(tags), ",") {
