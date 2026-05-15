@@ -128,16 +128,22 @@ func tagScore(t string) (string, int) {
 	switch t {
 	case "":
 		return t, 0
-	case "archived", "category", "opened", "sent":
-		return t, 1
-	case "spam":
+	case "[gmail]all mail", "[gmail]":
+		return "untagged", 1
+	case "archived", "category", "opened", "sent", "unread":
 		return t, 2
-	case "[gmail]all mail":
-		return "untagged", 2
+	case "spam":
+		return t, 3
 	default:
-		if rest, ok := strings.CutPrefix(t, "category "); ok {
-			return rest, 3
+		if rest, ok := strings.CutPrefix(t, "imap_$"); ok {
+			return rest, 0
 		}
-		return t, 4
+		if rest, ok := strings.CutPrefix(t, "imap_"); ok {
+			return rest, 0
+		}
+		if rest, ok := strings.CutPrefix(t, "category "); ok {
+			return rest, 4
+		}
+		return t, 5
 	}
 }
