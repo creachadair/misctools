@@ -3,14 +3,13 @@ package main
 
 import (
 	"os"
-	"path/filepath"
 
 	"github.com/creachadair/command"
 )
 
 func main() {
 	root := &command.C{
-		Name:  filepath.Base(os.Args[0]),
+		Name:  command.ProgramName(),
 		Usage: "command [args]\nhelp [command",
 		Help:  `Unpack e-mail messages from mbox format.`,
 		Commands: []*command.C{
