@@ -4,12 +4,12 @@ go 1.26
 
 require (
 	github.com/creachadair/atomicfile v0.4.1
-	github.com/creachadair/command v0.2.4
-	github.com/creachadair/flax v0.0.5
-	github.com/creachadair/mboxlib v0.0.0-20260510164701-7f65c5dd6acc
-	github.com/creachadair/mds v0.28.0
-	github.com/creachadair/taskgroup v0.14.3
-	github.com/go-git/go-git/v5 v5.19.0
+	github.com/creachadair/command v0.2.6
+	github.com/creachadair/flax v0.0.6
+	github.com/creachadair/mboxlib v0.0.0-20260526235343-db3c5c79a835
+	github.com/creachadair/mds v0.28.1
+	github.com/creachadair/taskgroup v0.14.4
+	github.com/go-git/go-git/v5 v5.19.1
 	github.com/google/go-cmp v0.7.0
 	github.com/google/go-github/v66 v66.0.0
 	github.com/tdewolff/minify/v2 v2.24.13
