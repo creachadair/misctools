@@ -17,10 +17,10 @@ github.com/creachadair/command v0.2.6 h1:+d4xUSZza5nqRVVsVRf5jDbix/0uKxVqFrc30F4
 github.com/creachadair/command v0.2.6/go.mod h1:HWvS3zEpVakKlNXxT/j1U8tNoDaY7By7ORYQ+m1ha2U=
 github.com/creachadair/flax v0.0.6 h1:IFUdRdfKynNTyR5SRlrHMUGnxxMZZen8RVpwcDq/ftk=
 github.com/creachadair/flax v0.0.6/go.mod h1:F1PML0JZLXSNDMNiRGK2yjm5f+L9QCHchyHBldFymj8=
-github.com/creachadair/mboxlib v0.0.0-20260526235343-db3c5c79a835 h1:0G/RjaW5MhhfGrATMCkVYnVpAjb21lJwIu+Tx0wROxo=
-github.com/creachadair/mboxlib v0.0.0-20260526235343-db3c5c79a835/go.mod h1:ywb0vR0dCJokjQCX0jCguAEXsogbeBdBrgUfcVa7Lv0=
-github.com/creachadair/mds v0.28.1 h1:st3MPtX0KEMuUAgbip+IRzvdExNv94pzDrk/5AI4bo4=
-github.com/creachadair/mds v0.28.1/go.mod h1:dMBTCSy3iS3dwh4Rb1zxeZz2d7K8+N24GCTsayWtQRI=
+github.com/creachadair/mboxlib v0.0.0-20260612170609-f50635eafcdd h1:QH1/7yVEPxcOVbCShY7uwlijwDyLi6UBsAUyb1Iv3uY=
+github.com/creachadair/mboxlib v0.0.0-20260612170609-f50635eafcdd/go.mod h1:TOiePKV1wMMeeY+y/kM+LWzw8d4zRXDQXs8z5MDiVSg=
+github.com/creachadair/mds v0.29.2 h1:1IBhfyolZUCA53twI1hXembOdpIe4bJ4OGJELBbGrN4=
+github.com/creachadair/mds v0.29.2/go.mod h1:dMBTCSy3iS3dwh4Rb1zxeZz2d7K8+N24GCTsayWtQRI=
 github.com/creachadair/taskgroup v0.14.4 h1:ttR8StLWmYA1O6x96YlTpQLXjKyRpO4RBo+OcO6W6C0=
 github.com/creachadair/taskgroup v0.14.4/go.mod h1:uhCtIEsa7zpeMAFixddhCYjbJi7e4JMyU7OXUygkSsg=
 github.com/cyphar/filepath-securejoin v0.6.1 h1:5CeZ1jPXEiYt3+Z6zqprSAgSWiggmpVyciv8syjIpVE=
