@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"io"
 	"log"
 	"os"
 
@@ -18,17 +19,11 @@ type workList struct {
 }
 
 func (w *workList) saveTo(path string) error {
-	f, err := atomicfile.New(path, 0600)
-	if err != nil {
-		return err
-	}
-	defer f.Cancel()
-	enc := json.NewEncoder(f)
-	enc.SetIndent("", "  ")
-	if err := enc.Encode(w); err != nil {
-		return err
-	}
-	return f.Close()
+	return atomicfile.Tx(path, 0600, func(f io.Writer) error {
+		enc := json.NewEncoder(f)
+		enc.SetIndent("", "  ")
+		return enc.Encode(w)
+	})
 }
 
 func (w *workList) loadFrom(path string) error {
