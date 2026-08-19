@@ -224,8 +224,7 @@ func git(cmd string, args ...string) (string, error) {
 	}
 	out, err := exec.Command("git", append([]string{cmd}, args...)...).Output()
 	if err != nil {
-		var ex *exec.ExitError
-		if errors.As(err, &ex) {
+		if ex, ok := errors.AsType[*exec.ExitError](err); ok {
 			return "", errors.New(strings.SplitN(string(ex.Stderr), "\n", 2)[0])
 		}
 		return "", err
