@@ -17,8 +17,8 @@ github.com/creachadair/command v0.2.11 h1:YPpsfKHDgVvOWs0kzlZz1RviLbuyb/tBT39yzb
 github.com/creachadair/command v0.2.11/go.mod h1:p7iYfSCIAVz+oYYIsXsya1hjKgjitd3U/0eOrzTWkBQ=
 github.com/creachadair/flax v0.1.0 h1:smGIMMdPK21WiN2hwHE8FqdfkfSaIEZGpZyEnPa5jsU=
 github.com/creachadair/flax v0.1.0/go.mod h1:F1PML0JZLXSNDMNiRGK2yjm5f+L9QCHchyHBldFymj8=
-github.com/creachadair/mboxlib v0.0.0-20260901051535-35aa635a41a3 h1:FpHxf8y+AdapSbnwOilycGRXsiLvSfulZtZxryXHp/s=
-github.com/creachadair/mboxlib v0.0.0-20260901051535-35aa635a41a3/go.mod h1:qIlEPvP+rjmsYzT5Zuth7/eOfvb8nc7U9M7brCls2wg=
+github.com/creachadair/mboxlib v0.0.0-20260907171947-9fd03c75ed37 h1:8216MW2unUDLtPd+NTgLXU3FE9yueignmKajF6GmP/Q=
+github.com/creachadair/mboxlib v0.0.0-20260907171947-9fd03c75ed37/go.mod h1:VYicOHa3NvGtoHWFL8LL6HsIUEHglEtX+F/T4UCPknY=
 github.com/creachadair/mds v0.31.0 h1:h4SXXgallvZfD8CFQnQNAOtBkUGpZjPwNBRQpHpHM/g=
 github.com/creachadair/mds v0.31.0/go.mod h1:IZ3oLffgVNZ4O5WXTPxx7EX5ilSl1ypdv5FekYyynyI=
 github.com/creachadair/taskgroup v0.14.4 h1:ttR8StLWmYA1O6x96YlTpQLXjKyRpO4RBo+OcO6W6C0=

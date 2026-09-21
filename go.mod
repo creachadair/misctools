@@ -6,7 +6,7 @@ require (
 	github.com/creachadair/atomicfile v0.4.2
 	github.com/creachadair/command v0.2.11
 	github.com/creachadair/flax v0.1.0
-	github.com/creachadair/mboxlib v0.0.0-20260901051535-35aa635a41a3
+	github.com/creachadair/mboxlib v0.0.0-20260907171947-9fd03c75ed37
 	github.com/creachadair/mds v0.31.0
 	github.com/creachadair/taskgroup v0.14.4
 	github.com/go-git/go-git/v5 v5.19.2
