@@ -24,12 +24,12 @@
 #
 # -- Environment:
 #
-#  MODTIME   -- how long between updates (default: 16 days)
+#  MODTIME   -- how long between updates (default: 10 days)
 #  MATCH     -- update matching directories (default: all); glob OK
 #
 set -euo pipefail
 
-: "${MODTIME:=16d}"
+: "${MODTIME:=10d}"
 : "${MATCH:=*}"
 
 unset CDPATH
