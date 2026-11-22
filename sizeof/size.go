@@ -83,7 +83,6 @@ func valueSize(v reflect.Value, seen mapset.Set[uintptr]) uintptr {
 	case reflect.Struct:
 		// Chase pointer and slice fields and add the size of their members.
 		for _, f := range v.Fields() {
-			f := f
 			switch f.Kind() {
 			case reflect.Pointer:
 				p := f.Pointer()
